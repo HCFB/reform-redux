@@ -1,6 +1,6 @@
 {
   "name": "reform-redux",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "description": "Simple realisation of react/redux form",
   "keywords": [
@@ -9,7 +9,8 @@
     "form",
     "asynchronous",
     "validation",
-    "perfomance"
+    "perfomance",
+    "immutable"
   ],
   "main": "./dist/reform-redux.js",
   "module": "./dist/reform-redux.js",
@@ -19,33 +20,33 @@
   "types": "./dist/reform-redux.flow.js",
   "dependencies": {
     "immutable": "^4.0.0-rc.9",
-    "prop-types": "*",
-    "react": "*",
-    "redux": "*"
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "redux": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.36",
-    "@babel/preset-flow": "^7.0.0-beta.37",
-    "@babel/preset-stage-2": "^7.0.0-beta.36",
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/preset-flow": "^7.0.0-beta.51",
+    "@babel/preset-stage-2": "^7.0.0-beta.51",
     "babel-core": "^7.0.0-beta.3",
-    "babel-eslint": "^8.2.1",
-    "babel-jest": "^22.0.4",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-eslint": "^8.2.5",
+    "babel-jest": "^22.4.4",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "eslint": "^4.15.0",
+    "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-flowtype": "^2.41.0",
-    "eslint-plugin-prettier": "^2.4.0",
+    "eslint-plugin-flowtype": "^2.49.3",
+    "eslint-plugin-prettier": "^2.6.1",
     "flow-bin": "^0.62.0",
     "husky": "^0.14.3",
-    "jest": "^22.0.6",
-    "prettier": "^1.9.2",
-    "react-dom": "*",
+    "jest": "^22.4.4",
+    "prettier": "^1.13.7",
+    "react-dom": "^16.4.1",
     "rollup": "^0.53.1",
-    "rollup-plugin-babel": "^4.0.0-beta.0",
+    "rollup-plugin-babel": "^4.0.0-beta.7",
     "rollup-plugin-uglify": "^2.0.1",
-    "uglify-es": "^3.3.4"
+    "uglify-es": "^3.3.9"
   },
   "scripts": {
     "flow": "flow",

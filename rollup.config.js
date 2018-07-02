@@ -15,6 +15,7 @@ const common = {
           {
             loose: true,
             useBuiltIns: true,
+            decoratorsLegacy: true,
           },
         ],
         '@babel/preset-flow',

@@ -2,7 +2,9 @@
   "env": {
     "test": {
       "presets": [
-        "@babel/preset-stage-2",
+        ["@babel/preset-stage-2", {
+          "decoratorsLegacy": true
+        }],
         "@babel/preset-flow"
       ],
       "plugins": [
