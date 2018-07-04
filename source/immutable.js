@@ -4,9 +4,14 @@ import { createFormComponent } from './components/Form';
 import { createFieldComponent } from './components/Field';
 import { createButtonComponent } from './components/Button';
 import { createSelectFormData } from './containers/selectFormData';
+import { filterReactDomProps } from './utils/common';
 import type { DataFunctions } from './types/dataFunctions';
 
 const dataFunctions: DataFunctions = immutable();
+
+// Utils
+
+export { filterReactDomProps };
 
 // Reducer
 

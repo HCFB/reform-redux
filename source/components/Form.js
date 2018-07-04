@@ -13,7 +13,7 @@ import {
   removeField,
 } from '../actions/Field';
 import { validateField, getValidateFunctionsArray } from '../utils/Field';
-import { debounce, asyncForEach } from '../utils/common';
+import { debounce, asyncForEach, filterReactDomProps } from '../utils/common';
 import type { Element } from 'react';
 import type { MiniReduxForm, ComponentProps, FieldsValidate, ComponentState } from '../types/Form';
 import type {
@@ -322,6 +322,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       const { children } = this.props;
 
       return createElement('form', {
+        ...filterReactDomProps(this.props),
         onSubmit: this.handleSubmit,
         children,
       });
