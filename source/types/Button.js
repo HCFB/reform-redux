@@ -1,5 +1,6 @@
 export type ComponentProps = {
   type: string,
+  children: any,
   onClick?: Function,
 };
 

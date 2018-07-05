@@ -64,6 +64,7 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
         ...filterReactDomProps(this.props),
         disabled: this.props.disabled || this.state.submitting,
         onClick: this.onClickHandler,
+        children: this.props.children,
       });
     }
   }
