@@ -287,7 +287,16 @@ describe('components / Field.immutable', () => {
     expect(normalize).lastCalledWithImmutable(
       'test',
       'TEST',
-      Map({ field: Map({ disabled: false, errors: List(), valid: true, value: 'TEST' }) }),
+      Map({
+        field: Map({
+          disabled: false,
+          changed: false,
+          touched: false,
+          errors: List(),
+          valid: true,
+          value: 'TEST',
+        }),
+      }),
       'onChange',
     );
   });
@@ -629,7 +638,16 @@ describe('components / Field.immutable', () => {
     expect(normalize).lastCalledWithImmutable(
       'TEST',
       'TEST',
-      Map({ field: Map({ disabled: false, errors: List(), valid: true, value: 'TEST' }) }),
+      Map({
+        field: Map({
+          disabled: false,
+          changed: false,
+          touched: false,
+          errors: List(),
+          valid: true,
+          value: 'TEST',
+        }),
+      }),
       'onBlur',
     );
   });
@@ -657,6 +675,8 @@ describe('components / Field.immutable', () => {
         disabled: false,
         errors: List(),
         valid: true,
+        touched: false,
+        changed: false,
         value: '',
       }),
     );
@@ -684,6 +704,8 @@ describe('components / Field.immutable', () => {
       Map({
         disabled: false,
         errors: List(),
+        changed: false,
+        touched: false,
         valid: true,
         value: '',
       }),
@@ -714,7 +736,16 @@ describe('components / Field.immutable', () => {
     expect(normalize).lastCalledWithImmutable(
       'TEST',
       'TEST',
-      Map({ field: Map({ disabled: false, errors: List(), valid: true, value: 'TEST' }) }),
+      Map({
+        field: Map({
+          disabled: false,
+          changed: false,
+          touched: false,
+          errors: List(),
+          valid: true,
+          value: 'TEST',
+        }),
+      }),
       'onFocus',
     );
   });

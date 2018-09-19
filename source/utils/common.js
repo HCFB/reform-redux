@@ -328,12 +328,16 @@ const DOMProps: Array<string> = [
   'onAnimationIteration',
   'onTransitionEnd',
 ];
+const DOMDataAttributes: RegExp = /data-.{1,}/;
 
 export function filterReactDomProps(props: Object): Object {
   const filterProps: Object = {};
 
   for (const prop in props) {
-    if (props.hasOwnProperty(prop) && DOMProps.indexOf(prop) !== -1) {
+    if (
+      (props.hasOwnProperty(prop) && DOMProps.indexOf(prop) !== -1) ||
+      DOMDataAttributes.test(prop)
+    ) {
       filterProps[prop] = props[prop];
     }
   }

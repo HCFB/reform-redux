@@ -4,7 +4,7 @@ import { resetForm } from '../actions/Form';
 import { filterReactDomProps } from '../utils/common';
 import type { Element } from 'react';
 import type { State } from '../types/formReducer';
-import type { MiniReduxForm } from '../types/Form';
+import type { ReFormRedux } from '../types/Form';
 import type { ComponentProps, ComponentState } from '../types/Button';
 import type { DataFunctions } from '../types/dataFunctions';
 import type { ComponentCreator } from '../types/common';
@@ -24,7 +24,7 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
       store: PropTypes.object,
     };
 
-    constructor(props: ComponentProps, context: MiniReduxForm) {
+    constructor(props: ComponentProps, context: ReFormRedux) {
       super(props, context);
 
       if (!context._reformRedux) {

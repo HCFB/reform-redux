@@ -4,8 +4,10 @@ import type { ComponentType } from 'react';
 
 export type FieldData = {
   value: any,
+  changed: boolean,
   errors: Array<string>,
   valid: boolean,
+  touched: boolean,
   disabled: boolean,
 };
 
@@ -48,6 +50,8 @@ export type ComponentProps = {
   value?: string,
   validate?: FieldValidateProp,
   disabled?: boolean,
+  changed?: boolean,
+  touched?: boolean,
   onChange?: Function,
   onBlur?: (event: Event, fieldData: FieldData) => any,
   onFocus?: (event: Event, fieldData: FieldData) => any,
@@ -59,6 +63,19 @@ export type ComponentState = {
 };
 
 // Actions
+
+export type SetFieldTouched = {
+  type: string,
+  formName: string,
+  fieldName: FieldName,
+  fieldTouched: boolean,
+};
+
+export type SetFieldsTouched = {
+  type: string,
+  formName: string,
+  touchedFields: { [fieldName: FieldName]: boolean },
+};
 
 export type SetFieldDisabled = {
   type: string,

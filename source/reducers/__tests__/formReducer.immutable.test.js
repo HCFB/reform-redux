@@ -18,7 +18,7 @@ import {
   CHANGE_FIELDS_VALUES,
 } from '../../constants/Field';
 
-describe('reducers/formReducer.immutable', () => {
+describe('reducers / formReducer.immutable', () => {
   const state = Map({
     valid: true,
     submitted: false,

@@ -89,7 +89,9 @@ type FieldData = {
   value: any,
   errors: Array<string>,
   valid: boolean,
+  touched: boolean,
   disabled: boolean,
+  changed: boolean,
 };
 ```
 
@@ -109,6 +111,8 @@ The Field component creates new field in store and provide all data of this fiel
 | component       | ComponentType<*>                                                                                              | yes      | Function or Class or String which be passed to React.createElement.                              |
 | validate        | Array\<(value: any) => any\> \| (value: any) => any                                                           | no       | Validate functions.                                                                              |
 | disabled        | boolean                                                                                                       | no       | Field disabled or not.                                                                           |
+| changed         | boolean                                                                                                       | no       | Field changed or not.                                                                            |
+| touched         | boolean                                                                                                       | no       | Field touched or not.                                                                            |
 | value           | any                                                                                                           | no       | Value of your field.                                                                             |
 | normalize       | (value: any, previousValue: any, allFields: FieldsData, when: onChange \| onBlur \| onFocus \| onInit) => any | no       | Normalize value function. If you normalize your data on onInit then allFields will empty object. |
 | onFocus         | (event: Event, fieldData: FieldData) => any                                                                   | no       | onFocus handler.                                                                                 |
@@ -120,16 +124,18 @@ The Field component creates new field in store and provide all data of this fiel
 
 ### Props which avaible in the `component`
 
-| Prop name | Flow type                                   | Description                                                                            |
-| --------- | ------------------------------------------- | -------------------------------------------------------------------------------------- |
-| onChange  | (data: any, value: any) => any              | Execute this function when you need to change value in the store.                      |
-| onBlur    | (event: Event, fieldData: FieldData) => any | This function will trigger function or functions which validate your field.            |
-| onFocus   | (event: Event, fieldData: FieldData) => any | This function will trigger normalize function.                                         |
-| value     | any                                         | Field value.                                                                           |
-| disabled  | boolean                                     | Field disabled or not.                                                                 |
-| checked   | boolean                                     | This prop will avaible in the component if your component is checkbox or radio button. |
-| formName  | string                                      | Form name.                                                                             |
-| errors    | Array\<string\>                             | Array of errors.                                                                       |
+| Prop name | Flow type                                              | Description                                                                            |
+| --------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| onChange  | (data: any, normalizeWhen: string = 'onChange') => any | Execute this function when you need to change value in the store.                      |
+| onBlur    | (event: Event, fieldData: FieldData) => any            | This function will trigger function or functions which validate your field.            |
+| onFocus   | (event: Event, fieldData: FieldData) => any            | This function will trigger normalize function.                                         |
+| value     | any                                                    | Field value.                                                                           |
+| disabled  | boolean                                                | Field disabled or not.                                                                 |
+| changed   | boolean                                                | Field changed or not.                                                                  |
+| touched   | boolean                                                | Field touched or not.                                                                  |
+| checked   | boolean                                                | This prop will avaible in the component if your component is checkbox or radio button. |
+| formName  | string                                                 | Form name.                                                                             |
+| errors    | Array\<string\>                                        | Array of errors.                                                                       |
 
 ## Button
 
@@ -282,6 +288,33 @@ store.dispatch(resetFields(
 ));
 ```
 
+### setFieldTouched
+
+Set field touched.
+
+```javascript
+import { setFieldTouched } from 'reform-redux';
+
+store.dispatch(setFieldTouched(
+  formName: string,
+  fieldName: FieldName,
+  fieldTouched: boolean,
+));
+```
+
+### setFieldsTouched
+
+Set fields touched.
+
+```javascript
+import { setFieldsTouched } from 'reform-redux';
+
+store.dispatch(setFieldsTouched(
+  formName: string,
+  touchedFields: { [fieldName: FieldName]: boolean },
+));
+```
+
 ### Context
 
 Form component creates context which avaible in components children. 
@@ -298,6 +331,8 @@ _reformRedux: {
       updateForm: Function,
     },
     field: {
+      setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function,
+      setFieldsTouched: (fieldName: FieldName, fieldsTouched: { [fieldName: FieldName]: boolean }): Function,
       changeFieldValue: (fieldName: FieldName, fieldValue: string) => Function,
       changeFieldsValues: (fieldsValues: { [fieldName: FieldName]: any }) => Function,
       setFieldErrors: (fieldName: FieldName, errors: Array<string>) => Function,

@@ -2,7 +2,7 @@ import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { getValidateFunctionsArray, validateField } from '../utils/Field';
 import { filterReactDomProps } from '../utils/common';
-import type { MiniReduxForm } from '../types/Form';
+import type { ReFormRedux } from '../types/Form';
 import type { FieldData, FieldsData, ComponentProps, ComponentState } from '../types/Field';
 import type { State } from '../types/formReducer';
 import type { DataFunctions } from '../types/dataFunctions';
@@ -42,7 +42,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       store: PropTypes.object,
     };
 
-    constructor(props: ComponentProps, context: MiniReduxForm) {
+    constructor(props: ComponentProps, context: ReFormRedux) {
       super(props, context);
 
       if (!context._reformRedux) {
@@ -84,6 +84,8 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         value,
         errors: list([]),
         valid: true,
+        touched: props.touched || false,
+        changed: props.changed || false,
         disabled: props.disabled || false,
       });
 
@@ -106,13 +108,15 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       this.state = {
         field: map(this.initialFieldData),
       };
+
+      this.registerField();
     }
 
     shouldComponentUpdate() {
       return Boolean(this.reduxRenderCount > 1);
     }
 
-    componentWillMount() {
+    registerField = () => {
       this.unsubscribeFromStore = this.context.store.subscribe(() => {
         const state: State = this.context.store.getState();
         const currentFormData: State = getIn(state, this.context._reformRedux.form.path);
@@ -138,6 +142,8 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         }
       });
 
+      // Register
+
       const initialFieldData = map(this.initialFieldData);
       const { type, checked, multiple, component } = this.props;
 
@@ -157,7 +163,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       if (listSize(keys(getIn(currentFormData, ['fields'])))) {
         this.context._reformRedux.form.updateForm();
       }
-    }
+    };
 
     componentWillUnmount() {
       this.unsubscribeFromStore();
@@ -198,37 +204,37 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
     };
 
     getFieldValue = (data: any): any => {
-      if (data.nativeEvent && data.nativeEvent instanceof Event) {
-        if (this.isRadio()) {
-          return data.target.checked ? this.props.value : '';
-        }
+      const isEvent = data.nativeEvent && data.nativeEvent instanceof Event;
+      if (this.isRadio()) {
+        const checked = isEvent ? data.target.checked : data;
+        return checked ? this.props.value : '';
+      }
 
-        if (this.isCheckbox()) {
-          if (this.context._reformRedux.form.fieldsCount[this.props.name] > 1) {
-            return list(
-              data.target.checked
-                ? [...toJS(getIn(this.state.field, ['value'])), toJS(this.props.value)]
-                : toJS(getIn(this.state.field, ['value'])).filter(
+      if (this.isCheckbox()) {
+        const checked = isEvent ? data.target.checked : data;
+        if (this.context._reformRedux.form.fieldsCount[this.props.name] > 1) {
+          return list(
+            checked
+              ? [...toJS(getIn(this.state.field, ['value'])), toJS(this.props.value)]
+              : toJS(getIn(this.state.field, ['value'])).filter(
                   value => value !== this.props.value, // eslint-disable-line
                 ), // eslint-disable-line
-            );
-          }
-
-          return data.target.checked ? this.props.value : '';
-        }
-
-        if (this.props.component === 'select' && this.props.multiple) {
-          return list(
-            [].slice.call(data.target.selectedOptions).map(option => {
-              return option.value;
-            }),
           );
         }
 
-        return data.target.value;
+        return checked ? this.props.value : '';
       }
 
-      return data;
+      if (this.props.component === 'select' && this.props.multiple) {
+        const selectedOptions = isEvent ? data.target.selectedOptions : data;
+        return list(
+          [].slice.call(selectedOptions).map(option => {
+            return option.value;
+          }),
+        );
+      }
+
+      return isEvent ? data.target.value : data;
     };
 
     changeFieldValueHandler = (data: any, normalizeWhen: string = 'onChange') => {
@@ -266,6 +272,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
 
       if (this.fieldWasTouched) return;
       this.fieldWasTouched = true;
+      this.context._reformRedux.field.setFieldTouched(this.props.name, true);
 
       if (this.props.validate) {
         const validate: Array<Function> = getValidateFunctionsArray(dataFunctions)(
@@ -313,7 +320,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         value: any,
         disabled: boolean,
       } = {
-        ...filterReactDomProps(restProps),
+        ...restProps,
         onChange: this.changeFieldValueHandler,
         onBlur: this.onBlurFieldHandler,
         onFocus: this.onFocusFieldHandler,
@@ -344,10 +351,11 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
           innerRef,
           formName: this.context._reformRedux.form.name,
           errors: getIn(this.state.field, ['errors']),
+          changed: getIn(this.state.field, ['changed']),
         };
       } else {
         fieldProps = {
-          ...fieldProps,
+          ...filterReactDomProps(fieldProps),
           ref: innerRef,
           value: isImmutable(fieldValue) ? toJS(fieldValue) : fieldValue,
         };

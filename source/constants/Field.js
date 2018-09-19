@@ -7,3 +7,5 @@ export const SET_FIELDS_DISABLED: string = 'SET_FIELDS_DISABLED';
 export const RESET_FIELD: string = 'RESET_FIELD';
 export const RESET_FIELDS: string = 'RESET_FIELDS';
 export const REMOVE_FIELD: string = 'REMOVE_FIELD';
+export const SET_FIELD_TOUCHED: string = 'SET_FIELD_TOUCHED';
+export const SET_FIELDS_TOUCHED: string = 'SET_FIELDS_TOUCHED';

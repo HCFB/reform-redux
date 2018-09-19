@@ -27,7 +27,9 @@ export type Action =
 
 export type State = {
   valid: boolean,
-  submitted?: boolean,
-  submitting?: boolean,
+  changed: boolean,
+  touched: boolean,
+  submitted: boolean,
+  submitting: boolean,
   fields: FieldsData,
 };

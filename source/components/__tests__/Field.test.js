@@ -17,6 +17,7 @@ describe('components / Field', () => {
         field: {
           value: '',
           errors: [],
+          changed: false,
           valid: true,
           disabled: false,
         },
@@ -73,14 +74,35 @@ describe('components / Field', () => {
     const component = mount(createElement(Test));
 
     expect(global.store.getState().form.fields).toEqual({
-      field: { value: '', errors: [], valid: true, disabled: false },
-      field1: { value: '', errors: [], valid: true, disabled: false },
+      field: {
+        value: '',
+        errors: [],
+        changed: false,
+        touched: false,
+        valid: true,
+        disabled: false,
+      },
+      field1: {
+        value: '',
+        errors: [],
+        changed: false,
+        touched: false,
+        valid: true,
+        disabled: false,
+      },
     });
 
     component.setProps({ hidden: true });
 
     expect(global.store.getState().form.fields).toEqual({
-      field1: { value: '', errors: [], valid: true, disabled: false },
+      field1: {
+        value: '',
+        errors: [],
+        changed: false,
+        touched: false,
+        valid: true,
+        disabled: false,
+      },
     });
   });
 
@@ -125,7 +147,7 @@ describe('components / Field', () => {
   });
 
   it('if you pass disabled and value props then this props will in state.field.value and state.field.disabled.', () => {
-    expect.assertions(4);
+    expect.assertions(8);
 
     let component = shallow(
       createElement(Field, {
@@ -133,6 +155,8 @@ describe('components / Field', () => {
         component: 'input',
         value: 'test',
         disabled: true,
+        touched: true,
+        changed: true,
       }),
       {
         context: global.context,
@@ -141,6 +165,8 @@ describe('components / Field', () => {
 
     expect(component.state('field').value).toBe('test');
     expect(component.state('field').disabled).toBeTruthy();
+    expect(component.state('field').touched).toBeTruthy();
+    expect(component.state('field').changed).toBeTruthy();
 
     component = shallow(
       createElement(Field, {
@@ -154,6 +180,8 @@ describe('components / Field', () => {
 
     expect(component.state('field').value).toBe('');
     expect(component.state('field').disabled).toBeFalsy();
+    expect(component.state('field').touched).toBeFalsy();
+    expect(component.state('field').changed).toBeFalsy();
   });
 
   it('if component type is checkbox or radio value must be an empty string.', () => {
@@ -216,7 +244,7 @@ describe('components / Field', () => {
   });
 
   it('component onChange', () => {
-    expect.assertions(2);
+    expect.assertions(4);
 
     const component = mount(
       createElement(
@@ -235,6 +263,8 @@ describe('components / Field', () => {
 
     expect(component.find('input').prop('value')).toBe('test');
     expect(global.store.getState().form.fields.field.value).toBe('test');
+    expect(global.store.getState().form.fields.field.changed).toBe(true);
+    expect(global.store.getState().form.changed).toBe(true);
   });
 
   it('component with custom onChange', () => {
@@ -259,7 +289,7 @@ describe('components / Field', () => {
   });
 
   it('validate on onChange after onBlur', done => {
-    expect.assertions(2);
+    expect.assertions(6);
 
     const validate = value => {
       if (value.length > 3) return 'Must be 3 characters or less.';
@@ -276,11 +306,17 @@ describe('components / Field', () => {
       ),
     );
 
+    expect(global.store.getState().form.touched).toBeFalsy();
+    expect(global.store.getState().form.fields.field.touched).toBeFalsy();
+
     const input = component.find('input');
     input.simulate('blur');
 
     const getEvent = value => ({ nativeEvent: new Event('change'), target: { value } });
     input.simulate('change', getEvent('test'));
+
+    expect(global.store.getState().form.touched).toBeTruthy();
+    expect(global.store.getState().form.fields.field.touched).toBeTruthy();
 
     setImmediate(() => {
       expect(global.store.getState().form.fields.field.errors).toEqual([
@@ -344,7 +380,16 @@ describe('components / Field', () => {
     expect(normalize).lastCalledWith(
       'test',
       'TEST',
-      { field: { disabled: false, errors: [], valid: true, value: 'TEST' } },
+      {
+        field: {
+          disabled: false,
+          errors: [],
+          touched: false,
+          valid: true,
+          changed: false,
+          value: 'TEST',
+        },
+      },
       'onChange',
     );
   });
@@ -375,6 +420,48 @@ describe('components / Field', () => {
 
     const event = { nativeEvent: new Event('change'), target: { value: 'test' } };
     component.find('input').simulate('change', event);
+  });
+
+  it('set field value in list of custom checkbox components', done => {
+    class Checkbox extends Component {
+      onChange = event => {
+        this.props.onChange(event.target.checked);
+      };
+
+      render() {
+        return createElement('input', { type: 'checkbox', onChange: this.onChange });
+      }
+    }
+
+    const component = mount(
+      createElement(global.Provider, {}, [
+        createElement(Field, {
+          key: 0,
+          name: 'field',
+          component: Checkbox,
+          value: '1',
+          type: 'checkbox',
+        }),
+        createElement(Field, {
+          key: 1,
+          name: 'field',
+          value: '2',
+          component: Checkbox,
+          type: 'checkbox',
+        }),
+      ]),
+    );
+
+    const event = { nativeEvent: new Event('change'), target: { checked: true } };
+    component
+      .find('input')
+      .first()
+      .simulate('change', event);
+
+    setImmediate(() => {
+      expect(global.store.getState().form.fields.field.value).toEqual(['1']);
+      done();
+    });
   });
 
   it('get field value from event in custom component', () => {
@@ -670,7 +757,16 @@ describe('components / Field', () => {
     expect(normalize).toBeCalledWith(
       'TEST',
       'TEST',
-      { field: { disabled: false, errors: [], valid: true, value: 'TEST' } },
+      {
+        field: {
+          disabled: false,
+          errors: [],
+          touched: false,
+          valid: true,
+          changed: false,
+          value: 'TEST',
+        },
+      },
       'onBlur',
     );
   });
@@ -695,6 +791,8 @@ describe('components / Field', () => {
     expect(onBlur).toBeCalledWith(expect.anything(), {
       disabled: false,
       errors: [],
+      changed: false,
+      touched: false,
       valid: true,
       value: '',
     });
@@ -720,6 +818,8 @@ describe('components / Field', () => {
     expect(onFocus).toBeCalledWith(expect.anything(), {
       disabled: false,
       errors: [],
+      changed: false,
+      touched: false,
       valid: true,
       value: '',
     });
@@ -749,9 +849,49 @@ describe('components / Field', () => {
     expect(normalize).lastCalledWith(
       'TEST',
       'TEST',
-      { field: { disabled: false, errors: [], valid: true, value: 'TEST' } },
+      {
+        field: {
+          disabled: false,
+          changed: false,
+          touched: false,
+          errors: [],
+          valid: true,
+          value: 'TEST',
+        },
+      },
       'onFocus',
     );
+  });
+
+  it('custom component props', () => {
+    const customComponent = () => {
+      return 'test';
+    };
+    const refFunciton = jest.fn();
+    const component = mount(
+      createElement(
+        global.Provider,
+        {},
+        createElement(Field, {
+          name: 'field',
+          innerRef: refFunciton,
+          component: customComponent,
+        }),
+      ),
+    );
+    const input = component.find(customComponent);
+
+    expect(Object.keys(input.props())).toEqual([
+      'value',
+      'onChange',
+      'onBlur',
+      'onFocus',
+      'disabled',
+      'innerRef',
+      'formName',
+      'errors',
+      'changed',
+    ]);
   });
 
   it('simple input component props', () => {

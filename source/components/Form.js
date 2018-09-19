@@ -11,11 +11,13 @@ import {
   resetField,
   resetFields,
   removeField,
+  setFieldsTouched,
+  setFieldTouched,
 } from '../actions/Field';
 import { validateField, getValidateFunctionsArray } from '../utils/Field';
 import { debounce, asyncForEach, filterReactDomProps } from '../utils/common';
 import type { Element } from 'react';
-import type { MiniReduxForm, ComponentProps, FieldsValidate, ComponentState } from '../types/Form';
+import type { ReFormRedux, ComponentProps, FieldsValidate } from '../types/Form';
 import type {
   FieldData,
   FieldsData,
@@ -40,7 +42,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
     deleteIn,
   }: DataFunctions = dataFunctions;
 
-  class Form extends Component<ComponentProps, ComponentState> {
+  class Form extends Component<ComponentProps> {
     formName: string;
     path: Array<string>;
 
@@ -85,7 +87,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       if (!this.fieldsValidateStack[this.formName]) this.fieldsValidateStack[this.formName] = {};
     }
 
-    getChildContext(): MiniReduxForm {
+    getChildContext(): ReFormRedux {
       const store: Store<State, *, *> = this.context.store;
 
       return {
@@ -104,6 +106,12 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
             ),
           },
           field: {
+            setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function =>
+              store.dispatch(setFieldTouched(this.formName, fieldName, fieldTouched)),
+            setFieldsTouched: (
+              fieldName: FieldName,
+              fieldsTouched: { [fieldName: FieldName]: boolean },
+            ): Function => store.dispatch(setFieldsTouched(this.formName, fieldsTouched)),
             removeField: (fieldName: FieldName): Function =>
               store.dispatch(removeField(this.formName, fieldName)),
             changeFieldsValues: (fieldsValues: { [fieldName: FieldName]: any }): Function =>

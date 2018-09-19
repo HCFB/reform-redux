@@ -66,10 +66,11 @@ describe('utils/common', () => {
   });
 
   it('filter ReactDOM props', () => {
-    const someProps = filterReactDomProps({ a: true, onClick: false });
+    const someProps = filterReactDomProps({ a: true, onClick: false, 'data-test': 'test' });
 
     expect(someProps).toEqual({
       onClick: false,
+      'data-test': 'test',
     });
   });
 });

@@ -16,7 +16,7 @@ export type IsList = (input: any) => boolean;
 export type HasIn = (where: Where, searchKeyPath: SearchKeyPath) => boolean;
 export type SetIn = <Input: Where>(where: any, searchKeyPath: SearchKeyPath, value: any) => Input;
 export type GetIn = <Input>(where: any, searchKeyPath: SearchKeyPath, def?: Input) => Input;
-export type Merge = <Input: Where>(target: Input, source: Input) => Input;
+export type Merge = <Input: any>(target: Input, source: Input) => Input;
 export type DeleteIn = <Input: any>(where: Input, searchKeyPath: SearchKeyPath) => Input;
 export type ComponentCreator = (dataFunctions: DataFunctions) => ComponentType<*>;
 export type Is = (firstCollection: any, secondCollection: any) => boolean;
