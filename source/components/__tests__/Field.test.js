@@ -891,6 +891,7 @@ describe('components / Field', () => {
       'formName',
       'errors',
       'changed',
+      'touched',
     ]);
   });
 

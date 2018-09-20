@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2018-09-20
+
+- Code improvements.
+- If the field was touched don't validate him. (bugfix)
+
+## [1.2.1] - 2018-09-19
+
+- Pass `touched` prop to Field component.
+
 ## [1.2.0] - 2018-09-19
 
 - Name of property `touched` was changed to `changed`.

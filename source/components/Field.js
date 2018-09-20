@@ -25,7 +25,6 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
 
   class Field extends Component<ComponentProps, ComponentState> {
     initialFieldData: FieldData;
-    fieldWasTouched: boolean = false;
     unsubscribeFromStore: Function = () => {};
     reduxRenderCount: number = 0;
 
@@ -121,23 +120,21 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         const state: State = this.context.store.getState();
         const currentFormData: State = getIn(state, this.context._reformRedux.form.path);
         const currentFieldData: FieldData = this.state.field;
-        const nextFieldData: { field: FieldData } = {
-          field: getIn(
-            state,
-            [...this.context._reformRedux.form.path, 'fields', this.props.name],
-            this.state.field,
-          ),
-        };
+        const nextFieldData: FieldData = getIn(
+          state,
+          [...this.context._reformRedux.form.path, 'fields', this.props.name],
+          this.state.field,
+        );
 
-        if (currentFormData.submitted) {
-          this.fieldWasTouched = true;
+        if (currentFormData.submitted && !getIn(nextFieldData, ['touched'])) {
+          this.context._reformRedux.field.setFieldTouched(this.props.name, true);
         }
 
         this.reduxRenderCount += 1;
 
-        if (!is(currentFieldData, nextFieldData.field)) {
+        if (!is(currentFieldData, nextFieldData)) {
           this.setState({
-            field: map(nextFieldData.field),
+            field: map(nextFieldData),
           });
         }
       });
@@ -192,7 +189,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
     changeFieldValue = async (value: any) => {
       this.context._reformRedux.field.changeFieldValue(this.props.name, value);
 
-      if (this.fieldWasTouched && this.props.validate) {
+      if (getIn(this.state.field, ['touched']) && this.props.validate) {
         const validate: Array<Function> = getValidateFunctionsArray(dataFunctions)(
           this.props.validate,
         );
@@ -270,8 +267,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
 
       // If the field was touched don't validate him.
 
-      if (this.fieldWasTouched) return;
-      this.fieldWasTouched = true;
+      if (getIn(this.state.field, ['touched'])) return;
       this.context._reformRedux.field.setFieldTouched(this.props.name, true);
 
       if (this.props.validate) {
@@ -352,6 +348,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
           formName: this.context._reformRedux.form.name,
           errors: getIn(this.state.field, ['errors']),
           changed: getIn(this.state.field, ['changed']),
+          touched: getIn(this.state.field, ['touched']),
         };
       } else {
         fieldProps = {
