@@ -2,13 +2,16 @@
   "env": {
     "test": {
       "presets": [
-        ["@babel/preset-stage-2", {
-          "decoratorsLegacy": true
+        ["@babel/preset-env", {
+          "targets": "last 2 version"
         }],
         "@babel/preset-flow"
       ],
       "plugins": [
-        "transform-es2015-modules-commonjs"
+        ["transform-es2015-modules-commonjs", {
+          "loose": false
+        }],
+        "@babel/plugin-proposal-class-properties"
       ]
     }
   }

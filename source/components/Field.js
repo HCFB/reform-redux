@@ -1,4 +1,4 @@
-import { Component, createElement } from 'react';
+import { Component, createElement, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { getValidateFunctionsArray, validateField } from '../utils/Field';
 import { filterReactDomProps } from '../utils/common';
@@ -19,14 +19,19 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
     listIncludes,
     isImmutable,
     toJS,
-    keys,
-    listSize,
   }: DataFunctions = dataFunctions;
 
   class Field extends Component<ComponentProps, ComponentState> {
     initialFieldData: FieldData;
     unsubscribeFromStore: Function = () => {};
     reduxRenderCount: number = 0;
+
+    static propTypes = {
+      name: PropTypes.string.isRequired,
+      component: PropTypes.node.isRequired,
+      removeOnUnmount: PropTypes.bool,
+      normalize: PropTypes.func,
+    };
 
     static defaultProps: {
       disabled: $PropertyType<ComponentProps, 'disabled'>,
@@ -46,22 +51,6 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
 
       if (!context._reformRedux) {
         throw new Error('Component `Field` must be in `Form` component.');
-      }
-
-      if (!props.name) {
-        throw new Error('The `name` prop is required.');
-      }
-
-      if (props.removeOnUnmount && typeof props.removeOnUnmount !== 'boolean') {
-        throw new Error('The `removeOnUnmount` prop must be a boolean.');
-      }
-
-      if (props.normalize && typeof props.normalize !== 'function') {
-        throw new Error('The `normalize` prop must be a function.');
-      }
-
-      if (!props.component) {
-        throw new Error('The `component` prop is required.');
       }
 
       if (props.multiple && props.component === 'select' && props.value && !isList(props.value)) {
@@ -147,8 +136,6 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       const validate: Array<Function> = getValidateFunctionsArray(dataFunctions)(
         this.props.validate,
       );
-      const state: State = this.context.store.getState();
-      const currentFormData: State = getIn(state, this.context._reformRedux.form.path);
 
       this.context._reformRedux.form.registerField(this.props.name, initialFieldData, validate, {
         type,
@@ -157,7 +144,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         component,
       });
 
-      if (listSize(keys(getIn(currentFormData, ['fields'])))) {
+      if (this.context._reformRedux.form.initialized) {
         this.context._reformRedux.form.updateForm();
       }
     };
@@ -168,6 +155,11 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
     }
 
     componentWillReceiveProps(nextProps: ComponentProps) {
+      // Update value only for single fields
+      if (this.context._reformRedux.form.fieldsCount[this.props.name] > 1) {
+        return;
+      }
+
       if (nextProps.value !== undefined && !is(map(this.props.value), map(nextProps.value))) {
         this.changeFieldValue(nextProps.value);
       }
@@ -214,8 +206,8 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
             checked
               ? [...toJS(getIn(this.state.field, ['value'])), toJS(this.props.value)]
               : toJS(getIn(this.state.field, ['value'])).filter(
-                  value => value !== this.props.value, // eslint-disable-line
-                ), // eslint-disable-line
+                  value => value !== this.props.value,
+                ),
           );
         }
 
@@ -369,5 +361,5 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
     }
   }
 
-  return Field;
+  return forwardRef((props, ref) => createElement(Field, { ...props, innerRef: ref }));
 };

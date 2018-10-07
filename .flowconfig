@@ -3,9 +3,10 @@
 .*/__tests__/.*
 .*/coverage/.*
 .*/jest/.*
-.*/dist/.*
 .*/package*
 .*/rollup*
+.*/immutable*
+.*/reform-redux*
 
 [libs]
 ./source/types/flow-typed

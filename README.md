@@ -1,10 +1,11 @@
 # ReForm-Redux
+[![npm version](https://badge.fury.io/js/reform-redux.svg)](https://badge.fury.io/js/reform-redux)
 
 Simple realisation of react/redux form component.
 
 ## Attention
 
-For use this plugin with old browsers you need to add polyfills to your bundle. Like [babel-polyfill](https://github.com/babel/babel/tree/master/packages/babel-polyfill) & [babel-preset-env](https://github.com/babel/babel/tree/master/packages/babel-preset-env).
+For use this plugin with old browsers you need to add polyfills to your bundle. Like [@babel/polyfill](https://github.com/babel/babel/tree/master/packages/babel-polyfill) & [@babel/preset-env](https://github.com/babel/babel/tree/master/packages/babel-preset-env).
 
 ## Examples
 
@@ -119,7 +120,6 @@ The Field component creates new field in store and provide all data of this fiel
 | onBlur          | (event: Event, fieldData: FieldData) => any                                                                   | no       | onBlur handler.                                                                                  |
 | onChange        | (data: any, value: any) => any                                                                                | no       | onChange handler.                                                                                |
 | checked         | boolean                                                                                                       | no       | Checked or not your radio button or checkbox.                                                    |
-| innerRef        | (element: any) => void                                                                                        | no       | Ref for Field component.                                                                         |
 | removeOnUnmount | boolean                                                                                                       | no       | Remove field data from store on unmount                                                          |
 
 ### Props which avaible in the `component`
@@ -283,7 +283,7 @@ Reset form.
 ```javascript
 import { resetForm } from 'reform-redux';
 
-store.dispatch(resetFields(
+store.dispatch(resetForm(
   formName: string,
 ));
 ```
@@ -324,6 +324,7 @@ _reformRedux: {
     form: {
       name: string,
       path: string,
+      initialized: boolean,
       registerField: Function,
       fieldsCount: { [fieldName: FieldName]: number },
       unregisterField: Function,

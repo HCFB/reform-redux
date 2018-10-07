@@ -12,5 +12,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# folders
-/dist
+# build
+immutable*
+reform-redux*

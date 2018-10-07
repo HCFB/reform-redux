@@ -5,36 +5,30 @@ import { formInitialisation } from '../../actions/Form';
 
 describe('components / Field', () => {
   it('snapshot', () => {
-    const snapshot = shallow(createElement(global.Provider, {}, createElement(Field)));
+    const snapshot = mount(
+      createElement(
+        global.Provider,
+        {},
+        createElement(Field, { component: 'input', name: 'name' }),
+      ),
+    );
     expect(snapshot).toMatchSnapshot();
   });
 
   it('componentWillReceiveProps checked for radio and checkbox types', done => {
-    expect.assertions(2);
-
-    global.store.dispatch(
-      formInitialisation('form', {
-        field: {
-          value: '',
-          errors: [],
-          changed: false,
-          valid: true,
-          disabled: false,
-        },
-      }),
-    );
-
-    let component = shallow(
-      createElement(Field, {
-        name: 'field',
-        component: 'input',
-        value: 'test',
-        type: 'checkbox',
-      }),
-      {
-        context: global.context,
-      },
-    );
+    const wrapper = ({ checked = false }) =>
+      createElement(
+        global.Provider,
+        {},
+        createElement(Field, {
+          name: 'field',
+          component: 'input',
+          value: 'test',
+          type: 'checkbox',
+          checked,
+        }),
+      );
+    const component = mount(createElement(wrapper));
 
     component.setProps({
       checked: true,
@@ -42,9 +36,63 @@ describe('components / Field', () => {
 
     setImmediate(() => {
       expect(global.store.getState().form.fields.field.value).toBe('test');
-      expect(component.state('field').value).toBe('test');
 
       done();
+    });
+  });
+
+  it('dynamically create new fields in form', () => {
+    expect.assertions(2);
+    jest.useFakeTimers();
+    class Test extends Component {
+      state = {
+        showFields: false,
+      };
+
+      static getDerivedStateFromProps({ showFields }) {
+        return { showFields };
+      }
+
+      render() {
+        return createElement(
+          global.Provider,
+          {},
+          this.state.showFields
+            ? [
+                createElement(Field, {
+                  name: 'field',
+                  component: 'input',
+                  key: 0,
+                }),
+              ]
+            : null,
+        );
+      }
+    }
+
+    const component = mount(createElement(Test));
+
+    expect(global.store.getState().form.fields).toEqual({});
+
+    component.setProps({
+      showFields: true,
+    });
+
+    jest.runAllTimers();
+
+    component
+      .find('input')
+      .simulate('change', { nativeEvent: new Event('change'), target: { value: 'test' } });
+
+    expect(global.store.getState().form.fields).toEqual({
+      field: {
+        value: 'test',
+        errors: [],
+        changed: true,
+        touched: false,
+        valid: true,
+        disabled: false,
+      },
     });
   });
 
@@ -107,39 +155,54 @@ describe('components / Field', () => {
   });
 
   it('if component is not in Form component then throw error', () => {
-    expect(() => shallow(createElement(Field))).toThrow(
+    console.error = jest.fn(); // eslint-disable-line
+    expect(() => mount(createElement(Field, { name: 'name', component: 'input' }))).toThrow(
       'Component `Field` must be in `Form` component.',
     );
   });
 
-  it('if component has not "name" prop then throw error', () => {
-    expect(() =>
-      shallow(createElement(Field), {
-        context: global.context,
-      }),
-    ).toThrow('The `name` prop is required.');
-  });
+  it('check component prop types', () => {
+    expect.assertions(2);
 
-  it('if component "normalize" prop is not a function then throw error', () => {
-    expect(() =>
-      shallow(createElement(Field, { name: 'test', normalize: 'test' }), {
-        context: global.context,
+    let errors = [];
+    console.error = error => errors.push(error); // eslint-disable-line no-console
+    let expectedErrors = [
+      'Warning: Failed prop type: The prop `name` is marked as required in `Field`, but its value is `undefined`.\n    in Field',
+      'Warning: Failed prop type: The prop `component` is marked as required in `Field`, but its value is `undefined`.\n    in Field',
+    ];
+
+    shallow(createElement(Field));
+
+    expect(errors).toEqual(expectedErrors);
+
+    errors = [];
+    expectedErrors = [
+      'Warning: Failed prop type: Invalid prop `normalize` of type `string` supplied to `Field`, expected `function`.\n    in Field',
+    ];
+
+    shallow(
+      createElement(Field, {
+        name: 'test',
+        normalize: 'test',
       }),
-    ).toThrow('The `normalize` prop must be a function.');
+    );
+
+    expect(errors).toEqual(expectedErrors);
   });
 
   it('if component with prop type=select and prop=multiple and value with type not array then throw error', () => {
     expect(() =>
-      shallow(
-        createElement(Field, {
-          name: 'test',
-          component: 'select',
-          multiple: true,
-          value: 'test',
-        }),
-        {
-          context: global.context,
-        },
+      mount(
+        createElement(
+          global.Provider,
+          {},
+          createElement(Field, {
+            name: 'test',
+            component: 'select',
+            multiple: true,
+            value: 'test',
+          }),
+        ),
       ),
     ).toThrow(
       'The `value` prop supplied to Field with type "select" must be an array if `multiple` is true.',
@@ -163,10 +226,10 @@ describe('components / Field', () => {
       },
     );
 
-    expect(component.state('field').value).toBe('test');
-    expect(component.state('field').disabled).toBeTruthy();
-    expect(component.state('field').touched).toBeTruthy();
-    expect(component.state('field').changed).toBeTruthy();
+    expect(component.dive().state('field').value).toBe('test');
+    expect(component.dive().state('field').disabled).toBeTruthy();
+    expect(component.dive().state('field').touched).toBeTruthy();
+    expect(component.dive().state('field').changed).toBeTruthy();
 
     component = shallow(
       createElement(Field, {
@@ -178,10 +241,10 @@ describe('components / Field', () => {
       },
     );
 
-    expect(component.state('field').value).toBe('');
-    expect(component.state('field').disabled).toBeFalsy();
-    expect(component.state('field').touched).toBeFalsy();
-    expect(component.state('field').changed).toBeFalsy();
+    expect(component.dive().state('field').value).toBe('');
+    expect(component.dive().state('field').disabled).toBeFalsy();
+    expect(component.dive().state('field').touched).toBeFalsy();
+    expect(component.dive().state('field').changed).toBeFalsy();
   });
 
   it('if component type is checkbox or radio value must be an empty string.', () => {
@@ -199,7 +262,7 @@ describe('components / Field', () => {
       },
     );
 
-    expect(component.state('field').value).toBe('');
+    expect(component.dive().state('field').value).toBe('');
 
     component = shallow(
       createElement(Field, {
@@ -213,7 +276,7 @@ describe('components / Field', () => {
       },
     );
 
-    expect(component.state('field').value).toBe('');
+    expect(component.dive().state('field').value).toBe('');
   });
 
   it('if in redux store exists field data then take it from redux store and write to field state.', () => {
@@ -240,7 +303,7 @@ describe('components / Field', () => {
       },
     );
 
-    expect(component.state('field').value).toBe('');
+    expect(component.dive().state('field').value).toBe('');
   });
 
   it('component onChange', () => {
@@ -905,7 +968,7 @@ describe('components / Field', () => {
         {},
         createElement(Field, {
           name: 'field',
-          innerRef: refFunciton,
+          ref: refFunciton,
           component: 'input',
         }),
       ),
@@ -956,6 +1019,38 @@ describe('components / Field', () => {
         }),
       ),
     );
+  });
+
+  it("check that passed value doesn't change value of field if you have few components with same name", () => {
+    expect.assertions(2);
+
+    const component = ({ value1, value2 }) =>
+      createElement(global.Provider, {}, [
+        createElement(Field, {
+          name: 'field',
+          component: 'input',
+          type: 'checkbox',
+          checked: true,
+          value: value1,
+          key: 0,
+        }),
+        createElement(Field, {
+          name: 'field',
+          component: 'input',
+          type: 'checkbox',
+          checked: true,
+          value: value2,
+          key: 1,
+        }),
+      ]);
+
+    const mountedComponent = mount(createElement(component, { value1: 1, value2: 2 }));
+
+    expect(global.store.getState().form.fields.field.value).toEqual([1, 2]);
+
+    mountedComponent.setProps({ value1: 'test' });
+
+    expect(global.store.getState().form.fields.field.value).toEqual([1, 2]);
   });
 
   it('checked prop in two checkboxes with same name', () => {

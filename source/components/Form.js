@@ -45,6 +45,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
   class Form extends Component<ComponentProps> {
     formName: string;
     path: Array<string>;
+    initialized: boolean = false;
 
     static contextTypes = {
       store: PropTypes.object,
@@ -52,6 +53,10 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
 
     static childContextTypes = {
       _reformRedux: PropTypes.object,
+    };
+
+    static propTypes = {
+      path: PropTypes.string.isRequired,
     };
 
     static defaultProps: {
@@ -96,6 +101,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
             name: this.formName,
             path: this.path,
             fieldsCount: this.fieldsCount[this.formName],
+            initialized: this.initialized,
             registerField: this.registerField,
             unregisterField: this.unregisterField,
             resetForm: (): Function => store.dispatch(resetForm(this.formName)),
@@ -255,6 +261,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
         this.context.store.dispatch(
           formInitialisation(this.formName, this.fieldsStack[this.formName]),
         );
+        this.initialized = true;
       }
     }
 

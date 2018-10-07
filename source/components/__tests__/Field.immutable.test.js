@@ -7,46 +7,36 @@ import { changeFieldValue } from '../../actions/Field';
 
 describe('components / Field.immutable', () => {
   it('snapshot', () => {
-    const snapshot = shallow(
-      createElement(global.Provider, { immutable: true }, createElement(Field)),
+    const snapshot = mount(
+      createElement(
+        global.Provider,
+        { immutable: true },
+        createElement(Field, { component: 'input', name: 'test' }),
+      ),
     );
     expect(snapshot).toMatchSnapshot();
   });
 
   it('if component is not in Form component then throw error', () => {
-    expect(() => shallow(createElement(Field))).toThrow(
+    console.error = jest.fn(); // eslint-disable-line
+    expect(() => mount(createElement(Field))).toThrow(
       'Component `Field` must be in `Form` component.',
     );
   });
 
-  it('if component has not "name" prop then throw error', () => {
-    expect(() =>
-      shallow(createElement(Field), {
-        context: global.immutableContext,
-      }),
-    ).toThrow('The `name` prop is required.');
-  });
-
-  it('if component "normalize" prop is not a function then throw error', () => {
-    expect(() =>
-      shallow(createElement(Field, { name: 'test', normalize: 'test' }), {
-        context: global.immutableContext,
-      }),
-    ).toThrow('The `normalize` prop must be a function.');
-  });
-
   it('if component with prop type=select and prop=multiple and value with type not array then throw error', () => {
     expect(() =>
-      shallow(
-        createElement(Field, {
-          name: 'test',
-          component: 'select',
-          multiple: true,
-          value: 'test',
-        }),
-        {
-          context: global.immutableContext,
-        },
+      mount(
+        createElement(
+          global.Provider,
+          {},
+          createElement(Field, {
+            name: 'test',
+            component: 'select',
+            multiple: true,
+            value: 'test',
+          }),
+        ),
       ),
     ).toThrow(
       'The `value` prop supplied to Field with type "select" must be an array if `multiple` is true.',
@@ -68,8 +58,8 @@ describe('components / Field.immutable', () => {
       },
     );
 
-    expect(getIn(component.state('field'), ['value'])).toBe('test');
-    expect(getIn(component.state('field'), ['disabled'])).toBeTruthy();
+    expect(getIn(component.dive().state('field'), ['value'])).toBe('test');
+    expect(getIn(component.dive().state('field'), ['disabled'])).toBeTruthy();
 
     component = shallow(
       createElement(Field, {
@@ -81,8 +71,8 @@ describe('components / Field.immutable', () => {
       },
     );
 
-    expect(getIn(component.state('field'), ['value'])).toBe('');
-    expect(getIn(component.state('field'), ['disabled'])).toBeFalsy();
+    expect(getIn(component.dive().state('field'), ['value'])).toBe('');
+    expect(getIn(component.dive().state('field'), ['disabled'])).toBeFalsy();
   });
 
   it('if component type is checkbox or radio value must be an empty string.', () => {
@@ -100,7 +90,7 @@ describe('components / Field.immutable', () => {
       },
     );
 
-    expect(getIn(component.state('field'), ['value'])).toBe('');
+    expect(getIn(component.dive().state('field'), ['value'])).toBe('');
 
     component = shallow(
       createElement(Field, {
@@ -114,7 +104,7 @@ describe('components / Field.immutable', () => {
       },
     );
 
-    expect(getIn(component.state('field'), ['value'])).toBe('');
+    expect(getIn(component.dive().state('field'), ['value'])).toBe('');
   });
 
   it('if in redux store exists field data then take it from redux store and write to field state.', () => {
@@ -144,7 +134,7 @@ describe('components / Field.immutable', () => {
       },
     );
 
-    expect(getIn(component.state('field'), ['value'])).toBe('');
+    expect(getIn(component.dive().state('field'), ['value'])).toBe('');
   });
 
   it('component onChange', () => {

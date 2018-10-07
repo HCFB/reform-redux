@@ -18,6 +18,7 @@ describe('components / Form.immutable', () => {
   });
 
   it('if component has not "path" prop then throw error', () => {
+    console.error = jest.fn(); // eslint-disable-line
     expect(() => shallow(createElement(Form, {}), global.formContext)).toThrow(
       'The `path` prop is required.',
     );
