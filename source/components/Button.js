@@ -30,9 +30,7 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
       if (!context._reformRedux) {
         throw new Error('Component `Button` must be in `Form` component.');
       }
-    }
 
-    componentWillMount() {
       this.unsubscribeFromStore = this.context.store.subscribe(() => {
         const state: State = this.context.store.getState();
         const currentFormData: State = getIn(state, this.context._reformRedux.form.path);

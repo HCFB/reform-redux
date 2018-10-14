@@ -57,6 +57,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
 
     static propTypes = {
       path: PropTypes.string.isRequired,
+      name: PropTypes.string,
     };
 
     static defaultProps: {
@@ -85,7 +86,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       }
 
       this.path = props.path.split('.');
-      this.formName = this.path.slice(-1)[0];
+      this.formName = props.name || this.path.slice(-1)[0];
 
       if (!this.fieldsStack[this.formName]) this.fieldsStack[this.formName] = {};
       if (!this.fieldsCount[this.formName]) this.fieldsCount[this.formName] = {};

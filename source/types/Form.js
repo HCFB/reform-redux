@@ -40,6 +40,7 @@ export type ReFormRedux = {
 export type ComponentProps = {
   children: Element<*>,
   path: string,
+  name?: string,
   onSubmitFailed?: (errorFields: FieldsData, fields: FieldsData, event: Event) => any,
   onSubmit?: (fields: FieldsData, event: Event) => any,
 };

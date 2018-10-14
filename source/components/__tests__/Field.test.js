@@ -15,7 +15,7 @@ describe('components / Field', () => {
     expect(snapshot).toMatchSnapshot();
   });
 
-  it('componentWillReceiveProps checked for radio and checkbox types', done => {
+  it('receive new prop checked for radio and checkbox types', done => {
     const wrapper = ({ checked = false }) =>
       createElement(
         global.Provider,

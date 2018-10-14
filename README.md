@@ -74,6 +74,7 @@ The Form component is a simple wrapper for the React `<form>`.
 | Prop name      | Flow type                                                          | Required | Description                                                              |
 | -------------- | ------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------ |
 | path           | string                                                             | yes      | Path to reducer in the redux store. Example: 'some.reducers.myFormName'. |
+| name           | string                                                             | no       | Form name.                                                               |
 | onSubmitFailed | (errorFields: FieldsData, fields: FieldsData, event: Event) => any | no       | Function which will trigger after unsuccessfull submit the form.         |
 | onSubmit       | (fields: FieldsData, event: Event) => any                          | no       | Function which will trigger after successfull submit the form.           |
 

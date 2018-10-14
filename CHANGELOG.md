@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - 2018-10-13
+
+- Update components to new react api.
+
+## [1.3.4] - 2018-10-11
+
+- Pass stateless components as component to Field.
+
+## [1.3.3] - 2018-10-11
+
+- Change component prop-type validator.
+
+## [1.3.2] - 2018-10-11
+
+- Get form name from props 'name' in Form component.
+
 ## [1.3.1] - 2018-10-7
 
 - Build fix.

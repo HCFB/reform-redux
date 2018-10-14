@@ -40,13 +40,7 @@ export const createSelectFormData: Function = (dataFunctions: DataFunctions) => 
           });
 
           this.state = componentState;
-        }
 
-        shouldComponentUpdate() {
-          return Boolean(Object.keys(this.state).length);
-        }
-
-        componentWillMount() {
           this.unsubscribeFromStore = this.context.store.subscribe(() => {
             const contextFormPath: Array<string> =
               (formPath && formPath.split('.')) || this.context._reformRedux.form.path;
@@ -61,6 +55,10 @@ export const createSelectFormData: Function = (dataFunctions: DataFunctions) => 
               this.setState(cloneDeep(fieldsData));
             }
           });
+        }
+
+        shouldComponentUpdate() {
+          return Boolean(Object.keys(this.state).length);
         }
 
         componentWillUnmount() {

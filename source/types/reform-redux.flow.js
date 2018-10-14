@@ -151,6 +151,7 @@ declare module 'reform-redux' {
   declare export var Form: ComponentType<{
     children: Element<*>,
     path: string,
+    name?: string,
     onSubmitFailed?: (
       errorFields: {
         [fieldName: string]: {

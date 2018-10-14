@@ -24,11 +24,11 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
   class Field extends Component<ComponentProps, ComponentState> {
     initialFieldData: FieldData;
     unsubscribeFromStore: Function = () => {};
-    reduxRenderCount: number = 0;
 
     static propTypes = {
       name: PropTypes.string.isRequired,
-      component: PropTypes.node.isRequired,
+      component: PropTypes.oneOfType([PropTypes.node, PropTypes.element, PropTypes.func])
+        .isRequired,
       removeOnUnmount: PropTypes.bool,
       normalize: PropTypes.func,
     };
@@ -92,16 +92,11 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       }
 
       // Write initial data to store
-
       this.state = {
         field: map(this.initialFieldData),
       };
 
       this.registerField();
-    }
-
-    shouldComponentUpdate() {
-      return Boolean(this.reduxRenderCount > 1);
     }
 
     registerField = () => {
@@ -118,8 +113,6 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         if (currentFormData.submitted && !getIn(nextFieldData, ['touched'])) {
           this.context._reformRedux.field.setFieldTouched(this.props.name, true);
         }
-
-        this.reduxRenderCount += 1;
 
         if (!is(currentFieldData, nextFieldData)) {
           this.setState({
@@ -154,21 +147,21 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       this.context._reformRedux.form.unregisterField(this.props.name, this.props.removeOnUnmount);
     }
 
-    componentWillReceiveProps(nextProps: ComponentProps) {
+    componentDidUpdate(prevProps: ComponentProps) {
       // Update value only for single fields
       if (this.context._reformRedux.form.fieldsCount[this.props.name] > 1) {
         return;
       }
 
-      if (nextProps.value !== undefined && !is(map(this.props.value), map(nextProps.value))) {
-        this.changeFieldValue(nextProps.value);
+      if (this.props.value !== undefined && !is(this.props.value, prevProps.value)) {
+        return this.changeFieldValue(this.props.value);
       }
 
       if (
         ['radio', 'checkbox'].indexOf(this.props.type) !== -1 &&
-        this.props.checked !== nextProps.checked
+        this.props.checked !== prevProps.checked
       ) {
-        this.changeFieldValue(nextProps.checked ? nextProps.value : '');
+        return this.changeFieldValue(this.props.checked ? this.props.value : '');
       }
     }
 
