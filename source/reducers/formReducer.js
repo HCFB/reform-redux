@@ -35,7 +35,7 @@ import type {
   SetFieldsTouched,
   RemoveField,
 } from '../types/Field';
-import type { FormInitialisation, SetFormSubmitting, UpdateForm } from '../types/Form';
+import type { FormInitialisation, SetFormSubmitting, UpdateForm, ResetForm } from '../types/Form';
 import type { DataFunctions } from '../types/dataFunctions';
 
 export const createFormReducer: Function = ({
@@ -49,6 +49,7 @@ export const createFormReducer: Function = ({
   listSize,
   keys,
   list,
+  isList,
 }: DataFunctions) => {
   const initialState: State = fromJS({
     valid: true,
@@ -59,21 +60,41 @@ export const createFormReducer: Function = ({
     fields: map({}),
   });
   let initialFormState: State = map(initialState);
+  let emptyFormState: State = map(initialState);
 
   const reducers: {
     [reducerName: string]: (state: State, action?: Action) => State,
   } = {
-    [getReduxConst(RESET_FORM)]: (): State => map(initialFormState),
+    [getReduxConst(RESET_FORM)]: (state: State, action: ResetForm): State => {
+      return action.state === 'initial' ? map(initialFormState) : map(emptyFormState);
+    },
     [getReduxConst(RESET_FIELD)]: (state: State, action: ResetField): State => {
       const newState: State = map(state);
+      const resetToState: State = action.state === 'initial' ? initialFormState : emptyFormState;
 
       if (hasIn(newState, ['fields', action.fieldName])) {
         return setIn(
           newState,
           ['fields', action.fieldName],
-          getIn(initialFormState, ['fields', action.fieldName]),
+          getIn(resetToState, ['fields', action.fieldName]),
         );
       }
+
+      return newState;
+    },
+    [getReduxConst(RESET_FIELDS)]: (state: State, action: ResetFields): State => {
+      let newState = map(state);
+      const resetToState: State = action.state === 'initial' ? initialFormState : emptyFormState;
+
+      action.fieldsNames.forEach((fieldName: FieldName) => {
+        if (hasIn(newState, ['fields', fieldName])) {
+          newState = setIn(
+            newState,
+            ['fields', fieldName],
+            getIn(resetToState, ['fields', fieldName]),
+          );
+        }
+      });
 
       return newState;
     },
@@ -83,21 +104,6 @@ export const createFormReducer: Function = ({
       if (hasIn(newState, ['fields', action.fieldName])) {
         return deleteIn(newState, ['fields', action.fieldName]);
       }
-
-      return newState;
-    },
-    [getReduxConst(RESET_FIELDS)]: (state: State, action: ResetFields): State => {
-      let newState = map(state);
-
-      action.fieldsNames.forEach((fieldName: FieldName) => {
-        if (hasIn(newState, ['fields', fieldName])) {
-          newState = setIn(
-            newState,
-            ['fields', fieldName],
-            getIn(initialFormState, ['fields', fieldName]),
-          );
-        }
-      });
 
       return newState;
     },
@@ -130,10 +136,41 @@ export const createFormReducer: Function = ({
       return setIn(newState, ['submitting'], action.submitting);
     },
     [getReduxConst(FORM_INITIALISATION)]: (state: State, action: FormInitialisation): State => {
+      const fields = map(action.fields);
+      const touched: boolean = keys(fields).some((fieldKey: string) =>
+        getIn(fields, [fieldKey, 'touched']),
+      );
+      const changed: boolean = keys(fields).some((fieldKey: string) =>
+        getIn(fields, [fieldKey, 'changed']),
+      );
+
       initialFormState = (merge(state, {
-        fields: map(action.fields),
+        fields: map(fields),
         valid: true,
+        touched,
+        changed,
       }): any);
+
+      const emptyFields: FieldsData = keys(fields).reduce((accumulator, emptyFieldKey: string) => {
+        return merge(
+          accumulator,
+          map({
+            [emptyFieldKey]: map({
+              value: isList(getIn(fields, [emptyFieldKey, 'value'])) ? list([]) : '',
+              valid: true,
+              changed: false,
+              touched: false,
+              errors: list([]),
+              disabled: false,
+            }),
+          }),
+        );
+      }, map({}));
+
+      emptyFormState = merge(state, {
+        fields: map(emptyFields),
+        valid: true,
+      });
 
       return map(initialFormState);
     },

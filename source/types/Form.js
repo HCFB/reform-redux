@@ -1,5 +1,6 @@
 import type { Element } from 'react';
 import type { FieldsData, FieldValidateProp, FieldsCount, FieldName } from './Field';
+import type { ResetState } from './formReducer';
 
 export type ReFormRedux = {
   _reformRedux: {
@@ -72,4 +73,5 @@ export type SetFormSubmitting = {
 export type ResetForm = {
   type: string,
   formName: string,
+  state?: ResetState,
 };

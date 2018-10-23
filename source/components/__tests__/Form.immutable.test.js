@@ -45,7 +45,6 @@ describe('components / Form.immutable', () => {
             'registerField',
             'unregisterField',
             'resetForm',
-            'updateForm',
           ]),
         );
 

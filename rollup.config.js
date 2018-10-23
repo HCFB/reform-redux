@@ -5,7 +5,16 @@ import { minify } from 'uglify-es';
 import nodeResolve from 'rollup-plugin-node-resolve';
 
 const common = {
-  external: ['react', 'prop-types', 'immutable', 'redux'],
+  external: [
+    'react',
+    'prop-types',
+    'immutable',
+    'redux',
+    // polyfills
+    'core-js/modules/web.timers',
+    'core-js/modules/web.dom.iterable',
+    'core-js/modules/web.immediate',
+  ],
   plugins: [
     babel({
       exclude: 'node_modules/**',
@@ -14,7 +23,8 @@ const common = {
         [
           '@babel/preset-env',
           {
-            targets: 'last 2 version',
+            targets: 'last 3 Chrome versions',
+            useBuiltIns: 'entry',
           },
         ],
         '@babel/preset-flow',

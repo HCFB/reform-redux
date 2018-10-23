@@ -26,6 +26,7 @@ import type {
   SetFieldTouched,
   SetFieldsTouched,
 } from '../types/Field';
+import type { ResetState } from '../types/formReducer';
 import { getReduxConst } from '../utils/common';
 
 export const setFieldTouched: Function = (
@@ -54,19 +55,26 @@ export const removeField: Function = (formName: string, fieldName: FieldName): R
   fieldName,
 });
 
-export const resetField: Function = (formName: string, fieldName: FieldName): ResetField => ({
+export const resetField: Function = (
+  formName: string,
+  fieldName: FieldName,
+  state?: ResetState,
+): ResetField => ({
   type: getReduxConst(RESET_FIELD),
   formName,
   fieldName,
+  state,
 });
 
 export const resetFields: Function = (
   formName: string,
   fieldsNames: Array<FieldName>,
+  state?: ResetState,
 ): ResetFields => ({
   type: getReduxConst(RESET_FIELDS),
   formName,
   fieldsNames,
+  state,
 });
 
 export const setFieldDisabled: Function = (

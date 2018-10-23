@@ -136,10 +136,6 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         multiple,
         component,
       });
-
-      if (this.context._reformRedux.form.initialized) {
-        this.context._reformRedux.form.updateForm();
-      }
     };
 
     componentWillUnmount() {

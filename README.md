@@ -78,7 +78,7 @@ The Form component is a simple wrapper for the React `<form>`.
 | onSubmitFailed | (errorFields: FieldsData, fields: FieldsData, event: Event) => any | no       | Function which will trigger after unsuccessfull submit the form.         |
 | onSubmit       | (fields: FieldsData, event: Event) => any                          | no       | Function which will trigger after successfull submit the form.           |
 
-### Flow types
+## Flow types
 
 ```
 type FieldName = string | number;
@@ -95,6 +95,8 @@ type FieldData = {
   disabled: boolean,
   changed: boolean,
 };
+
+type ResetState = 'initial' | 'empty';
 ```
 
 ## Field
@@ -153,7 +155,7 @@ If you need to disable your submit button when form is submitting or reset form 
 
 ## Containers
 
-## selectFormData
+### selectFormData
 
 Component wrapper which pass fields data to wrapped component through props.
 
@@ -261,6 +263,7 @@ import { resetField } from 'reform-redux';
 store.dispatch(resetField(
   formName: string,
   fieldName: FieldName,
+  state?: ResetState
 ));
 ```
 
@@ -274,6 +277,7 @@ import { resetFields } from 'reform-redux';
 store.dispatch(resetFields(
   formName: string,
   fieldsNames: Array<FieldName>,
+  state?: ResetState
 ));
 ```
 
@@ -286,6 +290,7 @@ import { resetForm } from 'reform-redux';
 
 store.dispatch(resetForm(
   formName: string,
+  state?: ResetState
 ));
 ```
 
@@ -325,12 +330,10 @@ _reformRedux: {
     form: {
       name: string,
       path: string,
-      initialized: boolean,
       registerField: Function,
       fieldsCount: { [fieldName: FieldName]: number },
       unregisterField: Function,
       resetForm: Function,
-      updateForm: Function,
     },
     field: {
       setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function,
@@ -341,8 +344,8 @@ _reformRedux: {
       setFieldsErrors: (fieldName: FieldName, fieldsErrors: { [fieldName: FieldName]: Array<string> }) => Function,
       setFieldDisabled: (fieldName: FieldName, disabled: boolean) => Function,
       setFieldsDisabled: (fieldName: FieldName, disabledFields: { [fieldName: FieldName]: boolean }) => Function,
-      resetField: (fieldName: FieldName) => Function,
-      resetFields: (fieldsNames: Array<FieldName>) => Function,
+      resetField: (fieldName: FieldName, state: ResetState) => Function,
+      resetFields: (fieldsNames: Array<FieldName>, state: ResetState) => Function,
     },
   }
 ```

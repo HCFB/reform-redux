@@ -196,6 +196,8 @@ describe('reducers / formReducer.immutable', () => {
   });
 
   it('RESET_FIELDS', () => {
+    expect.assertions(2);
+
     const action = immutableReducer('form');
     let newState = action(state, {
       type: getReduxConst(FORM_INITIALISATION),
@@ -221,9 +223,38 @@ describe('reducers / formReducer.immutable', () => {
       type: getReduxConst(RESET_FIELDS),
       formName: 'form',
       fieldsNames: ['field'],
+      state: 'initial',
     });
 
     expect(getIn(newState, ['fields', 'field', 'value'])).toBe('initial');
+
+    newState = action(state, {
+      type: getReduxConst(FORM_INITIALISATION),
+      formName: 'form',
+      fields: Map({
+        field: Map({
+          disabled: false,
+          value: 'initial',
+          valid: true,
+          errors: List(),
+        }),
+      }),
+    });
+
+    newState = action(newState, {
+      type: getReduxConst(CHANGE_FIELD_VALUE),
+      formName: 'form',
+      fieldName: 'field',
+      fieldValue: 'changed',
+    });
+
+    newState = action(newState, {
+      type: getReduxConst(RESET_FIELDS),
+      formName: 'form',
+      fieldsNames: ['field'],
+    });
+
+    expect(getIn(newState, ['fields', 'field', 'value'])).toBe('');
   });
 
   it('RESET_FIELD', () => {
@@ -252,6 +283,7 @@ describe('reducers / formReducer.immutable', () => {
       type: getReduxConst(RESET_FIELD),
       formName: 'form',
       fieldName: 'field',
+      state: 'initial',
     });
 
     expect(getIn(newState, ['fields', 'field', 'value'])).toBe('initial');
@@ -282,6 +314,7 @@ describe('reducers / formReducer.immutable', () => {
     newState = action(newState, {
       type: getReduxConst(RESET_FORM),
       formName: 'form',
+      state: 'initial',
     });
 
     expect(getIn(newState, ['fields', 'field', 'value'])).toBe('initial');

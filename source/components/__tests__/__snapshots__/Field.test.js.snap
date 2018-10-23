@@ -180,7 +180,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -188,7 +187,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -218,7 +216,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -226,7 +223,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -260,7 +256,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -268,7 +263,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -459,7 +453,6 @@ ReactWrapper {
                     "fieldsCount": Object {
                       "name": 1,
                     },
-                    "initialized": false,
                     "name": "form",
                     "path": Array [
                       "form",
@@ -467,7 +460,6 @@ ReactWrapper {
                     "registerField": [Function],
                     "resetForm": [Function],
                     "unregisterField": [Function],
-                    "updateForm": [Function],
                   },
                 },
                 "store": Object {
@@ -498,6 +490,7 @@ ReactWrapper {
                   Symbol(observable): [Function],
                 },
               },
+              "createFormUpdater": [Function],
               "decreaseFieldCount": [Function],
               "fieldsCount": Object {
                 "form": Object {
@@ -541,6 +534,7 @@ ReactWrapper {
               "registerField": [Function],
               "state": null,
               "unregisterField": [Function],
+              "updateForm": [Function],
               "updater": Object {
                 "enqueueForceUpdate": [Function],
                 "enqueueReplaceState": [Function],
@@ -691,7 +685,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -699,7 +692,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -729,7 +721,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -737,7 +728,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -771,7 +761,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -779,7 +768,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -970,7 +958,6 @@ ReactWrapper {
                     "fieldsCount": Object {
                       "name": 1,
                     },
-                    "initialized": false,
                     "name": "form",
                     "path": Array [
                       "form",
@@ -978,7 +965,6 @@ ReactWrapper {
                     "registerField": [Function],
                     "resetForm": [Function],
                     "unregisterField": [Function],
-                    "updateForm": [Function],
                   },
                 },
                 "store": Object {
@@ -1009,6 +995,7 @@ ReactWrapper {
                   Symbol(observable): [Function],
                 },
               },
+              "createFormUpdater": [Function],
               "decreaseFieldCount": [Function],
               "fieldsCount": Object {
                 "form": Object {
@@ -1052,6 +1039,7 @@ ReactWrapper {
               "registerField": [Function],
               "state": null,
               "unregisterField": [Function],
+              "updateForm": [Function],
               "updater": Object {
                 "enqueueForceUpdate": [Function],
                 "enqueueReplaceState": [Function],
@@ -1356,7 +1344,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -1364,7 +1351,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -1394,7 +1380,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -1402,7 +1387,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -1436,7 +1420,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -1444,7 +1427,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -1635,7 +1617,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -1643,7 +1624,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -1674,6 +1654,7 @@ ReactWrapper {
                     Symbol(observable): [Function],
                   },
                 },
+                "createFormUpdater": [Function],
                 "decreaseFieldCount": [Function],
                 "fieldsCount": Object {
                   "form": Object {
@@ -1717,6 +1698,7 @@ ReactWrapper {
                 "registerField": [Function],
                 "state": null,
                 "unregisterField": [Function],
+                "updateForm": [Function],
                 "updater": Object {
                   "enqueueForceUpdate": [Function],
                   "enqueueReplaceState": [Function],
@@ -1991,7 +1973,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -1999,7 +1980,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -2029,7 +2009,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -2037,7 +2016,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -2071,7 +2049,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -2079,7 +2056,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -2270,7 +2246,6 @@ ReactWrapper {
                   "fieldsCount": Object {
                     "name": 1,
                   },
-                  "initialized": false,
                   "name": "form",
                   "path": Array [
                     "form",
@@ -2278,7 +2253,6 @@ ReactWrapper {
                   "registerField": [Function],
                   "resetForm": [Function],
                   "unregisterField": [Function],
-                  "updateForm": [Function],
                 },
               },
               "store": Object {
@@ -2309,6 +2283,7 @@ ReactWrapper {
                 Symbol(observable): [Function],
               },
             },
+            "createFormUpdater": [Function],
             "decreaseFieldCount": [Function],
             "fieldsCount": Object {
               "form": Object {
@@ -2352,6 +2327,7 @@ ReactWrapper {
             "registerField": [Function],
             "state": null,
             "unregisterField": [Function],
+            "updateForm": [Function],
             "updater": Object {
               "enqueueForceUpdate": [Function],
               "enqueueReplaceState": [Function],
@@ -2504,7 +2480,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -2512,7 +2487,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -2542,7 +2516,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -2550,7 +2523,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -2584,7 +2556,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -2592,7 +2563,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -2783,7 +2753,6 @@ ReactWrapper {
                   "fieldsCount": Object {
                     "name": 1,
                   },
-                  "initialized": false,
                   "name": "form",
                   "path": Array [
                     "form",
@@ -2791,7 +2760,6 @@ ReactWrapper {
                   "registerField": [Function],
                   "resetForm": [Function],
                   "unregisterField": [Function],
-                  "updateForm": [Function],
                 },
               },
               "store": Object {
@@ -2822,6 +2790,7 @@ ReactWrapper {
                 Symbol(observable): [Function],
               },
             },
+            "createFormUpdater": [Function],
             "decreaseFieldCount": [Function],
             "fieldsCount": Object {
               "form": Object {
@@ -2865,6 +2834,7 @@ ReactWrapper {
             "registerField": [Function],
             "state": null,
             "unregisterField": [Function],
+            "updateForm": [Function],
             "updater": Object {
               "enqueueForceUpdate": [Function],
               "enqueueReplaceState": [Function],
@@ -3015,7 +2985,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -3023,7 +2992,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -3053,7 +3021,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -3061,7 +3028,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -3095,7 +3061,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -3103,7 +3068,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -3294,7 +3258,6 @@ ReactWrapper {
                   "fieldsCount": Object {
                     "name": 1,
                   },
-                  "initialized": false,
                   "name": "form",
                   "path": Array [
                     "form",
@@ -3302,7 +3265,6 @@ ReactWrapper {
                   "registerField": [Function],
                   "resetForm": [Function],
                   "unregisterField": [Function],
-                  "updateForm": [Function],
                 },
               },
               "store": Object {
@@ -3333,6 +3295,7 @@ ReactWrapper {
                 Symbol(observable): [Function],
               },
             },
+            "createFormUpdater": [Function],
             "decreaseFieldCount": [Function],
             "fieldsCount": Object {
               "form": Object {
@@ -3376,6 +3339,7 @@ ReactWrapper {
             "registerField": [Function],
             "state": null,
             "unregisterField": [Function],
+            "updateForm": [Function],
             "updater": Object {
               "enqueueForceUpdate": [Function],
               "enqueueReplaceState": [Function],
@@ -3553,7 +3517,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -3561,7 +3524,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -3591,7 +3553,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -3599,7 +3560,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -3633,7 +3593,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -3641,7 +3600,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -3832,7 +3790,6 @@ ReactWrapper {
                     "fieldsCount": Object {
                       "name": 1,
                     },
-                    "initialized": false,
                     "name": "form",
                     "path": Array [
                       "form",
@@ -3840,7 +3797,6 @@ ReactWrapper {
                     "registerField": [Function],
                     "resetForm": [Function],
                     "unregisterField": [Function],
-                    "updateForm": [Function],
                   },
                 },
                 "store": Object {
@@ -3871,6 +3827,7 @@ ReactWrapper {
                   Symbol(observable): [Function],
                 },
               },
+              "createFormUpdater": [Function],
               "decreaseFieldCount": [Function],
               "fieldsCount": Object {
                 "form": Object {
@@ -3914,6 +3871,7 @@ ReactWrapper {
               "registerField": [Function],
               "state": null,
               "unregisterField": [Function],
+              "updateForm": [Function],
               "updater": Object {
                 "enqueueForceUpdate": [Function],
                 "enqueueReplaceState": [Function],
@@ -4064,7 +4022,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -4072,7 +4029,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -4102,7 +4058,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -4110,7 +4065,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -4144,7 +4098,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -4152,7 +4105,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -4343,7 +4295,6 @@ ReactWrapper {
                     "fieldsCount": Object {
                       "name": 1,
                     },
-                    "initialized": false,
                     "name": "form",
                     "path": Array [
                       "form",
@@ -4351,7 +4302,6 @@ ReactWrapper {
                     "registerField": [Function],
                     "resetForm": [Function],
                     "unregisterField": [Function],
-                    "updateForm": [Function],
                   },
                 },
                 "store": Object {
@@ -4382,6 +4332,7 @@ ReactWrapper {
                   Symbol(observable): [Function],
                 },
               },
+              "createFormUpdater": [Function],
               "decreaseFieldCount": [Function],
               "fieldsCount": Object {
                 "form": Object {
@@ -4425,6 +4376,7 @@ ReactWrapper {
               "registerField": [Function],
               "state": null,
               "unregisterField": [Function],
+              "updateForm": [Function],
               "updater": Object {
                 "enqueueForceUpdate": [Function],
                 "enqueueReplaceState": [Function],
@@ -4729,7 +4681,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -4737,7 +4688,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -4767,7 +4717,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -4775,7 +4724,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -4809,7 +4757,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -4817,7 +4764,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -5008,7 +4954,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -5016,7 +4961,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -5047,6 +4991,7 @@ ReactWrapper {
                     Symbol(observable): [Function],
                   },
                 },
+                "createFormUpdater": [Function],
                 "decreaseFieldCount": [Function],
                 "fieldsCount": Object {
                   "form": Object {
@@ -5090,6 +5035,7 @@ ReactWrapper {
                 "registerField": [Function],
                 "state": null,
                 "unregisterField": [Function],
+                "updateForm": [Function],
                 "updater": Object {
                   "enqueueForceUpdate": [Function],
                   "enqueueReplaceState": [Function],
@@ -5288,7 +5234,6 @@ ReactWrapper {
               "fieldsCount": Object {
                 "name": 1,
               },
-              "initialized": false,
               "name": "form",
               "path": Array [
                 "form",
@@ -5296,7 +5241,6 @@ ReactWrapper {
               "registerField": [Function],
               "resetForm": [Function],
               "unregisterField": [Function],
-              "updateForm": [Function],
             },
           },
           "store": Object {
@@ -6110,7 +6054,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -6118,7 +6061,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -6148,7 +6090,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -6156,7 +6097,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -6190,7 +6130,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -6198,7 +6137,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -7034,6 +6972,7 @@ ReactWrapper {
             Symbol(observable): [Function],
           },
         },
+        "createFormUpdater": [Function],
         "decreaseFieldCount": [Function],
         "fieldsCount": Object {
           "form": Object {
@@ -7077,6 +7016,7 @@ ReactWrapper {
         "registerField": [Function],
         "state": null,
         "unregisterField": [Function],
+        "updateForm": [Function],
         "updater": Object {
           "enqueueForceUpdate": [Function],
           "enqueueReplaceState": [Function],
@@ -7143,7 +7083,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -7151,7 +7090,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -7181,7 +7119,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -7189,7 +7126,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -8622,7 +8558,6 @@ ReactWrapper {
                                 "fieldsCount": Object {
                                   "name": 1,
                                 },
-                                "initialized": false,
                                 "name": "form",
                                 "path": Array [
                                   "form",
@@ -8630,7 +8565,6 @@ ReactWrapper {
                                 "registerField": [Function],
                                 "resetForm": [Function],
                                 "unregisterField": [Function],
-                                "updateForm": [Function],
                               },
                             },
                             "store": Object {
@@ -8661,6 +8595,7 @@ ReactWrapper {
                               Symbol(observable): [Function],
                             },
                           },
+                          "createFormUpdater": [Function],
                           "decreaseFieldCount": [Function],
                           "fieldsCount": Object {
                             "form": Object {
@@ -8704,6 +8639,7 @@ ReactWrapper {
                           "registerField": [Function],
                           "state": null,
                           "unregisterField": [Function],
+                          "updateForm": [Function],
                           "updater": Object {
                             "enqueueForceUpdate": [Function],
                             "enqueueReplaceState": [Function],
@@ -10134,7 +10070,6 @@ ReactWrapper {
                                 "fieldsCount": Object {
                                   "name": 1,
                                 },
-                                "initialized": false,
                                 "name": "form",
                                 "path": Array [
                                   "form",
@@ -10142,7 +10077,6 @@ ReactWrapper {
                                 "registerField": [Function],
                                 "resetForm": [Function],
                                 "unregisterField": [Function],
-                                "updateForm": [Function],
                               },
                             },
                             "store": Object {
@@ -10173,6 +10107,7 @@ ReactWrapper {
                               Symbol(observable): [Function],
                             },
                           },
+                          "createFormUpdater": [Function],
                           "decreaseFieldCount": [Function],
                           "fieldsCount": Object {
                             "form": Object {
@@ -10216,6 +10151,7 @@ ReactWrapper {
                           "registerField": [Function],
                           "state": null,
                           "unregisterField": [Function],
+                          "updateForm": [Function],
                           "updater": Object {
                             "enqueueForceUpdate": [Function],
                             "enqueueReplaceState": [Function],
@@ -11755,7 +11691,6 @@ ReactWrapper {
                                 "fieldsCount": Object {
                                   "name": 1,
                                 },
-                                "initialized": false,
                                 "name": "form",
                                 "path": Array [
                                   "form",
@@ -11763,7 +11698,6 @@ ReactWrapper {
                                 "registerField": [Function],
                                 "resetForm": [Function],
                                 "unregisterField": [Function],
-                                "updateForm": [Function],
                               },
                             },
                             "store": Object {
@@ -11794,6 +11728,7 @@ ReactWrapper {
                               Symbol(observable): [Function],
                             },
                           },
+                          "createFormUpdater": [Function],
                           "decreaseFieldCount": [Function],
                           "fieldsCount": Object {
                             "form": Object {
@@ -11837,6 +11772,7 @@ ReactWrapper {
                           "registerField": [Function],
                           "state": null,
                           "unregisterField": [Function],
+                          "updateForm": [Function],
                           "updater": Object {
                             "enqueueForceUpdate": [Function],
                             "enqueueReplaceState": [Function],
@@ -13267,7 +13203,6 @@ ReactWrapper {
                                 "fieldsCount": Object {
                                   "name": 1,
                                 },
-                                "initialized": false,
                                 "name": "form",
                                 "path": Array [
                                   "form",
@@ -13275,7 +13210,6 @@ ReactWrapper {
                                 "registerField": [Function],
                                 "resetForm": [Function],
                                 "unregisterField": [Function],
-                                "updateForm": [Function],
                               },
                             },
                             "store": Object {
@@ -13306,6 +13240,7 @@ ReactWrapper {
                               Symbol(observable): [Function],
                             },
                           },
+                          "createFormUpdater": [Function],
                           "decreaseFieldCount": [Function],
                           "fieldsCount": Object {
                             "form": Object {
@@ -13349,6 +13284,7 @@ ReactWrapper {
                           "registerField": [Function],
                           "state": null,
                           "unregisterField": [Function],
+                          "updateForm": [Function],
                           "updater": Object {
                             "enqueueForceUpdate": [Function],
                             "enqueueReplaceState": [Function],
@@ -13414,7 +13350,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -13422,7 +13357,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -13682,7 +13616,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -13690,7 +13623,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -13720,7 +13652,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -13728,7 +13659,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -13762,7 +13692,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -13770,7 +13699,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -13961,7 +13889,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -13969,7 +13896,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -14000,6 +13926,7 @@ ReactWrapper {
                     Symbol(observable): [Function],
                   },
                 },
+                "createFormUpdater": [Function],
                 "decreaseFieldCount": [Function],
                 "fieldsCount": Object {
                   "form": Object {
@@ -14043,6 +13970,7 @@ ReactWrapper {
                 "registerField": [Function],
                 "state": null,
                 "unregisterField": [Function],
+                "updateForm": [Function],
                 "updater": Object {
                   "enqueueForceUpdate": [Function],
                   "enqueueReplaceState": [Function],
@@ -14193,7 +14121,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -14201,7 +14128,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -14231,7 +14157,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -14239,7 +14164,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -14273,7 +14197,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -14281,7 +14204,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -14472,7 +14394,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -14480,7 +14401,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -14511,6 +14431,7 @@ ReactWrapper {
                     Symbol(observable): [Function],
                   },
                 },
+                "createFormUpdater": [Function],
                 "decreaseFieldCount": [Function],
                 "fieldsCount": Object {
                   "form": Object {
@@ -14554,6 +14475,7 @@ ReactWrapper {
                 "registerField": [Function],
                 "state": null,
                 "unregisterField": [Function],
+                "updateForm": [Function],
                 "updater": Object {
                   "enqueueForceUpdate": [Function],
                   "enqueueReplaceState": [Function],
@@ -14858,7 +14780,6 @@ ReactWrapper {
                               "fieldsCount": Object {
                                 "name": 1,
                               },
-                              "initialized": false,
                               "name": "form",
                               "path": Array [
                                 "form",
@@ -14866,7 +14787,6 @@ ReactWrapper {
                               "registerField": [Function],
                               "resetForm": [Function],
                               "unregisterField": [Function],
-                              "updateForm": [Function],
                             },
                           },
                           "store": Object {
@@ -14896,7 +14816,6 @@ ReactWrapper {
                               "fieldsCount": Object {
                                 "name": 1,
                               },
-                              "initialized": false,
                               "name": "form",
                               "path": Array [
                                 "form",
@@ -14904,7 +14823,6 @@ ReactWrapper {
                               "registerField": [Function],
                               "resetForm": [Function],
                               "unregisterField": [Function],
-                              "updateForm": [Function],
                             },
                           },
                           "store": Object {
@@ -14938,7 +14856,6 @@ ReactWrapper {
                               "fieldsCount": Object {
                                 "name": 1,
                               },
-                              "initialized": false,
                               "name": "form",
                               "path": Array [
                                 "form",
@@ -14946,7 +14863,6 @@ ReactWrapper {
                               "registerField": [Function],
                               "resetForm": [Function],
                               "unregisterField": [Function],
-                              "updateForm": [Function],
                             },
                           },
                           "store": Object {
@@ -15137,7 +15053,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -15145,7 +15060,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -15176,6 +15090,7 @@ ReactWrapper {
                       Symbol(observable): [Function],
                     },
                   },
+                  "createFormUpdater": [Function],
                   "decreaseFieldCount": [Function],
                   "fieldsCount": Object {
                     "form": Object {
@@ -15219,6 +15134,7 @@ ReactWrapper {
                   "registerField": [Function],
                   "state": null,
                   "unregisterField": [Function],
+                  "updateForm": [Function],
                   "updater": Object {
                     "enqueueForceUpdate": [Function],
                     "enqueueReplaceState": [Function],
@@ -15493,7 +15409,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -15501,7 +15416,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -15531,7 +15445,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -15539,7 +15452,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -15573,7 +15485,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -15581,7 +15492,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -15772,7 +15682,6 @@ ReactWrapper {
                     "fieldsCount": Object {
                       "name": 1,
                     },
-                    "initialized": false,
                     "name": "form",
                     "path": Array [
                       "form",
@@ -15780,7 +15689,6 @@ ReactWrapper {
                     "registerField": [Function],
                     "resetForm": [Function],
                     "unregisterField": [Function],
-                    "updateForm": [Function],
                   },
                 },
                 "store": Object {
@@ -15811,6 +15719,7 @@ ReactWrapper {
                   Symbol(observable): [Function],
                 },
               },
+              "createFormUpdater": [Function],
               "decreaseFieldCount": [Function],
               "fieldsCount": Object {
                 "form": Object {
@@ -15854,6 +15763,7 @@ ReactWrapper {
               "registerField": [Function],
               "state": null,
               "unregisterField": [Function],
+              "updateForm": [Function],
               "updater": Object {
                 "enqueueForceUpdate": [Function],
                 "enqueueReplaceState": [Function],
@@ -16006,7 +15916,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -16014,7 +15923,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -16044,7 +15952,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -16052,7 +15959,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -16086,7 +15992,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -16094,7 +15999,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -16285,7 +16189,6 @@ ReactWrapper {
                     "fieldsCount": Object {
                       "name": 1,
                     },
-                    "initialized": false,
                     "name": "form",
                     "path": Array [
                       "form",
@@ -16293,7 +16196,6 @@ ReactWrapper {
                     "registerField": [Function],
                     "resetForm": [Function],
                     "unregisterField": [Function],
-                    "updateForm": [Function],
                   },
                 },
                 "store": Object {
@@ -16324,6 +16226,7 @@ ReactWrapper {
                   Symbol(observable): [Function],
                 },
               },
+              "createFormUpdater": [Function],
               "decreaseFieldCount": [Function],
               "fieldsCount": Object {
                 "form": Object {
@@ -16367,6 +16270,7 @@ ReactWrapper {
               "registerField": [Function],
               "state": null,
               "unregisterField": [Function],
+              "updateForm": [Function],
               "updater": Object {
                 "enqueueForceUpdate": [Function],
                 "enqueueReplaceState": [Function],
@@ -16517,7 +16421,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -16525,7 +16428,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -16555,7 +16457,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -16563,7 +16464,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -16597,7 +16497,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -16605,7 +16504,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -16796,7 +16694,6 @@ ReactWrapper {
                     "fieldsCount": Object {
                       "name": 1,
                     },
-                    "initialized": false,
                     "name": "form",
                     "path": Array [
                       "form",
@@ -16804,7 +16701,6 @@ ReactWrapper {
                     "registerField": [Function],
                     "resetForm": [Function],
                     "unregisterField": [Function],
-                    "updateForm": [Function],
                   },
                 },
                 "store": Object {
@@ -16835,6 +16731,7 @@ ReactWrapper {
                   Symbol(observable): [Function],
                 },
               },
+              "createFormUpdater": [Function],
               "decreaseFieldCount": [Function],
               "fieldsCount": Object {
                 "form": Object {
@@ -16878,6 +16775,7 @@ ReactWrapper {
               "registerField": [Function],
               "state": null,
               "unregisterField": [Function],
+              "updateForm": [Function],
               "updater": Object {
                 "enqueueForceUpdate": [Function],
                 "enqueueReplaceState": [Function],
@@ -17055,7 +16953,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -17063,7 +16960,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -17093,7 +16989,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -17101,7 +16996,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -17135,7 +17029,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -17143,7 +17036,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -17334,7 +17226,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -17342,7 +17233,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -17373,6 +17263,7 @@ ReactWrapper {
                     Symbol(observable): [Function],
                   },
                 },
+                "createFormUpdater": [Function],
                 "decreaseFieldCount": [Function],
                 "fieldsCount": Object {
                   "form": Object {
@@ -17416,6 +17307,7 @@ ReactWrapper {
                 "registerField": [Function],
                 "state": null,
                 "unregisterField": [Function],
+                "updateForm": [Function],
                 "updater": Object {
                   "enqueueForceUpdate": [Function],
                   "enqueueReplaceState": [Function],
@@ -17566,7 +17458,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -17574,7 +17465,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -17604,7 +17494,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -17612,7 +17501,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -17646,7 +17534,6 @@ ReactWrapper {
                             "fieldsCount": Object {
                               "name": 1,
                             },
-                            "initialized": false,
                             "name": "form",
                             "path": Array [
                               "form",
@@ -17654,7 +17541,6 @@ ReactWrapper {
                             "registerField": [Function],
                             "resetForm": [Function],
                             "unregisterField": [Function],
-                            "updateForm": [Function],
                           },
                         },
                         "store": Object {
@@ -17845,7 +17731,6 @@ ReactWrapper {
                       "fieldsCount": Object {
                         "name": 1,
                       },
-                      "initialized": false,
                       "name": "form",
                       "path": Array [
                         "form",
@@ -17853,7 +17738,6 @@ ReactWrapper {
                       "registerField": [Function],
                       "resetForm": [Function],
                       "unregisterField": [Function],
-                      "updateForm": [Function],
                     },
                   },
                   "store": Object {
@@ -17884,6 +17768,7 @@ ReactWrapper {
                     Symbol(observable): [Function],
                   },
                 },
+                "createFormUpdater": [Function],
                 "decreaseFieldCount": [Function],
                 "fieldsCount": Object {
                   "form": Object {
@@ -17927,6 +17812,7 @@ ReactWrapper {
                 "registerField": [Function],
                 "state": null,
                 "unregisterField": [Function],
+                "updateForm": [Function],
                 "updater": Object {
                   "enqueueForceUpdate": [Function],
                   "enqueueReplaceState": [Function],
@@ -18231,7 +18117,6 @@ ReactWrapper {
                               "fieldsCount": Object {
                                 "name": 1,
                               },
-                              "initialized": false,
                               "name": "form",
                               "path": Array [
                                 "form",
@@ -18239,7 +18124,6 @@ ReactWrapper {
                               "registerField": [Function],
                               "resetForm": [Function],
                               "unregisterField": [Function],
-                              "updateForm": [Function],
                             },
                           },
                           "store": Object {
@@ -18269,7 +18153,6 @@ ReactWrapper {
                               "fieldsCount": Object {
                                 "name": 1,
                               },
-                              "initialized": false,
                               "name": "form",
                               "path": Array [
                                 "form",
@@ -18277,7 +18160,6 @@ ReactWrapper {
                               "registerField": [Function],
                               "resetForm": [Function],
                               "unregisterField": [Function],
-                              "updateForm": [Function],
                             },
                           },
                           "store": Object {
@@ -18311,7 +18193,6 @@ ReactWrapper {
                               "fieldsCount": Object {
                                 "name": 1,
                               },
-                              "initialized": false,
                               "name": "form",
                               "path": Array [
                                 "form",
@@ -18319,7 +18200,6 @@ ReactWrapper {
                               "registerField": [Function],
                               "resetForm": [Function],
                               "unregisterField": [Function],
-                              "updateForm": [Function],
                             },
                           },
                           "store": Object {
@@ -18510,7 +18390,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -18518,7 +18397,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -18549,6 +18427,7 @@ ReactWrapper {
                       Symbol(observable): [Function],
                     },
                   },
+                  "createFormUpdater": [Function],
                   "decreaseFieldCount": [Function],
                   "fieldsCount": Object {
                     "form": Object {
@@ -18592,6 +18471,7 @@ ReactWrapper {
                   "registerField": [Function],
                   "state": null,
                   "unregisterField": [Function],
+                  "updateForm": [Function],
                   "updater": Object {
                     "enqueueForceUpdate": [Function],
                     "enqueueReplaceState": [Function],
@@ -18790,7 +18670,6 @@ ReactWrapper {
                 "fieldsCount": Object {
                   "name": 1,
                 },
-                "initialized": false,
                 "name": "form",
                 "path": Array [
                   "form",
@@ -18798,7 +18677,6 @@ ReactWrapper {
                 "registerField": [Function],
                 "resetForm": [Function],
                 "unregisterField": [Function],
-                "updateForm": [Function],
               },
             },
             "store": Object {
@@ -19612,7 +19490,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -19620,7 +19497,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -19650,7 +19526,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -19658,7 +19533,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -19692,7 +19566,6 @@ ReactWrapper {
                           "fieldsCount": Object {
                             "name": 1,
                           },
-                          "initialized": false,
                           "name": "form",
                           "path": Array [
                             "form",
@@ -19700,7 +19573,6 @@ ReactWrapper {
                           "registerField": [Function],
                           "resetForm": [Function],
                           "unregisterField": [Function],
-                          "updateForm": [Function],
                         },
                       },
                       "store": Object {
@@ -20536,6 +20408,7 @@ ReactWrapper {
               Symbol(observable): [Function],
             },
           },
+          "createFormUpdater": [Function],
           "decreaseFieldCount": [Function],
           "fieldsCount": Object {
             "form": Object {
@@ -20579,6 +20452,7 @@ ReactWrapper {
           "registerField": [Function],
           "state": null,
           "unregisterField": [Function],
+          "updateForm": [Function],
           "updater": Object {
             "enqueueForceUpdate": [Function],
             "enqueueReplaceState": [Function],
@@ -20645,7 +20519,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -20653,7 +20526,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -20683,7 +20555,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -20691,7 +20562,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {
@@ -22124,7 +21994,6 @@ ReactWrapper {
                                   "fieldsCount": Object {
                                     "name": 1,
                                   },
-                                  "initialized": false,
                                   "name": "form",
                                   "path": Array [
                                     "form",
@@ -22132,7 +22001,6 @@ ReactWrapper {
                                   "registerField": [Function],
                                   "resetForm": [Function],
                                   "unregisterField": [Function],
-                                  "updateForm": [Function],
                                 },
                               },
                               "store": Object {
@@ -22163,6 +22031,7 @@ ReactWrapper {
                                 Symbol(observable): [Function],
                               },
                             },
+                            "createFormUpdater": [Function],
                             "decreaseFieldCount": [Function],
                             "fieldsCount": Object {
                               "form": Object {
@@ -22206,6 +22075,7 @@ ReactWrapper {
                             "registerField": [Function],
                             "state": null,
                             "unregisterField": [Function],
+                            "updateForm": [Function],
                             "updater": Object {
                               "enqueueForceUpdate": [Function],
                               "enqueueReplaceState": [Function],
@@ -23636,7 +23506,6 @@ ReactWrapper {
                                   "fieldsCount": Object {
                                     "name": 1,
                                   },
-                                  "initialized": false,
                                   "name": "form",
                                   "path": Array [
                                     "form",
@@ -23644,7 +23513,6 @@ ReactWrapper {
                                   "registerField": [Function],
                                   "resetForm": [Function],
                                   "unregisterField": [Function],
-                                  "updateForm": [Function],
                                 },
                               },
                               "store": Object {
@@ -23675,6 +23543,7 @@ ReactWrapper {
                                 Symbol(observable): [Function],
                               },
                             },
+                            "createFormUpdater": [Function],
                             "decreaseFieldCount": [Function],
                             "fieldsCount": Object {
                               "form": Object {
@@ -23718,6 +23587,7 @@ ReactWrapper {
                             "registerField": [Function],
                             "state": null,
                             "unregisterField": [Function],
+                            "updateForm": [Function],
                             "updater": Object {
                               "enqueueForceUpdate": [Function],
                               "enqueueReplaceState": [Function],
@@ -25257,7 +25127,6 @@ ReactWrapper {
                                   "fieldsCount": Object {
                                     "name": 1,
                                   },
-                                  "initialized": false,
                                   "name": "form",
                                   "path": Array [
                                     "form",
@@ -25265,7 +25134,6 @@ ReactWrapper {
                                   "registerField": [Function],
                                   "resetForm": [Function],
                                   "unregisterField": [Function],
-                                  "updateForm": [Function],
                                 },
                               },
                               "store": Object {
@@ -25296,6 +25164,7 @@ ReactWrapper {
                                 Symbol(observable): [Function],
                               },
                             },
+                            "createFormUpdater": [Function],
                             "decreaseFieldCount": [Function],
                             "fieldsCount": Object {
                               "form": Object {
@@ -25339,6 +25208,7 @@ ReactWrapper {
                             "registerField": [Function],
                             "state": null,
                             "unregisterField": [Function],
+                            "updateForm": [Function],
                             "updater": Object {
                               "enqueueForceUpdate": [Function],
                               "enqueueReplaceState": [Function],
@@ -26769,7 +26639,6 @@ ReactWrapper {
                                   "fieldsCount": Object {
                                     "name": 1,
                                   },
-                                  "initialized": false,
                                   "name": "form",
                                   "path": Array [
                                     "form",
@@ -26777,7 +26646,6 @@ ReactWrapper {
                                   "registerField": [Function],
                                   "resetForm": [Function],
                                   "unregisterField": [Function],
-                                  "updateForm": [Function],
                                 },
                               },
                               "store": Object {
@@ -26808,6 +26676,7 @@ ReactWrapper {
                                 Symbol(observable): [Function],
                               },
                             },
+                            "createFormUpdater": [Function],
                             "decreaseFieldCount": [Function],
                             "fieldsCount": Object {
                               "form": Object {
@@ -26851,6 +26720,7 @@ ReactWrapper {
                             "registerField": [Function],
                             "state": null,
                             "unregisterField": [Function],
+                            "updateForm": [Function],
                             "updater": Object {
                               "enqueueForceUpdate": [Function],
                               "enqueueReplaceState": [Function],
@@ -26916,7 +26786,6 @@ ReactWrapper {
                         "fieldsCount": Object {
                           "name": 1,
                         },
-                        "initialized": false,
                         "name": "form",
                         "path": Array [
                           "form",
@@ -26924,7 +26793,6 @@ ReactWrapper {
                         "registerField": [Function],
                         "resetForm": [Function],
                         "unregisterField": [Function],
-                        "updateForm": [Function],
                       },
                     },
                     "store": Object {

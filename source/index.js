@@ -1,3 +1,5 @@
+import '@babel/polyfill';
+
 import plain from './utils/plainFunctions';
 import { createFormReducer } from './reducers/formReducer';
 import { createFormComponent } from './components/Form';

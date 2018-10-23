@@ -27,7 +27,7 @@ import type {
 } from '../types/Field';
 import type { ComponentCreator } from '../types/common';
 import type { Store } from 'redux';
-import type { State } from '../types/formReducer';
+import type { State, ResetState } from '../types/formReducer';
 import type { DataFunctions } from '../types/dataFunctions';
 
 export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctions) => {
@@ -78,7 +78,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       [formName: string]: FieldsValidate,
     } = {};
 
-    constructor(props: ComponentProps) {
+    constructor(props: ComponentProps, context) {
       super(props);
 
       if (!props.path) {
@@ -91,6 +91,8 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       if (!this.fieldsStack[this.formName]) this.fieldsStack[this.formName] = {};
       if (!this.fieldsCount[this.formName]) this.fieldsCount[this.formName] = {};
       if (!this.fieldsValidateStack[this.formName]) this.fieldsValidateStack[this.formName] = {};
+
+      this.updateForm = this.createFormUpdater(context.store);
     }
 
     getChildContext(): ReFormRedux {
@@ -102,15 +104,10 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
             name: this.formName,
             path: this.path,
             fieldsCount: this.fieldsCount[this.formName],
-            initialized: this.initialized,
             registerField: this.registerField,
             unregisterField: this.unregisterField,
-            resetForm: (): Function => store.dispatch(resetForm(this.formName)),
-            updateForm: debounce(
-              (): Function =>
-                store.dispatch(updateForm(this.formName, this.fieldsStack[this.formName])),
-              250,
-            ),
+            resetForm: (state?: ResetState): Function =>
+              store.dispatch(resetForm(this.formName, state)),
           },
           field: {
             setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function =>
@@ -137,14 +134,20 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
               fieldName: FieldName,
               disabledFields: { [fieldName: FieldName]: boolean },
             ): Function => store.dispatch(setFieldsDisabled(this.formName, disabledFields)),
-            resetField: (fieldName: FieldName): Function =>
-              store.dispatch(resetField(this.formName, fieldName)),
-            resetFields: (fieldsNames: Array<FieldName>): Function =>
-              store.dispatch(resetFields(this.formName, fieldsNames)),
+            resetField: (fieldName: FieldName, state?: ResetState): Function =>
+              store.dispatch(resetField(this.formName, fieldName, state)),
+            resetFields: (fieldsNames: Array<FieldName>, state?: ResetState): Function =>
+              store.dispatch(resetFields(this.formName, fieldsNames, state)),
           },
         },
       };
     }
+
+    createFormUpdater = (store: Store<State, *, *>) =>
+      debounce(
+        (): Function => store.dispatch(updateForm(this.formName, this.fieldsStack[this.formName])),
+        250,
+      );
 
     increaseFieldCount = (fieldName: FieldName) => {
       const fieldsCount: number = this.fieldsCount[this.formName][fieldName] || 0;
@@ -251,6 +254,10 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
 
       this.fieldsStack[this.formName][fieldName] = fieldData;
       this.fieldsValidateStack[this.formName][fieldName] = fieldValidate;
+
+      if (this.initialized) {
+        this.updateForm();
+      }
     };
 
     componentDidMount() {

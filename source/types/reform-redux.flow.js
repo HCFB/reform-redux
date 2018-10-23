@@ -2,6 +2,10 @@
 
 import type { ComponentType } from 'react';
 
+// Default types
+
+type ResetState = 'initial' | 'empty';
+
 declare module 'reform-redux/immutable' {
   // Reducer
   declare export var formReducerCreator: Function;
@@ -40,6 +44,8 @@ declare module 'reform-redux' {
     action: any,
   ) => {
     valid: boolean,
+    changed: boolean,
+    touched: boolean,
     submitted: boolean,
     submitting: boolean,
     fields: {
@@ -127,24 +133,30 @@ declare module 'reform-redux' {
   declare export var resetField: (
     formName: string,
     fieldName: string,
+    state?: ResetState,
   ) => {
     type: string,
     formName: string,
     fieldName: string,
+    state: ResetState,
   };
   declare export var resetFields: (
     formName: string,
     fieldsNames: Array<string>,
+    state?: ResetState,
   ) => {
     type: string,
     formName: string,
     fieldsNames: Array<string>,
+    state: ResetState,
   };
   declare export var resetForm: (
     formName: string,
+    state?: ResetState,
   ) => {
     type: string,
     formName: string,
+    state: ResetState,
   };
 
   // Components

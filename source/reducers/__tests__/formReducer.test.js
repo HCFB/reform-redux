@@ -207,6 +207,7 @@ describe('reducers/formReducer', () => {
   });
 
   it('RESET_FIELDS', () => {
+    expect.assertions(2);
     const action = formReducerCreator('form');
     let newState = action(state, {
       type: getReduxConst(FORM_INITIALISATION),
@@ -232,12 +233,42 @@ describe('reducers/formReducer', () => {
       type: getReduxConst(RESET_FIELDS),
       formName: 'form',
       fieldsNames: ['field'],
+      state: 'initial',
     });
 
     expect(newState.fields.field.value).toBe('initial');
+
+    newState = action(state, {
+      type: getReduxConst(FORM_INITIALISATION),
+      formName: 'form',
+      fields: {
+        field: {
+          disabled: false,
+          value: 'initial',
+          valid: true,
+          errors: [],
+        },
+      },
+    });
+
+    newState = action(newState, {
+      type: getReduxConst(CHANGE_FIELD_VALUE),
+      formName: 'form',
+      fieldName: 'field',
+      fieldValue: 'changed',
+    });
+
+    newState = action(newState, {
+      type: getReduxConst(RESET_FIELDS),
+      formName: 'form',
+      fieldsNames: ['field'],
+    });
+
+    expect(newState.fields.field.value).toBe('');
   });
 
   it('RESET_FIELD', () => {
+    expect.assertions(2);
     const action = formReducerCreator('form');
     let newState = action(state, {
       type: getReduxConst(FORM_INITIALISATION),
@@ -263,12 +294,42 @@ describe('reducers/formReducer', () => {
       type: getReduxConst(RESET_FIELD),
       formName: 'form',
       fieldName: 'field',
+      state: 'initial',
     });
 
     expect(newState.fields.field.value).toBe('initial');
+
+    newState = action(state, {
+      type: getReduxConst(FORM_INITIALISATION),
+      formName: 'form',
+      fields: {
+        field: {
+          disabled: false,
+          value: 'initial',
+          valid: true,
+          errors: [],
+        },
+      },
+    });
+
+    newState = action(newState, {
+      type: getReduxConst(CHANGE_FIELD_VALUE),
+      formName: 'form',
+      fieldName: 'field',
+      fieldValue: 'changed',
+    });
+
+    newState = action(newState, {
+      type: getReduxConst(RESET_FIELD),
+      formName: 'form',
+      fieldName: 'field',
+    });
+
+    expect(newState.fields.field.value).toBe('');
   });
 
   it('RESET_FORM', () => {
+    expect.assertions(2);
     const action = formReducerCreator('form');
     let newState = action(state, {
       type: getReduxConst(FORM_INITIALISATION),
@@ -293,8 +354,36 @@ describe('reducers/formReducer', () => {
     newState = action(newState, {
       type: getReduxConst(RESET_FORM),
       formName: 'form',
+      state: 'initial',
     });
 
     expect(newState.fields.field.value).toBe('initial');
+
+    newState = action(state, {
+      type: getReduxConst(FORM_INITIALISATION),
+      formName: 'form',
+      fields: {
+        field: {
+          disabled: false,
+          value: 'initial',
+          valid: true,
+          errors: [],
+        },
+      },
+    });
+
+    newState = action(newState, {
+      type: getReduxConst(CHANGE_FIELD_VALUE),
+      formName: 'form',
+      fieldName: 'field',
+      fieldValue: 'changed',
+    });
+
+    newState = action(newState, {
+      type: getReduxConst(RESET_FORM),
+      formName: 'form',
+    });
+
+    expect(newState.fields.field.value).toBe('');
   });
 });

@@ -1,3 +1,5 @@
+import '@babel/polyfill';
+
 import immutable from './utils/immutableFunctions';
 import { createFormReducer } from './reducers/formReducer';
 import { createFormComponent } from './components/Form';

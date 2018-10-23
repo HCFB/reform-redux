@@ -11,6 +11,8 @@ import type {
 } from '../types/Field';
 import type { FormInitialisation, ResetForm, UpdateForm, SetFormSubmitting } from '../types/Form';
 
+export type ResetState = 'initial' | 'empty';
+
 export type Action =
   | ResetField
   | ResetFields

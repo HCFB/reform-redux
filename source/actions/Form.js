@@ -4,6 +4,7 @@ import {
   SET_FORM_SUBMITTING,
   UPDATE_FORM,
 } from '../constants/Form';
+import type { ResetState } from '../types/formReducer';
 import { getReduxConst } from '../utils/common';
 import type { FieldsData } from '../types/Field';
 import type { FormInitialisation, SetFormSubmitting, ResetForm, UpdateForm } from '../types/Form';
@@ -32,7 +33,8 @@ export const setFormSubmitting: Function = (
   submitting,
 });
 
-export const resetForm: Function = (formName: string): ResetForm => ({
+export const resetForm: Function = (formName: string, state?: ResetState): ResetForm => ({
   type: getReduxConst(RESET_FORM),
   formName,
+  state,
 });
