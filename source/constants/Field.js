@@ -9,3 +9,5 @@ export const RESET_FIELDS: string = 'RESET_FIELDS';
 export const REMOVE_FIELD: string = 'REMOVE_FIELD';
 export const SET_FIELD_TOUCHED: string = 'SET_FIELD_TOUCHED';
 export const SET_FIELDS_TOUCHED: string = 'SET_FIELDS_TOUCHED';
+export const SET_FIELD_CHANGED: string = 'SET_FIELD_CHANGED';
+export const SET_FIELDS_CHANGED: string = 'SET_FIELDS_CHANGED';

@@ -9,6 +9,8 @@ import {
   SET_FIELDS_ERRORS,
   SET_FIELD_TOUCHED,
   SET_FIELDS_TOUCHED,
+  SET_FIELD_CHANGED,
+  SET_FIELDS_CHANGED,
 } from '../../constants/Field';
 import { getReduxConst } from '../../utils/common';
 import {
@@ -22,6 +24,8 @@ import {
   setFieldsErrors,
   setFieldTouched,
   setFieldsTouched,
+  setFieldChanged,
+  setFieldsChanged,
 } from '../Field';
 
 describe('actions / Field', () => {
@@ -48,6 +52,29 @@ describe('actions / Field', () => {
       type: getReduxConst(SET_FIELDS_TOUCHED),
       formName,
       touchedFields,
+    });
+  });
+
+  it('setFieldChanged', () => {
+    const fieldChanged = true;
+    const actionResult = setFieldChanged(formName, fieldName, fieldChanged);
+
+    expect(actionResult).toEqual({
+      type: getReduxConst(SET_FIELD_CHANGED),
+      formName,
+      fieldName,
+      fieldChanged,
+    });
+  });
+
+  it('setFieldsChanged', () => {
+    const changedFields = { test: true };
+    const actionResult = setFieldsChanged(formName, changedFields);
+
+    expect(actionResult).toEqual({
+      type: getReduxConst(SET_FIELDS_CHANGED),
+      formName,
+      changedFields,
     });
   });
 

@@ -1,6 +1,7 @@
 import {
   FORM_INITIALISATION,
   RESET_FORM,
+  SET_FORM_SUBMITTED,
   SET_FORM_SUBMITTING,
   UPDATE_FORM,
 } from '../constants/Form';
@@ -16,6 +17,8 @@ import {
   RESET_FIELDS,
   SET_FIELD_TOUCHED,
   SET_FIELDS_TOUCHED,
+  SET_FIELD_CHANGED,
+  SET_FIELDS_CHANGED,
 } from '../constants/Field';
 import { getReduxConst } from '../utils/common';
 import type { State, Action } from '../types/formReducer';
@@ -34,6 +37,9 @@ import type {
   SetFieldTouched,
   SetFieldsTouched,
   RemoveField,
+  SetFieldsChanged,
+  SetFieldChanged,
+  SetFormSubmitted,
 } from '../types/Field';
 import type { FormInitialisation, SetFormSubmitting, UpdateForm, ResetForm } from '../types/Form';
 import type { DataFunctions } from '../types/dataFunctions';
@@ -131,8 +137,6 @@ export const createFormReducer: Function = ({
     [getReduxConst(SET_FORM_SUBMITTING)]: (state: State, action: SetFormSubmitting): State => {
       let newState: State = map(state);
 
-      if (!action.submitting) newState = setIn(newState, ['submitted'], true);
-
       return setIn(newState, ['submitting'], action.submitting);
     },
     [getReduxConst(FORM_INITIALISATION)]: (state: State, action: FormInitialisation): State => {
@@ -229,12 +233,16 @@ export const createFormReducer: Function = ({
       let newState: State = map(state);
 
       if (hasIn(state, ['fields', action.fieldName])) {
-        // Change form
-        newState = setIn(newState, ['touched'], true);
-
         // Change field
         newState = setIn(newState, ['fields', action.fieldName, 'touched'], action.fieldTouched);
       }
+
+      // Change form
+      const fields = getIn(newState, ['fields']);
+      const touched = Boolean(
+        keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'touched'])),
+      );
+      newState = setIn(newState, ['touched'], touched);
 
       return newState;
     },
@@ -242,9 +250,6 @@ export const createFormReducer: Function = ({
       let newState: State = map(state);
 
       keys(action.touchedFields).forEach((touchedField: string) => {
-        // Change form
-        newState = setIn(newState, ['touched'], true);
-
         // Change field
         newState = setIn(
           newState,
@@ -252,6 +257,51 @@ export const createFormReducer: Function = ({
           getIn(action.touchedFields, [touchedField]),
         );
       });
+
+      // Change form
+      const fields = getIn(newState, ['fields']);
+      const touched = Boolean(
+        keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'touched'])),
+      );
+      newState = setIn(newState, ['touched'], touched);
+
+      return newState;
+    },
+    [getReduxConst(SET_FIELD_CHANGED)]: (state: State, action: SetFieldChanged): State => {
+      let newState: State = map(state);
+
+      if (hasIn(state, ['fields', action.fieldName])) {
+        // Change field
+        newState = setIn(newState, ['fields', action.fieldName, 'changed'], action.fieldChanged);
+      }
+
+      // Change form
+      const fields = getIn(newState, ['fields']);
+      const changed = Boolean(
+        keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'changed'])),
+      );
+      newState = setIn(newState, ['changed'], changed);
+
+      return newState;
+    },
+    [getReduxConst(SET_FIELDS_CHANGED)]: (state: State, action: SetFieldsChanged): State => {
+      let newState: State = map(state);
+
+      keys(action.changedFields).forEach((changedField: string) => {
+        // Change field
+        newState = setIn(
+          newState,
+          ['fields', changedField, 'changed'],
+          getIn(action.changedFields, [changedField]),
+        );
+      });
+
+      // Change form
+      const fields = getIn(newState, ['fields']);
+      const changed = Boolean(
+        keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'changed'])),
+      );
+      newState = setIn(newState, ['changed'], changed);
 
       return newState;
     },
@@ -306,6 +356,11 @@ export const createFormReducer: Function = ({
 
       newState = setIn(newState, ['valid'], formValid);
 
+      return newState;
+    },
+    [getReduxConst(SET_FORM_SUBMITTED)]: (state: State, action: SetFormSubmitted): State => {
+      let newState: State = map(state);
+      newState = setIn(newState, ['submitted'], action.submitted);
       return newState;
     },
   };

@@ -281,6 +281,19 @@ store.dispatch(resetFields(
 ));
 ```
 
+### setFormSubmitted
+
+Set form submitted.
+
+```javascript
+import { setFormSubmitted } from 'reform-redux';
+
+store.dispatch(setFormSubmitted(
+  formName: string,
+  submitted?: boolean
+));
+```
+
 ### resetForm
 
 Reset form.
@@ -321,6 +334,33 @@ store.dispatch(setFieldsTouched(
 ));
 ```
 
+### setFieldChanged
+
+Set field changed.
+
+```javascript
+import { setFieldChanged } from 'reform-redux';
+
+store.dispatch(setFieldChanged(
+  formName: string,
+  fieldName: FieldName,
+  fieldChanged: boolean,
+));
+```
+
+### setFieldsChanged
+
+Set fields changed.
+
+```javascript
+import { setFieldsChanged } from 'reform-redux';
+
+store.dispatch(setFieldsChanged(
+  formName: string,
+  changedFields: { [fieldName: FieldName]: boolean },
+));
+```
+
 ### Context
 
 Form component creates context which avaible in components children. 
@@ -334,6 +374,7 @@ _reformRedux: {
       fieldsCount: { [fieldName: FieldName]: number },
       unregisterField: Function,
       resetForm: Function,
+      setFormSubmitted: Function,
     },
     field: {
       setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function,

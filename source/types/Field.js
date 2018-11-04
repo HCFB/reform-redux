@@ -77,11 +77,30 @@ export type SetFieldsTouched = {
   touchedFields: { [fieldName: FieldName]: boolean },
 };
 
+export type SetFieldChanged = {
+  type: string,
+  formName: string,
+  fieldName: FieldName,
+  fieldChanged: boolean,
+};
+
+export type SetFieldsChanged = {
+  type: string,
+  formName: string,
+  changedFields: { [fieldName: FieldName]: boolean },
+};
+
 export type SetFieldDisabled = {
   type: string,
   formName: string,
   fieldName: FieldName,
   disabled: boolean,
+};
+
+export type SetFormSubmitted = {
+  type: string,
+  formName: string,
+  submitted: boolean,
 };
 
 export type SetFieldsDisabled = {

@@ -1,10 +1,17 @@
-import { formInitialisation, updateForm, setFormSubmitting, resetForm } from '../Form';
+import {
+  formInitialisation,
+  updateForm,
+  setFormSubmitting,
+  resetForm,
+  setFormSubmitted,
+} from '../Form';
 import { getReduxConst } from '../../utils/common';
 import {
   FORM_INITIALISATION,
   UPDATE_FORM,
   SET_FORM_SUBMITTING,
   RESET_FORM,
+  SET_FORM_SUBMITTED,
 } from '../../constants/Form';
 
 describe('actions / Form', () => {
@@ -39,6 +46,17 @@ describe('actions / Form', () => {
       type: getReduxConst(SET_FORM_SUBMITTING),
       formName,
       submitting,
+    });
+  });
+
+  it('setFormSubmitted', () => {
+    const submitted = true;
+    const actionResult = setFormSubmitted(formName, submitted);
+
+    expect(actionResult).toEqual({
+      type: getReduxConst(SET_FORM_SUBMITTED),
+      formName,
+      submitted,
     });
   });
 

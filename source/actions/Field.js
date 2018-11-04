@@ -10,6 +10,8 @@ import {
   REMOVE_FIELD,
   SET_FIELD_TOUCHED,
   SET_FIELDS_TOUCHED,
+  SET_FIELD_CHANGED,
+  SET_FIELDS_CHANGED,
 } from '../constants/Field';
 import type {
   ChangeFieldValue,
@@ -25,6 +27,8 @@ import type {
   RemoveField,
   SetFieldTouched,
   SetFieldsTouched,
+  SetFieldChanged,
+  SetFieldsChanged,
 } from '../types/Field';
 import type { ResetState } from '../types/formReducer';
 import { getReduxConst } from '../utils/common';
@@ -47,6 +51,26 @@ export const setFieldsTouched: Function = (
   type: getReduxConst(SET_FIELDS_TOUCHED),
   formName,
   touchedFields,
+});
+
+export const setFieldChanged: Function = (
+  formName: string,
+  fieldName: FieldName,
+  fieldChanged: boolean,
+): SetFieldChanged => ({
+  type: getReduxConst(SET_FIELD_CHANGED),
+  formName,
+  fieldName,
+  fieldChanged,
+});
+
+export const setFieldsChanged: Function = (
+  formName: string,
+  changedFields: { [fieldName: FieldName]: boolean },
+): SetFieldsChanged => ({
+  type: getReduxConst(SET_FIELDS_CHANGED),
+  formName,
+  changedFields,
 });
 
 export const removeField: Function = (formName: string, fieldName: FieldName): RemoveField => ({

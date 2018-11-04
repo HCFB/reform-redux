@@ -41,6 +41,45 @@ describe('components / Field', () => {
     });
   });
 
+  it('receive new prop changed and touched', () => {
+    expect.assertions(8);
+
+    const wrapper = ({ changed = false, touched = false }) =>
+      createElement(
+        global.Provider,
+        {},
+        createElement(Field, {
+          name: 'field',
+          component: 'input',
+          value: 'test',
+          type: 'checkbox',
+          changed,
+          touched,
+        }),
+      );
+    const component = mount(createElement(wrapper));
+
+    component.setProps({
+      changed: true,
+      touched: true,
+    });
+
+    expect(global.store.getState().form.fields.field.touched).toBeTruthy();
+    expect(global.store.getState().form.fields.field.changed).toBeTruthy();
+    expect(global.store.getState().form.touched).toBeTruthy();
+    expect(global.store.getState().form.changed).toBeTruthy();
+
+    component.setProps({
+      changed: false,
+      touched: false,
+    });
+
+    expect(global.store.getState().form.fields.field.touched).toBeFalsy();
+    expect(global.store.getState().form.fields.field.changed).toBeFalsy();
+    expect(global.store.getState().form.touched).toBeFalsy();
+    expect(global.store.getState().form.changed).toBeFalsy();
+  });
+
   it('dynamically create new fields in form', () => {
     expect.assertions(2);
     jest.useFakeTimers();
@@ -483,6 +522,33 @@ describe('components / Field', () => {
 
     const event = { nativeEvent: new Event('change'), target: { value: 'test' } };
     component.find('input').simulate('change', event);
+  });
+
+  it('through props change value of list of checkbox components', () => {
+    const wrapper = ({ checked = false }) => {
+      return createElement(global.Provider, {}, [
+        createElement(Field, {
+          key: 0,
+          name: 'field',
+          component: 'input',
+          value: '1',
+          type: 'checkbox',
+        }),
+        createElement(Field, {
+          key: 1,
+          name: 'field',
+          value: '2',
+          checked,
+          component: 'input',
+          type: 'checkbox',
+        }),
+      ]);
+    };
+
+    const component = mount(createElement(wrapper));
+    component.setProps({ checked: true });
+
+    expect(global.store.getState().form.fields.field.value).toEqual(['2']);
   });
 
   it('set field value in list of custom checkbox components', done => {
@@ -1137,5 +1203,107 @@ describe('components / Field', () => {
     const checkbox = component.find('input[type="checkbox"]');
     expect(Object.keys(radio.props())).toEqual(expect.arrayContaining(['checked', 'value']));
     expect(Object.keys(checkbox.props())).toEqual(expect.arrayContaining(['checked', 'value']));
+  });
+
+  it('mount and unmount list of checkboxes with default value with removeOnUnmount props', () => {
+    expect.assertions(3);
+    jest.useFakeTimers();
+
+    const wrapper = ({ visible = true }) => {
+      return createElement(
+        global.Provider,
+        {},
+        visible
+          ? [
+              createElement(Field, {
+                key: 0,
+                name: 'field',
+                component: 'input',
+                value: 1,
+                removeOnUnmount: true,
+                checked: true,
+                type: 'checkbox',
+              }),
+              createElement(Field, {
+                key: 1,
+                name: 'field',
+                value: 2,
+                removeOnUnmount: true,
+                component: 'input',
+                type: 'checkbox',
+              }),
+            ]
+          : null,
+      );
+    };
+
+    const component = mount(createElement(wrapper));
+
+    expect(global.store.getState().form.fields.field.value).toEqual([1]);
+
+    component.setProps({ visible: false });
+
+    expect(global.store.getState().form.fields).toEqual({});
+
+    component.setProps({ visible: true });
+
+    jest.runAllTimers();
+
+    expect(global.store.getState().form.fields.field.value).toEqual([1]);
+  });
+
+  it('mount and unmount list of checkboxes with default value without removeOnUnmount props', () => {
+    expect.assertions(3);
+    jest.useFakeTimers();
+
+    const wrapper = ({ visible = true }) => {
+      return createElement(
+        global.Provider,
+        {},
+        visible
+          ? [
+              createElement(Field, {
+                key: 0,
+                name: 'field',
+                component: 'input',
+                value: 1,
+                checked: true,
+                type: 'checkbox',
+              }),
+              createElement(Field, {
+                key: 1,
+                name: 'field',
+                value: 2,
+                checked: true,
+                component: 'input',
+                type: 'checkbox',
+              }),
+            ]
+          : null,
+      );
+    };
+
+    const component = mount(createElement(wrapper));
+
+    expect(global.store.getState().form.fields.field.value).toEqual([1, 2]);
+
+    component.setProps({ visible: false });
+
+    expect(global.store.getState().form.fields).toEqual({
+      field: {
+        changed: false,
+        disabled: false,
+        errors: [],
+        touched: false,
+        valid: true,
+        value: [1, 2],
+      },
+    });
+
+    component.setProps({ visible: true });
+
+    jest.runAllTimers();
+
+    expect(global.store.getState().form.fields.field.value).toEqual([1, 2]);
   });
 });

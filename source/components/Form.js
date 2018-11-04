@@ -1,6 +1,12 @@
 import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
-import { formInitialisation, resetForm, setFormSubmitting, updateForm } from '../actions/Form';
+import {
+  formInitialisation,
+  resetForm,
+  setFormSubmitting,
+  updateForm,
+  setFormSubmitted,
+} from '../actions/Form';
 import {
   changeFieldValue,
   setFieldErrors,
@@ -13,6 +19,8 @@ import {
   removeField,
   setFieldsTouched,
   setFieldTouched,
+  setFieldChanged,
+  setFieldsChanged,
 } from '../actions/Field';
 import { validateField, getValidateFunctionsArray } from '../utils/Field';
 import { debounce, asyncForEach, filterReactDomProps } from '../utils/common';
@@ -108,14 +116,18 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
             unregisterField: this.unregisterField,
             resetForm: (state?: ResetState): Function =>
               store.dispatch(resetForm(this.formName, state)),
+            setFormSubmitted: (submitted: boolean): Function =>
+              store.dispatch(setFormSubmitted(this.formName, submitted)),
           },
           field: {
             setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function =>
               store.dispatch(setFieldTouched(this.formName, fieldName, fieldTouched)),
-            setFieldsTouched: (
-              fieldName: FieldName,
-              fieldsTouched: { [fieldName: FieldName]: boolean },
-            ): Function => store.dispatch(setFieldsTouched(this.formName, fieldsTouched)),
+            setFieldsTouched: (fieldsTouched: { [fieldName: FieldName]: boolean }): Function =>
+              store.dispatch(setFieldsTouched(this.formName, fieldsTouched)),
+            setFieldChanged: (fieldName: FieldName, fieldChanged: boolean): Function =>
+              store.dispatch(setFieldChanged(this.formName, fieldName, fieldChanged)),
+            setFieldsChanged: (fieldsChanged: { [fieldName: FieldName]: boolean }): Function =>
+              store.dispatch(setFieldsChanged(this.formName, fieldsChanged)),
             removeField: (fieldName: FieldName): Function =>
               store.dispatch(removeField(this.formName, fieldName)),
             changeFieldsValues: (fieldsValues: { [fieldName: FieldName]: any }): Function =>
@@ -130,10 +142,8 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
             ): Function => store.dispatch(setFieldsErrors(this.formName, fieldsErrors)),
             setFieldDisabled: (fieldName: FieldName, disabled: boolean = true): Function =>
               store.dispatch(setFieldDisabled(this.formName, fieldName, disabled)),
-            setFieldsDisabled: (
-              fieldName: FieldName,
-              disabledFields: { [fieldName: FieldName]: boolean },
-            ): Function => store.dispatch(setFieldsDisabled(this.formName, disabledFields)),
+            setFieldsDisabled: (disabledFields: { [fieldName: FieldName]: boolean }): Function =>
+              store.dispatch(setFieldsDisabled(this.formName, disabledFields)),
             resetField: (fieldName: FieldName, state?: ResetState): Function =>
               store.dispatch(resetField(this.formName, fieldName, state)),
             resetFields: (fieldsNames: Array<FieldName>, state?: ResetState): Function =>
@@ -144,23 +154,26 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
     }
 
     createFormUpdater = (store: Store<State, *, *>) =>
-      debounce(
-        (): Function => store.dispatch(updateForm(this.formName, this.fieldsStack[this.formName])),
-        250,
-      );
+      debounce((formInitialized): Function => {
+        if (formInitialized) {
+          store.dispatch(updateForm(this.formName, this.fieldsStack[this.formName]));
+        }
+      }, 250);
 
     increaseFieldCount = (fieldName: FieldName) => {
       const fieldsCount: number = this.fieldsCount[this.formName][fieldName] || 0;
       return (this.fieldsCount[this.formName][fieldName] = fieldsCount + 1);
     };
 
-    decreaseFieldCount = (fieldName: FieldName) => {
-      const fieldsCount: number = this.fieldsCount[this.formName][fieldName];
+    decreaseFieldCount = (fieldName: FieldName, reset: boolean) => {
+      const fieldsCount: number = reset ? 0 : this.fieldsCount[this.formName][fieldName];
       return (this.fieldsCount[this.formName][fieldName] = fieldsCount ? fieldsCount - 1 : 0);
     };
 
     unregisterField = (fieldName: FieldName, removeOnUnmount: boolean) => {
-      this.decreaseFieldCount(fieldName);
+      if (!getIn(this.fieldsStack, [this.formName, fieldName])) return;
+
+      this.decreaseFieldCount(fieldName, true);
 
       if (removeOnUnmount) {
         this.context.store.dispatch(removeField(this.formName, fieldName));
@@ -181,10 +194,9 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       },
     ) => {
       this.increaseFieldCount(fieldName);
-
       if (fieldAdditionalData.type && this.fieldsCount[this.formName][fieldName] > 1) {
         if (fieldAdditionalData.type === 'radio' && !fieldAdditionalData.checked) {
-          return;
+          return this.updateForm(this.initialized);
         }
 
         if (fieldAdditionalData.type === 'checkbox' || fieldAdditionalData.type === 'radio') {
@@ -200,25 +212,31 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
                   ]);
                 }
 
-                return (this.fieldsStack[this.formName][fieldName] = setIn(
+                this.fieldsStack[this.formName][fieldName] = setIn(
                   this.fieldsStack[this.formName][fieldName],
                   ['value'],
                   fieldValue,
-                ));
+                );
+
+                return this.updateForm(this.initialized);
               }
 
-              return (this.fieldsStack[this.formName][fieldName] = setIn(
+              this.fieldsStack[this.formName][fieldName] = setIn(
                 this.fieldsStack[this.formName][fieldName],
                 ['value', listSize(getIn(this.fieldsStack[this.formName][fieldName], ['value']))],
                 getIn(fieldData, ['value']),
-              ));
+              );
+
+              return this.updateForm(this.initialized);
             }
 
-            return (this.fieldsStack[this.formName][fieldName] = setIn(
+            this.fieldsStack[this.formName][fieldName] = setIn(
               this.fieldsStack[this.formName][fieldName],
               ['value'],
               getIn(fieldData, ['value']),
-            ));
+            );
+
+            return this.updateForm(this.initialized);
           }
 
           if (
@@ -231,14 +249,14 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
               fieldValue = list([getIn(this.fieldsStack[this.formName][fieldName], ['value'])]);
             }
 
-            return (this.fieldsStack[this.formName][fieldName] = setIn(
+            this.fieldsStack[this.formName][fieldName] = setIn(
               this.fieldsStack[this.formName][fieldName],
               ['value'],
               fieldValue,
-            ));
+            );
           }
 
-          return;
+          return this.updateForm(this.initialized);
         }
       }
 
@@ -255,9 +273,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       this.fieldsStack[this.formName][fieldName] = fieldData;
       this.fieldsValidateStack[this.formName][fieldName] = fieldValidate;
 
-      if (this.initialized) {
-        this.updateForm();
-      }
+      this.updateForm(this.initialized);
     };
 
     componentDidMount() {
@@ -337,6 +353,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
 
         Promise.resolve(onSubmit(fields, event)).then(() => {
           store.dispatch(setFormSubmitting(this.formName, false));
+          store.dispatch(setFormSubmitted(this.formName, true));
         });
       }
     };

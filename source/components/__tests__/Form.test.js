@@ -112,7 +112,7 @@ describe('components / Form', () => {
   });
 
   it('form component onSubmit behavior', done => {
-    expect.assertions(4);
+    expect.assertions(6);
 
     const validate = value => {
       expect(global.store.getState().form.submitting).toBeTruthy();
@@ -131,9 +131,12 @@ describe('components / Form', () => {
       global.formContext,
     );
 
+    expect(global.store.getState().form.submitted).toBeFalsy();
+
     component.find('form').simulate('submit');
 
     setImmediate(() => {
+      expect(global.store.getState().form.submitted).toBeTruthy();
       expect(global.store.getState().form.submitting).toBeFalsy();
       expect(onSubmit).toBeCalledWith(
         {
