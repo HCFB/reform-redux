@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2018-12-28
+
+- Support of new react context api.
+
+## [1.6.8] - 2018-12-11
+
+- Get values from redux store if they exists
+
+## [1.6.7] - 2018-12-3
+
+- Set value as bool for checkboxes where value does not exists
+
+## [1.6.6] - 2018-11-22
+
+- If checkbox hasn't value prop then pass checked state.
+
+## [1.6.5] - 2018-11-7
+
+- Don't reset fields state on form update.
+
+## [1.6.4] - 2018-11-6
+
+- Bugfixes for list components.
+- Register field after unregister.
+
 ## [1.6.3] - 2018-11-4
 
 - Bugfix: Checkbox list after unmount & mount resets their value.

@@ -1,19 +1,23 @@
 import { createElement } from 'react';
 import { shallow, mount } from 'enzyme';
-import { Button } from '../../index';
+import { Provider } from 'react-redux';
+import { Button, Form } from '../../index';
 import { formInitialisation, setFormSubmitting } from '../../actions/Form';
 import { changeFieldValue } from '../../actions/Field';
 
 describe('components / Button', () => {
   it('snapshot', () => {
-    const snapshot = shallow(createElement(global.Provider, {}, createElement(Button)));
+    const snapshot = shallow(
+      createElement(Provider, { store: global.store }, createElement(Button)),
+    );
     expect(snapshot).toMatchSnapshot();
   });
 
   it('if component is not in Form component then throw error', () => {
-    expect(() => shallow(createElement(Button))).toThrow(
-      'Component `Button` must be in `Form` component.',
-    );
+    console.error = jest.fn(); // eslint-disable-line
+    expect(() =>
+      mount(createElement(Provider, { store: global.store }, createElement(Button))),
+    ).toThrow('Component `Button` must be in `Form` component.');
   });
 
   it('component with type=reset will reset form on onClick', () => {
@@ -90,9 +94,13 @@ describe('components / Button', () => {
   });
 
   it('if component was unmounted then after change form property "submitting", component property "disabled" and state "submitting" will not the same', () => {
-    const component = mount(createElement(Button), {
-      context: global.context,
-    });
+    const component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, createElement(Button)),
+      ),
+    );
     component.unmount();
 
     global.store.dispatch(setFormSubmitting('form', true));

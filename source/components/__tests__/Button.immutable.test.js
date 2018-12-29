@@ -1,7 +1,8 @@
 import { createElement } from 'react';
 import { getIn } from 'immutable';
+import { Provider } from 'react-redux';
 import { shallow, mount } from 'enzyme';
-import { Button } from '../../immutable';
+import { Button, Form } from '../../immutable';
 import { formInitialisation, setFormSubmitting } from '../../actions/Form';
 import { changeFieldValue } from '../../actions/Field';
 
@@ -12,12 +13,6 @@ describe('components / Button.immutable', () => {
     );
 
     expect(snapshot).toMatchSnapshot();
-  });
-
-  it('if component is not in Form component then throw error', () => {
-    expect(() => shallow(createElement(Button))).toThrow(
-      'Component `Button` must be in `Form` component.',
-    );
   });
 
   it('component with type=reset will reset form on onClick', () => {
@@ -106,9 +101,13 @@ describe('components / Button.immutable', () => {
   });
 
   it('if component was unmounted then after change form property "submitting", component property "disabled" and state "submitting" will not the same', () => {
-    const component = mount(createElement(Button), {
-      context: global.immutableContext,
-    });
+    const component = mount(
+      createElement(
+        Provider,
+        { store: global.immutableStore },
+        createElement(Form, { path: 'form' }, createElement(Button)),
+      ),
+    );
     component.unmount();
 
     global.immutableStore.dispatch(setFormSubmitting('form', true));

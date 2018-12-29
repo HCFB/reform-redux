@@ -1,4 +1,5 @@
-import { Component, createElement } from 'react';
+import { Component, createElement, createContext, forwardRef } from 'react';
+import { ReactReduxContext } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   formInitialisation,
@@ -25,7 +26,7 @@ import {
 import { validateField, getValidateFunctionsArray } from '../utils/Field';
 import { debounce, asyncForEach, filterReactDomProps } from '../utils/common';
 import type { Element } from 'react';
-import type { ReFormRedux, ComponentProps, FieldsValidate } from '../types/Form';
+import type { ComponentProps, FieldsValidate } from '../types/Form';
 import type {
   FieldData,
   FieldsData,
@@ -38,6 +39,8 @@ import type { Store } from 'redux';
 import type { State, ResetState } from '../types/formReducer';
 import type { DataFunctions } from '../types/dataFunctions';
 
+export const ReformReduxContext = createContext(null);
+
 export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctions) => {
   const {
     getIn,
@@ -47,21 +50,15 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
     setIn,
     map,
     isList,
+    is,
     deleteIn,
+    listIncludes,
   }: DataFunctions = dataFunctions;
 
   class Form extends Component<ComponentProps> {
     formName: string;
     path: Array<string>;
     initialized: boolean = false;
-
-    static contextTypes = {
-      store: PropTypes.object,
-    };
-
-    static childContextTypes = {
-      _reformRedux: PropTypes.object,
-    };
 
     static propTypes = {
       path: PropTypes.string.isRequired,
@@ -86,7 +83,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       [formName: string]: FieldsValidate,
     } = {};
 
-    constructor(props: ComponentProps, context) {
+    constructor(props: ComponentProps) {
       super(props);
 
       if (!props.path) {
@@ -100,57 +97,76 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       if (!this.fieldsCount[this.formName]) this.fieldsCount[this.formName] = {};
       if (!this.fieldsValidateStack[this.formName]) this.fieldsValidateStack[this.formName] = {};
 
-      this.updateForm = this.createFormUpdater(context.store);
-    }
-
-    getChildContext(): ReFormRedux {
-      const store: Store<State, *, *> = this.context.store;
-
-      return {
-        _reformRedux: {
-          form: {
-            name: this.formName,
-            path: this.path,
-            fieldsCount: this.fieldsCount[this.formName],
-            registerField: this.registerField,
-            unregisterField: this.unregisterField,
-            resetForm: (state?: ResetState): Function =>
-              store.dispatch(resetForm(this.formName, state)),
-            setFormSubmitted: (submitted: boolean): Function =>
-              store.dispatch(setFormSubmitted(this.formName, submitted)),
-          },
-          field: {
-            setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function =>
-              store.dispatch(setFieldTouched(this.formName, fieldName, fieldTouched)),
-            setFieldsTouched: (fieldsTouched: { [fieldName: FieldName]: boolean }): Function =>
-              store.dispatch(setFieldsTouched(this.formName, fieldsTouched)),
-            setFieldChanged: (fieldName: FieldName, fieldChanged: boolean): Function =>
-              store.dispatch(setFieldChanged(this.formName, fieldName, fieldChanged)),
-            setFieldsChanged: (fieldsChanged: { [fieldName: FieldName]: boolean }): Function =>
-              store.dispatch(setFieldsChanged(this.formName, fieldsChanged)),
-            removeField: (fieldName: FieldName): Function =>
-              store.dispatch(removeField(this.formName, fieldName)),
-            changeFieldsValues: (fieldsValues: { [fieldName: FieldName]: any }): Function =>
-              store.dispatch(changeFieldsValues(this.formName, fieldsValues)),
-            changeFieldValue: (fieldName: FieldName, fieldValue: any): Function =>
-              store.dispatch(changeFieldValue(this.formName, fieldName, fieldValue)),
-            setFieldErrors: (fieldName: FieldName, errors: Array<string>): Function =>
-              store.dispatch(setFieldErrors(this.formName, fieldName, errors)),
-            setFieldsErrors: (
-              fieldName: FieldName,
-              fieldsErrors: { [fieldName: FieldName]: Array<string> },
-            ): Function => store.dispatch(setFieldsErrors(this.formName, fieldsErrors)),
-            setFieldDisabled: (fieldName: FieldName, disabled: boolean = true): Function =>
-              store.dispatch(setFieldDisabled(this.formName, fieldName, disabled)),
-            setFieldsDisabled: (disabledFields: { [fieldName: FieldName]: boolean }): Function =>
-              store.dispatch(setFieldsDisabled(this.formName, disabledFields)),
-            resetField: (fieldName: FieldName, state?: ResetState): Function =>
-              store.dispatch(resetField(this.formName, fieldName, state)),
-            resetFields: (fieldsNames: Array<FieldName>, state?: ResetState): Function =>
-              store.dispatch(resetFields(this.formName, fieldsNames, state)),
-          },
+      this._reformReduxContext = {
+        form: {
+          name: this.formName,
+          path: this.path,
+          registerField: this.registerField,
+          unregisterField: this.unregisterField,
+          resetForm: (state?: ResetState): Function =>
+            props.reactReduxContext.store.dispatch(resetForm(this.formName, state)),
+          setFormSubmitted: (submitted: boolean): Function =>
+            props.reactReduxContext.store.dispatch(setFormSubmitted(this.formName, submitted)),
+        },
+        field: {
+          getFieldCount: (fieldName: string) => this.fieldsCount[this.formName][fieldName] || 0,
+          setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function =>
+            props.reactReduxContext.store.dispatch(
+              setFieldTouched(this.formName, fieldName, fieldTouched),
+            ),
+          setFieldsTouched: (fieldsTouched: { [fieldName: FieldName]: boolean }): Function =>
+            props.reactReduxContext.store.dispatch(setFieldsTouched(this.formName, fieldsTouched)),
+          setFieldChanged: (fieldName: FieldName, fieldChanged: boolean): Function =>
+            props.reactReduxContext.store.dispatch(
+              setFieldChanged(this.formName, fieldName, fieldChanged),
+            ),
+          setFieldsChanged: (fieldsChanged: { [fieldName: FieldName]: boolean }): Function =>
+            props.reactReduxContext.store.dispatch(setFieldsChanged(this.formName, fieldsChanged)),
+          removeField: (fieldName: FieldName): Function =>
+            props.reactReduxContext.store.dispatch(removeField(this.formName, fieldName)),
+          changeFieldsValues: (fieldsValues: { [fieldName: FieldName]: any }): Function =>
+            props.reactReduxContext.store.dispatch(changeFieldsValues(this.formName, fieldsValues)),
+          changeFieldValue: (fieldName: FieldName, fieldValue: any): Function =>
+            props.reactReduxContext.store.dispatch(
+              changeFieldValue(this.formName, fieldName, fieldValue),
+            ),
+          setFieldErrors: (fieldName: FieldName, errors: Array<string>): Function =>
+            props.reactReduxContext.store.dispatch(
+              setFieldErrors(this.formName, fieldName, errors),
+            ),
+          setFieldsErrors: (
+            fieldName: FieldName,
+            fieldsErrors: { [fieldName: FieldName]: Array<string> },
+          ): Function =>
+            props.reactReduxContext.store.dispatch(setFieldsErrors(this.formName, fieldsErrors)),
+          setFieldDisabled: (fieldName: FieldName, disabled: boolean = true): Function =>
+            props.reactReduxContext.store.dispatch(
+              setFieldDisabled(this.formName, fieldName, disabled),
+            ),
+          setFieldsDisabled: (disabledFields: { [fieldName: FieldName]: boolean }): Function =>
+            props.reactReduxContext.store.dispatch(
+              setFieldsDisabled(this.formName, disabledFields),
+            ),
+          resetField: (fieldName: FieldName, state?: ResetState): Function =>
+            props.reactReduxContext.store.dispatch(resetField(this.formName, fieldName, state)),
+          resetFields: (fieldsNames: Array<FieldName>, state?: ResetState): Function =>
+            props.reactReduxContext.store.dispatch(resetFields(this.formName, fieldsNames, state)),
+        },
+        _core: {
+          updateStackFieldValue: (fieldName: string, fieldValue: any) =>
+            this.updateStackFieldValue(fieldName, fieldValue),
         },
       };
+
+      this.updateForm = this.createFormUpdater(props.reactReduxContext.store);
+    }
+
+    updateStackFieldValue(fieldName: string, fieldValue: any) {
+      this.fieldsStack[this.formName][fieldName] = setIn(
+        this.fieldsStack[this.formName][fieldName],
+        ['value'],
+        fieldValue,
+      );
     }
 
     createFormUpdater = (store: Store<State, *, *>) =>
@@ -173,10 +189,10 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
     unregisterField = (fieldName: FieldName, removeOnUnmount: boolean) => {
       if (!getIn(this.fieldsStack, [this.formName, fieldName])) return;
 
-      this.decreaseFieldCount(fieldName, true);
+      this.decreaseFieldCount(fieldName, removeOnUnmount);
 
       if (removeOnUnmount) {
-        this.context.store.dispatch(removeField(this.formName, fieldName));
+        this.props.reactReduxContext.store.dispatch(removeField(this.formName, fieldName));
         this.fieldsStack = deleteIn(this.fieldsStack, [this.formName, fieldName]);
         this.fieldsValidateStack = deleteIn(this.fieldsValidateStack, [this.formName, fieldName]);
       }
@@ -194,22 +210,23 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       },
     ) => {
       this.increaseFieldCount(fieldName);
+
       if (fieldAdditionalData.type && this.fieldsCount[this.formName][fieldName] > 1) {
         if (fieldAdditionalData.type === 'radio' && !fieldAdditionalData.checked) {
           return this.updateForm(this.initialized);
         }
 
+        const stackFieldValue: any = getIn(this.fieldsStack[this.formName][fieldName], ['value']);
+        const fieldDataValue: any = getIn(fieldData, ['value']);
+
         if (fieldAdditionalData.type === 'checkbox' || fieldAdditionalData.type === 'radio') {
           if (fieldAdditionalData.checked) {
             if (fieldAdditionalData.type === 'checkbox') {
-              if (!isList(getIn(this.fieldsStack[this.formName][fieldName], ['value']))) {
-                let fieldValue: any = list([getIn(fieldData, ['value'])]);
+              if (!isList(stackFieldValue)) {
+                let fieldValue: any = list([fieldDataValue]);
 
-                if (getIn(this.fieldsStack[this.formName][fieldName], ['value'])) {
-                  fieldValue = list([
-                    getIn(this.fieldsStack[this.formName][fieldName], ['value']),
-                    getIn(fieldData, ['value']),
-                  ]);
+                if (stackFieldValue) {
+                  fieldValue = list([stackFieldValue, fieldDataValue]);
                 }
 
                 this.fieldsStack[this.formName][fieldName] = setIn(
@@ -221,11 +238,16 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
                 return this.updateForm(this.initialized);
               }
 
-              this.fieldsStack[this.formName][fieldName] = setIn(
-                this.fieldsStack[this.formName][fieldName],
-                ['value', listSize(getIn(this.fieldsStack[this.formName][fieldName], ['value']))],
-                getIn(fieldData, ['value']),
-              );
+              if (
+                !listIncludes(stackFieldValue, fieldDataValue) &&
+                !is(stackFieldValue, fieldDataValue)
+              ) {
+                this.fieldsStack[this.formName][fieldName] = setIn(
+                  this.fieldsStack[this.formName][fieldName],
+                  ['value', listSize(stackFieldValue)],
+                  fieldDataValue,
+                );
+              }
 
               return this.updateForm(this.initialized);
             }
@@ -233,20 +255,17 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
             this.fieldsStack[this.formName][fieldName] = setIn(
               this.fieldsStack[this.formName][fieldName],
               ['value'],
-              getIn(fieldData, ['value']),
+              fieldDataValue,
             );
 
             return this.updateForm(this.initialized);
           }
 
-          if (
-            !isList(getIn(this.fieldsStack[this.formName][fieldName], ['value'])) &&
-            fieldAdditionalData.type === 'checkbox'
-          ) {
+          if (!isList(stackFieldValue) && fieldAdditionalData.type === 'checkbox') {
             let fieldValue: any = list([]);
 
-            if (getIn(this.fieldsStack[this.formName][fieldName], ['value'])) {
-              fieldValue = list([getIn(this.fieldsStack[this.formName][fieldName], ['value'])]);
+            if (stackFieldValue) {
+              fieldValue = list([stackFieldValue]);
             }
 
             this.fieldsStack[this.formName][fieldName] = setIn(
@@ -277,14 +296,21 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
     };
 
     componentDidMount() {
-      const state: State = this.context.store.getState();
-      const currentFormData = getIn(state, this.path);
-      const fields: FieldsData = getIn(currentFormData, ['fields']);
+      const store: Store<State, *, *> = this.props.reactReduxContext.store;
+      let state: State = store.getState();
+      let fieldsLength: number = listSize(keys(getIn(state, [...this.path, 'fields'])));
 
-      if (!listSize(keys(fields))) {
-        this.context.store.dispatch(
+      if (fieldsLength) {
+        this.initialized = true;
+      }
+
+      if (this.initialized) {
+        this.updateForm(this.initialized);
+      } else {
+        this.props.reactReduxContext.store.dispatch(
           formInitialisation(this.formName, this.fieldsStack[this.formName]),
         );
+
         this.initialized = true;
       }
     }
@@ -292,7 +318,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
     handleSubmit = async (event: Event) => {
       event.preventDefault();
 
-      const store: Store<State, *, *> = this.context.store;
+      const store: Store<State, *, *> = this.props.reactReduxContext.store;
       store.dispatch(setFormSubmitting(this.formName, true));
 
       const { onSubmit, onSubmitFailed } = this.props;
@@ -359,15 +385,24 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
     };
 
     render(): Element<'form'> {
-      const { children } = this.props;
+      const { children, innerRef } = this.props;
 
-      return createElement('form', {
-        ...filterReactDomProps(this.props),
-        onSubmit: this.handleSubmit,
-        children,
-      });
+      return createElement(
+        ReformReduxContext.Provider,
+        { value: this._reformReduxContext },
+        createElement('form', {
+          ...filterReactDomProps(this.props),
+          ref: innerRef,
+          onSubmit: this.handleSubmit,
+          children,
+        }),
+      );
     }
   }
 
-  return Form;
+  return forwardRef((props, ref) =>
+    createElement(ReactReduxContext.Consumer, {}, reactReduxContextValue =>
+      createElement(Form, { ...props, reactReduxContext: reactReduxContextValue, innerRef: ref }),
+    ),
+  );
 };

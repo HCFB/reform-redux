@@ -1,6 +1,7 @@
-import PropTypes from 'prop-types';
-import { createElement, Component } from 'react';
+import { ReactReduxContext } from 'react-redux';
+import { createElement, Component, forwardRef } from 'react';
 import { is, cloneDeep } from '../utils/common';
+import { ReformReduxContext } from '../components/Form';
 import type { ComponentType, Element } from 'react';
 import type { State } from '../types/formReducer';
 import type { FieldsData, FieldName } from '../types/Field';
@@ -12,23 +13,19 @@ export const createSelectFormData: Function = (dataFunctions: DataFunctions) => 
   const selectFormData = (fieldNames: Array<FieldName>, formPath?: string): Function => {
     return (ConnectedComponent: ComponentType<*>): ComponentType<*> => {
       class SelectFormData extends Component<*, FieldsData> {
-        static contextTypes = {
-          _reformRedux: PropTypes.object,
-          store: PropTypes.object,
-        };
         unsubscribeFromStore: Function = () => {};
         state: FieldsData;
 
-        constructor(props, context) {
-          super(props, context);
+        constructor(props) {
+          super(props);
 
-          if (!context._reformRedux) {
+          if (!props.reformReduxContext) {
             throw new Error('Container `selectFormData` must be in `Form` component.');
           }
 
           const componentState: FieldsData = {};
-          const state: State = context.store.getState();
-          const currentFormData: State = getIn(state, context._reformRedux.form.path);
+          const state: State = props.reactReduxContext.store.getState();
+          const currentFormData: State = getIn(state, props.reformReduxContext.form.path);
 
           fieldNames.forEach(fieldName => {
             componentState[fieldName] = getIn(currentFormData, ['fields', fieldName]) || {
@@ -41,10 +38,10 @@ export const createSelectFormData: Function = (dataFunctions: DataFunctions) => 
 
           this.state = componentState;
 
-          this.unsubscribeFromStore = this.context.store.subscribe(() => {
+          this.unsubscribeFromStore = props.reactReduxContext.store.subscribe(() => {
             const contextFormPath: Array<string> =
-              (formPath && formPath.split('.')) || this.context._reformRedux.form.path;
-            const state: State = this.context.store.getState();
+              (formPath && formPath.split('.')) || props.reformReduxContext.form.path;
+            const state: State = props.reactReduxContext.store.getState();
             const fieldsData: FieldsData = {};
 
             fieldNames.forEach((fieldName: string) => {
@@ -67,6 +64,7 @@ export const createSelectFormData: Function = (dataFunctions: DataFunctions) => 
 
         render(): Element<*> {
           const state = cloneDeep(this.state);
+
           return createElement(ConnectedComponent, {
             ...this.props,
             ...state,
@@ -74,7 +72,18 @@ export const createSelectFormData: Function = (dataFunctions: DataFunctions) => 
         }
       }
 
-      return SelectFormData;
+      return forwardRef((props, ref) =>
+        createElement(ReactReduxContext.Consumer, {}, reactReduxContextValue =>
+          createElement(ReformReduxContext.Consumer, {}, reformReduxContextValue =>
+            createElement(SelectFormData, {
+              ...props,
+              reactReduxContext: reactReduxContextValue,
+              reformReduxContext: reformReduxContextValue,
+              innerRef: ref,
+            }),
+          ),
+        ),
+      );
     };
   };
 

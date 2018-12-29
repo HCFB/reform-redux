@@ -1,8 +1,9 @@
 import { Component, createElement, forwardRef } from 'react';
+import { ReactReduxContext } from 'react-redux';
 import PropTypes from 'prop-types';
+import { ReformReduxContext } from './Form';
 import { getValidateFunctionsArray, validateField } from '../utils/Field';
 import { filterReactDomProps } from '../utils/common';
-import type { ReFormRedux } from '../types/Form';
 import type { FieldData, FieldsData, ComponentProps, ComponentState } from '../types/Field';
 import type { State } from '../types/formReducer';
 import type { DataFunctions } from '../types/dataFunctions';
@@ -41,15 +42,10 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       disabled: false,
     };
 
-    static contextTypes = {
-      _reformRedux: PropTypes.object,
-      store: PropTypes.object,
-    };
+    constructor(props: ComponentProps) {
+      super(props);
 
-    constructor(props: ComponentProps, context: ReFormRedux) {
-      super(props, context);
-
-      if (!context._reformRedux) {
+      if (!props.reformReduxContext) {
         throw new Error('Component `Field` must be in `Form` component.');
       }
 
@@ -68,6 +64,10 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         value = normalize(props.value, '', map({}), 'onInit');
       }
 
+      if (['radio', 'checkbox'].indexOf(props.type) > -1) {
+        value = props.value || props.checked || false;
+      }
+
       this.initialFieldData = map({
         value,
         errors: list([]),
@@ -78,40 +78,51 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       });
 
       if (['radio', 'checkbox'].indexOf(props.type) > -1 && !props.checked) {
-        this.initialFieldData = setIn(this.initialFieldData, ['value'], '');
+        this.initialFieldData = setIn(this.initialFieldData, ['value'], props.value ? '' : false);
       }
 
-      // Get default value from store if it exists
+      if (props.reformReduxContext.field.getFieldCount(this.props.name) === 0) {
+        // Get default value from store if it exists
 
-      const state: State = this.context.store.getState();
-      const currentFormData: State = getIn(state, this.context._reformRedux.form.path);
-      const initialFieldData: FieldData = getIn(currentFormData, ['fields', props.name]);
+        const state: State = props.reactReduxContext.store.getState();
+        const currentFormData: State = getIn(state, props.reformReduxContext.form.path);
+        const initialFieldData: FieldData = getIn(currentFormData, ['fields', props.name]);
 
-      if (initialFieldData) {
-        this.initialFieldData = initialFieldData;
+        if (initialFieldData) {
+          this.initialFieldData = initialFieldData;
+        }
       }
 
       // Write initial data to store
       this.state = {
         field: map(this.initialFieldData),
       };
+    }
 
+    componentDidMount() {
       this.registerField();
     }
 
     registerField = () => {
-      this.unsubscribeFromStore = this.context.store.subscribe(() => {
-        const state: State = this.context.store.getState();
-        const currentFormData: State = getIn(state, this.context._reformRedux.form.path);
+      this.unsubscribeFromStore = this.props.reactReduxContext.store.subscribe(() => {
+        const state: State = this.props.reactReduxContext.store.getState();
+        const currentFormData: State = getIn(state, this.props.reformReduxContext.form.path);
         const currentFieldData: FieldData = this.state.field;
         const nextFieldData: FieldData = getIn(
           state,
-          [...this.context._reformRedux.form.path, 'fields', this.props.name],
+          [...this.props.reformReduxContext.form.path, 'fields', this.props.name],
           this.state.field,
         );
 
         if (currentFormData.submitted && !getIn(nextFieldData, ['touched'])) {
-          this.context._reformRedux.field.setFieldTouched(this.props.name, true);
+          this.props.reformReduxContext.field.setFieldTouched(this.props.name, true);
+        }
+
+        if (!is(getIn(currentFieldData, ['value']), getIn(nextFieldData, ['value']))) {
+          this.props.reformReduxContext._core.updateStackFieldValue(
+            this.props.name,
+            getIn(nextFieldData, ['value']),
+          );
         }
 
         if (!is(currentFieldData, nextFieldData)) {
@@ -130,33 +141,41 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         this.props.validate,
       );
 
-      this.context._reformRedux.form.registerField(this.props.name, initialFieldData, validate, {
-        type,
-        checked,
-        multiple,
-        component,
-      });
+      this.props.reformReduxContext.form.registerField(
+        this.props.name,
+        initialFieldData,
+        validate,
+        {
+          type,
+          checked,
+          multiple,
+          component,
+        },
+      );
     };
 
     componentWillUnmount() {
       this.unsubscribeFromStore();
-      this.context._reformRedux.form.unregisterField(this.props.name, this.props.removeOnUnmount);
+      this.props.reformReduxContext.form.unregisterField(
+        this.props.name,
+        this.props.removeOnUnmount,
+      );
     }
 
     componentDidUpdate(prevProps: ComponentProps) {
       // Update touched property
       if (this.props.touched !== prevProps.touched) {
-        this.context._reformRedux.field.setFieldTouched(this.props.name, this.props.touched);
+        this.props.reformReduxContext.field.setFieldTouched(this.props.name, this.props.touched);
       }
 
       // Update changed property
       if (this.props.changed !== prevProps.changed) {
-        this.context._reformRedux.field.setFieldChanged(this.props.name, this.props.changed);
+        this.props.reformReduxContext.field.setFieldChanged(this.props.name, this.props.changed);
       }
 
       if (
         ['radio', 'checkbox'].indexOf(this.props.type) !== -1 &&
-        this.context._reformRedux.form.fieldsCount[this.props.name] > 1 &&
+        this.props.reformReduxContext.field.getFieldCount(this.props.name) > 1 &&
         this.props.checked !== prevProps.checked
       ) {
         // Dont change field value if it's was changed (checkboxes)
@@ -181,7 +200,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       }
 
       // Update value only for single fields
-      if (this.context._reformRedux.form.fieldsCount[this.props.name] > 1) {
+      if (this.props.reformReduxContext.field.getFieldCount(this.props.name) > 1) {
         return;
       }
 
@@ -193,18 +212,20 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         ['radio', 'checkbox'].indexOf(this.props.type) !== -1 &&
         this.props.checked !== prevProps.checked
       ) {
-        return this.changeFieldValue(this.props.checked ? this.props.value : '');
+        return this.changeFieldValue(
+          this.props.checked ? this.props.value || this.props.checked : '',
+        );
       }
     }
 
     setFieldErrors = (errors: Array<string>) => {
       if (!is(getIn(this.state.field, ['errors']), errors)) {
-        this.context._reformRedux.field.setFieldErrors(this.props.name, errors);
+        this.props.reformReduxContext.field.setFieldErrors(this.props.name, errors);
       }
     };
 
     changeFieldValue = async (value: any) => {
-      this.context._reformRedux.field.changeFieldValue(this.props.name, value);
+      this.props.reformReduxContext.field.changeFieldValue(this.props.name, value);
 
       if (getIn(this.state.field, ['touched']) && this.props.validate) {
         const validate: Array<Function> = getValidateFunctionsArray(dataFunctions)(
@@ -222,12 +243,12 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
 
       if (this.isRadio()) {
         const checked = isEvent ? data.target.checked : data;
-        return checked ? this.props.value : '';
+        return checked ? this.props.value || checked : '';
       }
 
       if (this.isCheckbox()) {
         const checked = isEvent ? data.target.checked : data;
-        if (this.context._reformRedux.form.fieldsCount[this.props.name] > 1) {
+        if (this.props.reformReduxContext.field.getFieldCount(this.props.name) > 1) {
           return list(
             checked
               ? [...toJS(getIn(this.state.field, ['value'])), toJS(this.props.value)]
@@ -237,7 +258,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
           );
         }
 
-        return checked ? this.props.value : '';
+        return checked ? this.props.value || checked : '';
       }
 
       if (this.props.component === 'select' && this.props.multiple) {
@@ -257,8 +278,8 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       const { normalize } = this.props;
 
       if (normalize) {
-        const state: State = this.context.store.getState();
-        const currentFormData: State = getIn(state, this.context._reformRedux.form.path);
+        const state: State = this.props.reactReduxContext.store.getState();
+        const currentFormData: State = getIn(state, this.props.reformReduxContext.form.path);
         const fields: FieldsData = getIn(currentFormData, ['fields']);
 
         value = normalize(value, getIn(this.state.field, ['value']), map(fields), normalizeWhen);
@@ -277,16 +298,16 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         this.props.onBlur(event, fieldData);
       }
 
-      const fieldValue: any = getIn(this.state.field, ['value']);
+      const fieldValue: any = this.getFieldValue(event);
 
       if (this.props.normalize) {
-        this.changeFieldValueHandler(fieldValue, 'onBlur');
+        this.changeFieldValueHandler(event, 'onBlur');
       }
 
       // If the field was touched don't validate him.
 
       if (getIn(this.state.field, ['touched'])) return;
-      this.context._reformRedux.field.setFieldTouched(this.props.name, true);
+      this.props.reformReduxContext.field.setFieldTouched(this.props.name, true);
 
       if (this.props.validate) {
         const validate: Array<Function> = getValidateFunctionsArray(dataFunctions)(
@@ -347,7 +368,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       if (this.isRadioOrCheckbox()) {
         fieldProps = {
           ...fieldProps,
-          checked: is(restProps.value, fieldValue),
+          checked: restProps.value ? is(restProps.value, fieldValue) : fieldValue,
           value: restProps.value,
         };
       }
@@ -363,7 +384,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         fieldProps = {
           ...fieldProps,
           innerRef,
-          formName: this.context._reformRedux.form.name,
+          formName: this.props.reformReduxContext.form.name,
           errors: getIn(this.state.field, ['errors']),
           changed: getIn(this.state.field, ['changed']),
           touched: getIn(this.state.field, ['touched']),
@@ -387,5 +408,16 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
     }
   }
 
-  return forwardRef((props, ref) => createElement(Field, { ...props, innerRef: ref }));
+  return forwardRef((props, ref) =>
+    createElement(ReactReduxContext.Consumer, {}, reactReduxContextValue =>
+      createElement(ReformReduxContext.Consumer, {}, reformReduxContextValue =>
+        createElement(Field, {
+          ...props,
+          reactReduxContext: reactReduxContextValue,
+          reformReduxContext: reformReduxContextValue,
+          innerRef: ref,
+        }),
+      ),
+    ),
+  );
 };

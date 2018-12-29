@@ -1,10 +1,12 @@
 import { createElement, Component } from 'react';
-import { shallow, mount } from 'enzyme';
-import { Field, selectFormData } from '../../index';
+import { Provider } from 'react-redux';
+import { mount } from 'enzyme';
+import { Field, selectFormData, Form } from '../../index';
 
 describe('containers / selectFormData', () => {
   it('if container is not in Form component then throw error', () => {
-    expect(() => shallow(createElement(selectFormData()('')))).toThrow(
+    console.error = jest.fn(); // eslint-disable-line
+    expect(() => mount(createElement(selectFormData()('')))).toThrow(
       'Container `selectFormData` must be in `Form` component.',
     );
   });
@@ -25,19 +27,23 @@ describe('containers / selectFormData', () => {
 
     mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field1',
-          value: 'test',
-          component: 'input',
-        }),
-        createElement(Field, {
-          name: 'field2',
-          value: 'test2',
-          component: 'input',
-        }),
-        createElement(selectFormData(['field1', 'field2'], 'form')(CustomElement)),
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field1',
+            value: 'test',
+            component: 'input',
+            key: 0,
+          }),
+          createElement(Field, {
+            name: 'field2',
+            value: 'test2',
+            key: 1,
+            component: 'input',
+          }),
+          createElement(selectFormData(['field1', 'field2'], 'form')(CustomElement), { key: 2 }),
+        ]),
       ),
     );
   });

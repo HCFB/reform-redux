@@ -142,8 +142,6 @@ describe('reducers/formReducer', () => {
   });
 
   it('UPDATE_FORM', () => {
-    expect.assertions(2);
-
     const action = formReducerCreator('form');
     const newState = action(state, {
       type: getReduxConst(UPDATE_FORM),
@@ -155,7 +153,6 @@ describe('reducers/formReducer', () => {
     });
 
     expect(Object.keys(newState.fields)).toEqual(['field', 'field1']);
-    expect(newState.fields.field).not.toBe('new field');
   });
 
   it('REMOVE_FIELD', () => {

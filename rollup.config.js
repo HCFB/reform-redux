@@ -10,6 +10,7 @@ const common = {
     'prop-types',
     'immutable',
     'redux',
+    'react-redux',
     // polyfills
     'core-js/modules/web.timers',
     'core-js/modules/web.dom.iterable',

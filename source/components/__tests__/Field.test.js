@@ -1,15 +1,20 @@
 import { Component, createElement } from 'react';
+import { Provider } from 'react-redux';
 import { shallow, mount } from 'enzyme';
-import { Field, changeFieldValue } from '../../index';
+import { Field, changeFieldValue, Form } from '../../index';
 import { formInitialisation } from '../../actions/Form';
 
 describe('components / Field', () => {
   it('snapshot', () => {
-    const snapshot = mount(
+    const snapshot = shallow(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, { component: 'input', name: 'name' }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, { component: 'input', name: 'name' }),
+        ),
       ),
     );
     expect(snapshot).toMatchSnapshot();
@@ -18,15 +23,19 @@ describe('components / Field', () => {
   it('receive new prop checked for radio and checkbox types', done => {
     const wrapper = ({ checked = false }) =>
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          value: 'test',
-          type: 'checkbox',
-          checked,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            value: 'test',
+            type: 'checkbox',
+            checked,
+          }),
+        ),
       );
     const component = mount(createElement(wrapper));
 
@@ -46,16 +55,20 @@ describe('components / Field', () => {
 
     const wrapper = ({ changed = false, touched = false }) =>
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          value: 'test',
-          type: 'checkbox',
-          changed,
-          touched,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            value: 'test',
+            type: 'checkbox',
+            changed,
+            touched,
+          }),
+        ),
       );
     const component = mount(createElement(wrapper));
 
@@ -94,17 +107,21 @@ describe('components / Field', () => {
 
       render() {
         return createElement(
-          global.Provider,
-          {},
-          this.state.showFields
-            ? [
-                createElement(Field, {
-                  name: 'field',
-                  component: 'input',
-                  key: 0,
-                }),
-              ]
-            : null,
+          Provider,
+          { store: global.store },
+          createElement(
+            Form,
+            { path: 'form' },
+            this.state.showFields
+              ? [
+                  createElement(Field, {
+                    name: 'field',
+                    component: 'input',
+                    key: 0,
+                  }),
+                ]
+              : null,
+          ),
         );
       }
     }
@@ -140,21 +157,25 @@ describe('components / Field', () => {
 
     class Test extends Component {
       render() {
-        return createElement(global.Provider, {}, [
-          !this.props.hidden
-            ? createElement(Field, {
-                name: 'field',
-                component: 'input',
-                removeOnUnmount: true,
-                key: 0,
-              })
-            : null,
-          createElement(Field, {
-            name: 'field1',
-            component: 'input',
-            key: 1,
-          }),
-        ]);
+        return createElement(
+          Provider,
+          { store: global.store },
+          createElement(Form, { path: 'form' }, [
+            !this.props.hidden
+              ? createElement(Field, {
+                  name: 'field',
+                  component: 'input',
+                  removeOnUnmount: true,
+                  key: 0,
+                })
+              : null,
+            createElement(Field, {
+              name: 'field1',
+              component: 'input',
+              key: 1,
+            }),
+          ]),
+        );
       }
     }
 
@@ -201,46 +222,55 @@ describe('components / Field', () => {
   });
 
   it('check component prop types', () => {
-    expect.assertions(2);
+    expect.assertions(3);
 
     let errors = [];
     console.error = error => errors.push(error); // eslint-disable-line no-console
     let expectedErrors = [
-      'Warning: Failed prop type: The prop `name` is marked as required in `Field`, but its value is `undefined`.\n    in Field',
-      'Warning: Failed prop type: The prop `component` is marked as required in `Field`, but its value is `undefined`.\n    in Field',
+      'Warning: Failed prop type: The prop `name` is marked as required in `Field`, but its value is `undefined`.',
+      'Warning: Failed prop type: The prop `component` is marked as required in `Field`, but its value is `undefined`.',
     ];
 
-    shallow(createElement(Field));
-
-    expect(errors).toEqual(expectedErrors);
+    try {
+      mount(createElement(Field));
+    } catch (e) {
+      expect(errors[0]).toEqual(expect.stringContaining(expectedErrors[0]));
+      expect(errors[1]).toEqual(expect.stringContaining(expectedErrors[1]));
+    }
 
     errors = [];
     expectedErrors = [
-      'Warning: Failed prop type: Invalid prop `normalize` of type `string` supplied to `Field`, expected `function`.\n    in Field',
+      'Warning: Failed prop type: Invalid prop `normalize` of type `string` supplied to `Field`, expected `function`.',
     ];
 
-    shallow(
-      createElement(Field, {
-        name: 'test',
-        normalize: 'test',
-      }),
-    );
-
-    expect(errors).toEqual(expectedErrors);
+    try {
+      mount(
+        createElement(Field, {
+          name: 'test',
+          normalize: 'test',
+        }),
+      );
+    } catch {
+      expect(errors[0]).toEqual(expect.stringContaining(expectedErrors[0]));
+    }
   });
 
   it('if component with prop type=select and prop=multiple and value with type not array then throw error', () => {
     expect(() =>
       mount(
         createElement(
-          global.Provider,
-          {},
-          createElement(Field, {
-            name: 'test',
-            component: 'select',
-            multiple: true,
-            value: 'test',
-          }),
+          Provider,
+          { store: global.store },
+          createElement(
+            Form,
+            { path: 'form' },
+            createElement(Field, {
+              name: 'test',
+              component: 'select',
+              multiple: true,
+              value: 'test',
+            }),
+          ),
         ),
       ),
     ).toThrow(
@@ -251,71 +281,119 @@ describe('components / Field', () => {
   it('if you pass disabled and value props then this props will in state.field.value and state.field.disabled.', () => {
     expect.assertions(8);
 
-    let component = shallow(
-      createElement(Field, {
-        name: 'test',
-        component: 'input',
-        value: 'test',
-        disabled: true,
-        touched: true,
-        changed: true,
-      }),
-      {
-        context: global.context,
-      },
+    let component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'test',
+            component: 'input',
+            value: 'test',
+            disabled: true,
+            touched: true,
+            changed: true,
+          }),
+        ),
+      ),
     );
 
-    expect(component.dive().state('field').value).toBe('test');
-    expect(component.dive().state('field').disabled).toBeTruthy();
-    expect(component.dive().state('field').touched).toBeTruthy();
-    expect(component.dive().state('field').changed).toBeTruthy();
+    expect(component.find('Field[name="test"]').state('field').value).toBe('test');
+    expect(component.find('Field[name="test"]').state('field').disabled).toBeTruthy();
+    expect(component.find('Field[name="test"]').state('field').touched).toBeTruthy();
+    expect(component.find('Field[name="test"]').state('field').changed).toBeTruthy();
 
-    component = shallow(
-      createElement(Field, {
-        name: 'test',
-        component: 'input',
-      }),
-      {
-        context: global.context,
-      },
+    component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'test1',
+            component: 'input',
+          }),
+        ),
+      ),
     );
 
-    expect(component.dive().state('field').value).toBe('');
-    expect(component.dive().state('field').disabled).toBeFalsy();
-    expect(component.dive().state('field').touched).toBeFalsy();
-    expect(component.dive().state('field').changed).toBeFalsy();
+    expect(component.find('Field[name="test1"]').state('field').value).toBe('');
+    expect(component.find('Field[name="test1"]').state('field').disabled).toBeFalsy();
+    expect(component.find('Field[name="test1"]').state('field').touched).toBeFalsy();
+    expect(component.find('Field[name="test1"]').state('field').changed).toBeFalsy();
   });
 
   it('if component type is checkbox or radio value must be an empty string.', () => {
     expect.assertions(2);
 
-    let component = shallow(
-      createElement(Field, {
-        name: 'test',
-        component: 'input',
-        value: 'test',
-        type: 'checkbox',
-      }),
-      {
-        context: global.context,
-      },
+    let component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'test',
+            component: 'input',
+            value: 'test',
+            type: 'checkbox',
+          }),
+        ),
+      ),
     );
 
-    expect(component.dive().state('field').value).toBe('');
+    expect(component.find('Field[name="test"]').state('field').value).toBe('');
 
-    component = shallow(
-      createElement(Field, {
-        name: 'test',
-        component: 'input',
-        value: 'test',
-        type: 'radio',
-      }),
-      {
-        context: global.context,
-      },
+    component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'test',
+            component: 'input',
+            value: 'test',
+            type: 'radio',
+          }),
+        ),
+      ),
     );
 
-    expect(component.dive().state('field').value).toBe('');
+    expect(component.find('Field[name="test"]').state('field').value).toBe('');
+  });
+
+  it('check value of checkbox without value props in validate function.', done => {
+    let component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'test',
+            component: 'input',
+            type: 'checkbox',
+            touched: true,
+            validate: value => {
+              if (value) {
+                expect(value).toBeTruthy();
+                done();
+              }
+            },
+          }),
+        ),
+      ),
+    );
+
+    const event = { nativeEvent: new Event('change'), target: { checked: true } };
+    component.find(Field).simulate('change', event);
   });
 
   it('if in redux store exists field data then take it from redux store and write to field state.', () => {
@@ -330,19 +408,24 @@ describe('components / Field', () => {
       }),
     );
 
-    const component = shallow(
-      createElement(Field, {
-        name: 'field',
-        component: 'input',
-        value: 'test',
-        type: 'checkbox',
-      }),
-      {
-        context: global.context,
-      },
+    const component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            value: 'test',
+            type: 'checkbox',
+          }),
+        ),
+      ),
     );
 
-    expect(component.dive().state('field').value).toBe('');
+    expect(component.find('Field[name="field"]').state('field').value).toBe('');
   });
 
   it('component onChange', () => {
@@ -350,12 +433,16 @@ describe('components / Field', () => {
 
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+          }),
+        ),
       ),
     );
 
@@ -373,13 +460,17 @@ describe('components / Field', () => {
     const onChange = jest.fn();
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          onChange,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            onChange,
+          }),
+        ),
       ),
     );
     const value = 'test';
@@ -398,13 +489,17 @@ describe('components / Field', () => {
     };
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          validate,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            validate,
+          }),
+        ),
       ),
     );
 
@@ -438,13 +533,17 @@ describe('components / Field', () => {
     const normalize = value => value && value.toUpperCase();
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          normalize,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            normalize,
+          }),
+        ),
       ),
     );
 
@@ -464,13 +563,17 @@ describe('components / Field', () => {
     normalize.mockReturnValue('TEST');
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          normalize,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            normalize,
+          }),
+        ),
       ),
     );
 
@@ -510,13 +613,17 @@ describe('components / Field', () => {
     const onChange = (data, value) => expect(value).toBe('test');
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: Input,
-          onChange,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: Input,
+            onChange,
+          }),
+        ),
       ),
     );
 
@@ -526,23 +633,27 @@ describe('components / Field', () => {
 
   it('through props change value of list of checkbox components', () => {
     const wrapper = ({ checked = false }) => {
-      return createElement(global.Provider, {}, [
-        createElement(Field, {
-          key: 0,
-          name: 'field',
-          component: 'input',
-          value: '1',
-          type: 'checkbox',
-        }),
-        createElement(Field, {
-          key: 1,
-          name: 'field',
-          value: '2',
-          checked,
-          component: 'input',
-          type: 'checkbox',
-        }),
-      ]);
+      return createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            key: 0,
+            name: 'field',
+            component: 'input',
+            value: '1',
+            type: 'checkbox',
+          }),
+          createElement(Field, {
+            key: 1,
+            name: 'field',
+            value: '2',
+            checked,
+            component: 'input',
+            type: 'checkbox',
+          }),
+        ]),
+      );
     };
 
     const component = mount(createElement(wrapper));
@@ -563,22 +674,26 @@ describe('components / Field', () => {
     }
 
     const component = mount(
-      createElement(global.Provider, {}, [
-        createElement(Field, {
-          key: 0,
-          name: 'field',
-          component: Checkbox,
-          value: '1',
-          type: 'checkbox',
-        }),
-        createElement(Field, {
-          key: 1,
-          name: 'field',
-          value: '2',
-          component: Checkbox,
-          type: 'checkbox',
-        }),
-      ]),
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            key: 0,
+            name: 'field',
+            component: Checkbox,
+            value: '1',
+            type: 'checkbox',
+          }),
+          createElement(Field, {
+            key: 1,
+            name: 'field',
+            value: '2',
+            component: Checkbox,
+            type: 'checkbox',
+          }),
+        ]),
+      ),
     );
 
     const event = { nativeEvent: new Event('change'), target: { checked: true } };
@@ -607,13 +722,17 @@ describe('components / Field', () => {
     const onChange = (data, value) => expect(value).toBe('test');
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: Input,
-          onChange,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: Input,
+            onChange,
+          }),
+        ),
       ),
     );
 
@@ -625,20 +744,24 @@ describe('components / Field', () => {
     const onChange = (data, value) => expect(value).toEqual(['test2', 'test1']);
     const component = mount(
       createElement(
-        global.Provider,
-        {},
+        Provider,
+        { store: global.store },
         createElement(
-          Field,
-          {
-            name: 'field',
-            component: 'select',
-            multiple: true,
-            onChange,
-          },
-          [
-            createElement('option', { value: 'test1', key: 1 }, 'test1'),
-            createElement('option', { value: 'test2', key: 2 }, 'test2'),
-          ],
+          Form,
+          { path: 'form' },
+          createElement(
+            Field,
+            {
+              name: 'field',
+              component: 'select',
+              multiple: true,
+              onChange,
+            },
+            [
+              createElement('option', { value: 'test1', key: 1 }, 'test1'),
+              createElement('option', { value: 'test2', key: 2 }, 'test2'),
+            ],
+          ),
         ),
       ),
     );
@@ -656,7 +779,7 @@ describe('components / Field', () => {
 
     const onChange = (data, value) => {
       checked++;
-      expect(value).toBe('');
+      expect(value).toBe(checked < 3 ? true : '');
     };
     const onChangeSecond = (data, value) => {
       checked++;
@@ -664,25 +787,29 @@ describe('components / Field', () => {
     };
 
     let component = mount(
-      createElement(global.Provider, {}, [
-        createElement(Field, {
-          name: 'field',
-          className: 'field',
-          component: 'input',
-          type: 'checkbox',
-          key: 1,
-          onChange,
-        }),
-        createElement(Field, {
-          name: 'field1',
-          className: 'field1',
-          component: 'input',
-          type: 'checkbox',
-          value: 'test',
-          key: 2,
-          onChange: onChangeSecond,
-        }),
-      ]),
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field',
+            className: 'field',
+            component: 'input',
+            type: 'checkbox',
+            key: 1,
+            onChange,
+          }),
+          createElement(Field, {
+            name: 'field1',
+            className: 'field1',
+            component: 'input',
+            type: 'checkbox',
+            value: 'test',
+            key: 2,
+            onChange: onChangeSecond,
+          }),
+        ]),
+      ),
     );
 
     const event = checked => ({
@@ -715,26 +842,30 @@ describe('components / Field', () => {
     };
 
     let component = mount(
-      createElement(global.Provider, {}, [
-        createElement(Field, {
-          name: 'field',
-          className: 'field',
-          component: 'input',
-          type: 'checkbox',
-          value: 'field',
-          key: 1,
-          onChange,
-        }),
-        createElement(Field, {
-          name: 'field',
-          className: 'field1',
-          component: 'input',
-          type: 'checkbox',
-          value: 'field1',
-          key: 2,
-          onChange,
-        }),
-      ]),
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field',
+            className: 'field',
+            component: 'input',
+            type: 'checkbox',
+            value: 'field',
+            key: 1,
+            onChange,
+          }),
+          createElement(Field, {
+            name: 'field',
+            className: 'field1',
+            component: 'input',
+            type: 'checkbox',
+            value: 'field1',
+            key: 2,
+            onChange,
+          }),
+        ]),
+      ),
     );
 
     expect(global.store.getState().form.fields.field.value).toEqual([]);
@@ -766,15 +897,19 @@ describe('components / Field', () => {
 
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          type: 'radio',
-          value: 'field',
-          onChange,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'radio',
+            value: 'field',
+            onChange,
+          }),
+        ),
       ),
     );
 
@@ -789,15 +924,19 @@ describe('components / Field', () => {
   it('get field value in checked radio component', () => {
     mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          type: 'radio',
-          checked: true,
-          value: 'field',
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'radio',
+            checked: true,
+            value: 'field',
+          }),
+        ),
       ),
     );
 
@@ -810,13 +949,17 @@ describe('components / Field', () => {
     };
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          validate,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            validate,
+          }),
+        ),
       ),
     );
 
@@ -846,14 +989,18 @@ describe('components / Field', () => {
 
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          value: 'test',
-          normalize,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            value: 'test',
+            normalize,
+          }),
+        ),
       ),
     );
 
@@ -868,13 +1015,17 @@ describe('components / Field', () => {
 
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          normalize,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            normalize,
+          }),
+        ),
       ),
     );
 
@@ -883,8 +1034,8 @@ describe('components / Field', () => {
 
     input.simulate('blur', event);
 
-    expect(normalize).toBeCalledWith(
-      'TEST',
+    expect(normalize).lastCalledWith(
+      'test',
       'TEST',
       {
         field: {
@@ -904,13 +1055,17 @@ describe('components / Field', () => {
     const onBlur = jest.fn();
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          onBlur,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            onBlur,
+          }),
+        ),
       ),
     );
     const event = { nativeEvent: new Event('blur') };
@@ -931,13 +1086,17 @@ describe('components / Field', () => {
     const onFocus = jest.fn();
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          onFocus,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            onFocus,
+          }),
+        ),
       ),
     );
     const event = { nativeEvent: new Event('focus') };
@@ -960,13 +1119,17 @@ describe('components / Field', () => {
 
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          normalize,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            normalize,
+          }),
+        ),
       ),
     );
 
@@ -999,18 +1162,24 @@ describe('components / Field', () => {
     const refFunciton = jest.fn();
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          innerRef: refFunciton,
-          component: customComponent,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            innerRef: refFunciton,
+            component: customComponent,
+          }),
+        ),
       ),
     );
     const input = component.find(customComponent);
 
     expect(Object.keys(input.props())).toEqual([
+      'reactReduxContext',
+      'reformReduxContext',
       'value',
       'onChange',
       'onBlur',
@@ -1030,13 +1199,17 @@ describe('components / Field', () => {
     const refFunciton = jest.fn();
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          ref: refFunciton,
-          component: 'input',
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            ref: refFunciton,
+            component: 'input',
+          }),
+        ),
       ),
     );
     const input = component.find('input');
@@ -1054,13 +1227,17 @@ describe('components / Field', () => {
   it('component select with prop multiple must have value with type array', () => {
     const component = mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          component: 'select',
-          multiple: true,
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            component: 'select',
+            multiple: true,
+          }),
+        ),
       ),
     );
 
@@ -1071,18 +1248,22 @@ describe('components / Field', () => {
   it('in not string components exists formName and errors props', () => {
     mount(
       createElement(
-        global.Provider,
-        {},
-        createElement(Field, {
-          name: 'field',
-          innerRef: () => {},
-          component: props => {
-            expect(Object.keys(props)).toEqual(
-              expect.arrayContaining(['formName', 'innerRef', 'errors']),
-            );
-            return 'test';
-          },
-        }),
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          createElement(Field, {
+            name: 'field',
+            innerRef: () => {},
+            component: props => {
+              expect(Object.keys(props)).toEqual(
+                expect.arrayContaining(['formName', 'innerRef', 'errors']),
+              );
+              return 'test';
+            },
+          }),
+        ),
       ),
     );
   });
@@ -1091,24 +1272,28 @@ describe('components / Field', () => {
     expect.assertions(2);
 
     const component = ({ value1, value2 }) =>
-      createElement(global.Provider, {}, [
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          type: 'checkbox',
-          checked: true,
-          value: value1,
-          key: 0,
-        }),
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          type: 'checkbox',
-          checked: true,
-          value: value2,
-          key: 1,
-        }),
-      ]);
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'checkbox',
+            checked: true,
+            value: value1,
+            key: 0,
+          }),
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'checkbox',
+            checked: true,
+            value: value2,
+            key: 1,
+          }),
+        ]),
+      );
 
     const mountedComponent = mount(createElement(component, { value1: 1, value2: 2 }));
 
@@ -1119,28 +1304,62 @@ describe('components / Field', () => {
     expect(global.store.getState().form.fields.field.value).toEqual([1, 2]);
   });
 
+  it('checkbox value should be bool if prop does not exists', () => {
+    expect.assertions(4);
+
+    const component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'checkbox',
+            key: 0,
+          }),
+        ]),
+      ),
+    );
+
+    expect(global.store.getState().form.fields.field.value).toBeFalsy();
+
+    const event = { nativeEvent: new Event('change'), target: { checked: true } };
+    const input = component.find('input');
+    expect(component.find('input').props().checked).toBeFalsy();
+
+    input.simulate('change', event);
+
+    expect(component.find('input').props().checked).toBeTruthy();
+    expect(global.store.getState().form.fields.field.value).toBeTruthy();
+  });
+
   it('checked prop in two checkboxes with same name', () => {
     expect.assertions(2);
 
     const component = mount(
-      createElement(global.Provider, {}, [
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          type: 'checkbox',
-          checked: true,
-          value: 'field1',
-          key: 0,
-        }),
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          type: 'checkbox',
-          className: 'field2',
-          value: 'field2',
-          key: 1,
-        }),
-      ]),
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'checkbox',
+            checked: true,
+            value: 'field1',
+            key: 0,
+          }),
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'checkbox',
+            className: 'field2',
+            value: 'field2',
+            key: 1,
+          }),
+        ]),
+      ),
     );
 
     expect(component.find('Field.field2').instance().state.field.value).toEqual(['field1']);
@@ -1152,25 +1371,29 @@ describe('components / Field', () => {
 
   it('value in few checkboxes with same name', () => {
     const component1 = mount(
-      createElement(global.Provider, {}, [
-        createElement(Field, {
-          name: 'field1',
-          component: 'input',
-          type: 'checkbox',
-          checked: true,
-          value: 'field1',
-          key: 0,
-        }),
-        createElement(Field, {
-          name: 'field1',
-          component: 'input',
-          checked: true,
-          type: 'checkbox',
-          className: 'field3',
-          value: 'field2',
-          key: 1,
-        }),
-      ]),
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field1',
+            component: 'input',
+            type: 'checkbox',
+            checked: true,
+            value: 'field1',
+            key: 0,
+          }),
+          createElement(Field, {
+            name: 'field1',
+            component: 'input',
+            checked: true,
+            type: 'checkbox',
+            className: 'field3',
+            value: 'field2',
+            key: 1,
+          }),
+        ]),
+      ),
     );
 
     expect(component1.find('Field.field3').instance().state.field.value).toEqual([
@@ -1183,20 +1406,24 @@ describe('components / Field', () => {
     expect.assertions(2);
 
     const component = mount(
-      createElement(global.Provider, {}, [
-        createElement(Field, {
-          name: 'field',
-          component: 'input',
-          type: 'radio',
-          key: 0,
-        }),
-        createElement(Field, {
-          name: 'field1',
-          component: 'input',
-          type: 'checkbox',
-          key: 1,
-        }),
-      ]),
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'radio',
+            key: 0,
+          }),
+          createElement(Field, {
+            name: 'field1',
+            component: 'input',
+            type: 'checkbox',
+            key: 1,
+          }),
+        ]),
+      ),
     );
 
     const radio = component.find('input[type="radio"]');
@@ -1211,29 +1438,33 @@ describe('components / Field', () => {
 
     const wrapper = ({ visible = true }) => {
       return createElement(
-        global.Provider,
-        {},
-        visible
-          ? [
-              createElement(Field, {
-                key: 0,
-                name: 'field',
-                component: 'input',
-                value: 1,
-                removeOnUnmount: true,
-                checked: true,
-                type: 'checkbox',
-              }),
-              createElement(Field, {
-                key: 1,
-                name: 'field',
-                value: 2,
-                removeOnUnmount: true,
-                component: 'input',
-                type: 'checkbox',
-              }),
-            ]
-          : null,
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          visible
+            ? [
+                createElement(Field, {
+                  key: 0,
+                  name: 'field',
+                  component: 'input',
+                  value: 1,
+                  removeOnUnmount: true,
+                  checked: true,
+                  type: 'checkbox',
+                }),
+                createElement(Field, {
+                  key: 1,
+                  name: 'field',
+                  value: 2,
+                  removeOnUnmount: true,
+                  component: 'input',
+                  type: 'checkbox',
+                }),
+              ]
+            : null,
+        ),
       );
     };
 
@@ -1258,28 +1489,32 @@ describe('components / Field', () => {
 
     const wrapper = ({ visible = true }) => {
       return createElement(
-        global.Provider,
-        {},
-        visible
-          ? [
-              createElement(Field, {
-                key: 0,
-                name: 'field',
-                component: 'input',
-                value: 1,
-                checked: true,
-                type: 'checkbox',
-              }),
-              createElement(Field, {
-                key: 1,
-                name: 'field',
-                value: 2,
-                checked: true,
-                component: 'input',
-                type: 'checkbox',
-              }),
-            ]
-          : null,
+        Provider,
+        { store: global.store },
+        createElement(
+          Form,
+          { path: 'form' },
+          visible
+            ? [
+                createElement(Field, {
+                  key: 0,
+                  name: 'field',
+                  component: 'input',
+                  value: 1,
+                  checked: true,
+                  type: 'checkbox',
+                }),
+                createElement(Field, {
+                  key: 1,
+                  name: 'field',
+                  value: 2,
+                  checked: true,
+                  component: 'input',
+                  type: 'checkbox',
+                }),
+              ]
+            : null,
+        ),
       );
     };
 
@@ -1305,5 +1540,76 @@ describe('components / Field', () => {
     jest.runAllTimers();
 
     expect(global.store.getState().form.fields.field.value).toEqual([1, 2]);
+  });
+
+  it('dont reset values on form update', () => {
+    expect.assertions(4);
+    jest.useFakeTimers();
+
+    const wrapper = ({ visible = false, change = false }) => {
+      return createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          visible
+            ? createElement(Field, {
+                key: 0,
+                name: 'field',
+                component: 'input',
+                value: 1,
+                checked: true,
+                type: 'checkbox',
+              })
+            : null,
+          createElement(Field, {
+            key: 1,
+            name: 'field',
+            value: 2,
+            checked: true,
+            component: 'input',
+            type: 'checkbox',
+          }),
+          createElement(Field, {
+            key: 3,
+            name: 'field2',
+            value: change ? 'field2 value' : '',
+            component: 'input',
+            type: 'text',
+          }),
+        ]),
+      );
+    };
+
+    const component = mount(createElement(wrapper));
+
+    expect(global.store.getState().form.fields.field.value).toBe(2);
+    expect(global.store.getState().form.fields.field2.value).toBe('');
+
+    component.setProps({ change: true });
+
+    expect(global.store.getState().form.fields.field2.value).toBe('field2 value');
+
+    component.setProps({ visible: true });
+
+    jest.runAllTimers();
+
+    expect(global.store.getState().form.fields).toEqual({
+      field: {
+        changed: false,
+        disabled: false,
+        errors: [],
+        touched: false,
+        valid: true,
+        value: [2, 1],
+      },
+      field2: {
+        changed: false,
+        disabled: false,
+        errors: [],
+        touched: false,
+        valid: true,
+        value: 'field2 value',
+      },
+    });
   });
 });

@@ -1,10 +1,10 @@
-import { Component, createElement } from 'react';
-import PropTypes from 'prop-types';
+import { ReactReduxContext } from 'react-redux';
+import { Component, createElement, forwardRef } from 'react';
 import { resetForm } from '../actions/Form';
 import { filterReactDomProps } from '../utils/common';
+import { ReformReduxContext } from './Form';
 import type { Element } from 'react';
 import type { State } from '../types/formReducer';
-import type { ReFormRedux } from '../types/Form';
 import type { ComponentProps, ComponentState } from '../types/Button';
 import type { DataFunctions } from '../types/dataFunctions';
 import type { ComponentCreator } from '../types/common';
@@ -19,21 +19,16 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
       submitting: false,
     };
 
-    static contextTypes = {
-      _reformRedux: PropTypes.object,
-      store: PropTypes.object,
-    };
+    constructor(props: ComponentProps) {
+      super(props);
 
-    constructor(props: ComponentProps, context: ReFormRedux) {
-      super(props, context);
-
-      if (!context._reformRedux) {
+      if (!props.reformReduxContext) {
         throw new Error('Component `Button` must be in `Form` component.');
       }
 
-      this.unsubscribeFromStore = this.context.store.subscribe(() => {
-        const state: State = this.context.store.getState();
-        const currentFormData: State = getIn(state, this.context._reformRedux.form.path);
+      this.unsubscribeFromStore = props.reactReduxContext.store.subscribe(() => {
+        const state: State = props.reactReduxContext.store.getState();
+        const currentFormData: State = getIn(state, props.reformReduxContext.form.path);
         const formSubmitting: boolean = getIn(currentFormData, ['submitting']);
 
         if (this.state.submitting !== formSubmitting) {
@@ -49,10 +44,10 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
     }
 
     onClickHandler = (event: Event) => {
-      const { type, onClick } = this.props;
-      const { store, _reformRedux } = this.context;
+      const { type, onClick, reactReduxContext, reformReduxContext } = this.props;
 
-      if (type === 'reset') store.dispatch(resetForm(_reformRedux.form.name));
+      if (type === 'reset')
+        reactReduxContext.store.dispatch(resetForm(reformReduxContext.form.name));
 
       if (onClick) onClick(event);
     };
@@ -67,5 +62,16 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
     }
   }
 
-  return Button;
+  return forwardRef((props, ref) =>
+    createElement(ReactReduxContext.Consumer, {}, reactReduxContextValue =>
+      createElement(ReformReduxContext.Consumer, {}, reformReduxContextValue =>
+        createElement(Button, {
+          ...props,
+          reactReduxContext: reactReduxContextValue,
+          reformReduxContext: reformReduxContextValue,
+          innerRef: ref,
+        }),
+      ),
+    ),
+  );
 };

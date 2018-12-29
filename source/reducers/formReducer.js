@@ -182,9 +182,7 @@ export const createFormReducer: Function = ({
       let newState: State = map(state);
 
       keys(action.fields).forEach((fieldKey: string) => {
-        if (!hasIn(newState, ['fields', fieldKey])) {
-          newState = setIn(newState, ['fields', fieldKey], action.fields[fieldKey]);
-        }
+        newState = setIn(newState, ['fields', fieldKey], action.fields[fieldKey]);
       });
 
       keys(getIn(newState, ['fields'])).forEach((fieldKey: string) => {

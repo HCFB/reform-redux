@@ -1,11 +1,12 @@
 import { createElement, Component } from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { getIn } from 'immutable';
 import { Field, selectFormData } from '../../immutable';
 
 describe('containers / selectFormData.immutable', () => {
   it('if container is not in Form component then throw error', () => {
-    expect(() => shallow(createElement(selectFormData()('')))).toThrow(
+    console.error = jest.fn(); // eslint-disable-line
+    expect(() => mount(createElement(selectFormData()('')))).toThrow(
       'Container `selectFormData` must be in `Form` component.',
     );
   });

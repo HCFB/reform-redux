@@ -1,8 +1,8 @@
 import Adapter from 'enzyme-adapter-react-16';
+import { Provider as ReactReduxProvider } from 'react-redux';
 import { configure } from 'enzyme';
 import { createStore, combineReducers } from 'redux';
 import { Component, createElement } from 'react';
-import PropTypes from 'prop-types';
 import { is } from 'immutable';
 import { formReducerCreator, Form, changeFieldValue } from '../source';
 import {
@@ -15,21 +15,15 @@ import {
 configure({ adapter: new Adapter() });
 
 class Provider extends Component {
-  static childContextTypes = {
-    store: PropTypes.object,
-  };
-
-  getChildContext() {
-    return {
-      store: this.props.immutable ? global.immutableStore : global.store,
-    };
-  }
-
   render() {
     return createElement(
-      this.props.immutable ? ImmutableForm : Form,
-      { path: 'form' },
-      this.props.children,
+      ReactReduxProvider,
+      { store: this.props.immutable ? global.immutableStore : global.store },
+      createElement(
+        this.props.immutable ? ImmutableForm : Form,
+        { path: 'form' },
+        this.props.children,
+      ),
     );
   }
 }
@@ -80,6 +74,7 @@ beforeEach(() => {
         updateForm: () => {},
       },
       field: {
+        getFieldCount: () => 1,
         changeFieldValue: (fieldName, fieldValue) =>
           global.store.dispatch(changeFieldValue('form', fieldName, fieldValue)),
       },
