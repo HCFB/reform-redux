@@ -10,8 +10,10 @@ import {
   REMOVE_FIELD,
   SET_FIELD_TOUCHED,
   SET_FIELDS_TOUCHED,
+  SET_FIELDS_HIDDEN,
   SET_FIELD_CHANGED,
   SET_FIELDS_CHANGED,
+  SET_FIELD_HIDDEN,
 } from '../constants/Field';
 import type {
   ChangeFieldValue,
@@ -29,11 +31,32 @@ import type {
   SetFieldsTouched,
   SetFieldChanged,
   SetFieldsChanged,
+  SetFieldHidden,
+  SetFieldsHidden,
 } from '../types/Field';
 import type { ResetState } from '../types/formReducer';
 import { getReduxConst } from '../utils/common';
 
-export const setFieldTouched: Function = (
+/**
+ * Set field touched.
+ *
+ * @example
+ *
+ * import { setFieldTouched } from 'reform-redux';
+ *
+ * store.dispatch(setFieldTouched(
+ *   formName: string,
+ *   fieldName: FieldName,
+ *   fieldTouched: boolean,
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName} fieldName
+ * @param {boolean} fieldTouched
+ * @returns {SetFieldTouched}
+ */
+export const setFieldTouched = (
   formName: string,
   fieldName: FieldName,
   fieldTouched: boolean,
@@ -44,7 +67,80 @@ export const setFieldTouched: Function = (
   fieldTouched,
 });
 
-export const setFieldsTouched: Function = (
+/**
+ * Set fields hidden.
+ *
+ * @example
+ *
+ * import { setFieldsHidden } from 'reform-redux';
+ *
+ * store.dispatch(setFieldsHidden(
+ *  formName: string,
+ *  hiddenFields: { [fieldName: FieldName]: boolean },
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {object.<FieldName, boolean>} hiddenFields
+ * @returns {SetFieldsHidden}
+ */
+export const setFieldsHidden = (
+  formName: string,
+  hiddenFields: { [fieldName: FieldName]: boolean },
+): SetFieldsHidden => ({
+  type: getReduxConst(SET_FIELDS_HIDDEN),
+  formName,
+  hiddenFields,
+});
+
+/**
+ * Set field hidden.
+ *
+ * @example
+ *
+ * import { setFieldHidden } from 'reform-redux';
+ *
+ * store.dispatch(setFieldHidden(
+ *   formName: string,
+ *   fieldName: FieldName,
+ *   fieldHidden: boolean,
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName} fieldName
+ * @param {boolean} fieldHidden
+ * @returns {SetFieldHidden}
+ */
+export const setFieldHidden = (
+  formName: string,
+  fieldName: FieldName,
+  fieldHidden: boolean,
+): SetFieldHidden => ({
+  type: getReduxConst(SET_FIELD_HIDDEN),
+  formName,
+  fieldName,
+  fieldHidden,
+});
+
+/**
+ * Set fields touched.
+ *
+ * @example
+ *
+ * import { setFieldsTouched } from 'reform-redux';
+ *
+ * store.dispatch(setFieldsTouched(
+ *   formName: string,
+ *   touchedFields: { [fieldName: FieldName]: boolean },
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {object.<FieldName, boolean>} touchedFields
+ * @returns {SetFieldsTouched}
+ */
+export const setFieldsTouched = (
   formName: string,
   touchedFields: { [fieldName: FieldName]: boolean },
 ): SetFieldsTouched => ({
@@ -53,7 +149,26 @@ export const setFieldsTouched: Function = (
   touchedFields,
 });
 
-export const setFieldChanged: Function = (
+/**
+ * Set field changed.
+ *
+ * @example
+ *
+ * import { setFieldChanged } from 'reform-redux';
+ *
+ * store.dispatch(setFieldChanged(
+ *   formName: string,
+ *   fieldName: FieldName,
+ *   fieldChanged: boolean,
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName} fieldName
+ * @param {boolean} fieldChanged
+ * @returns {SetFieldChanged}
+ */
+export const setFieldChanged = (
   formName: string,
   fieldName: FieldName,
   fieldChanged: boolean,
@@ -64,7 +179,24 @@ export const setFieldChanged: Function = (
   fieldChanged,
 });
 
-export const setFieldsChanged: Function = (
+/**
+ * Set fields changed.
+ *
+ * @example
+ *
+ * import { setFieldsChanged } from 'reform-redux';
+ *
+ * store.dispatch(setFieldsChanged(
+ *   formName: string,
+ *   changedFields: { [fieldName: FieldName]: boolean },
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {object.<FieldName, boolean>} changedFields
+ * @returns {SetFieldsChanged}
+ */
+export const setFieldsChanged = (
   formName: string,
   changedFields: { [fieldName: FieldName]: boolean },
 ): SetFieldsChanged => ({
@@ -73,13 +205,49 @@ export const setFieldsChanged: Function = (
   changedFields,
 });
 
-export const removeField: Function = (formName: string, fieldName: FieldName): RemoveField => ({
+/**
+ * Remove field
+ *
+ * @example
+ *
+ * import { removeField } from 'reform-redux';
+ *
+ * store.dispatch(removeField(
+ *   formName: string,
+ *   fieldName: FieldName,
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName} fieldName
+ * @returns {RemoveField}
+ */
+export const removeField = (formName: string, fieldName: FieldName): RemoveField => ({
   type: getReduxConst(REMOVE_FIELD),
   formName,
   fieldName,
 });
 
-export const resetField: Function = (
+/**
+ * Reset field
+ *
+ * @example
+ *
+ * import { resetField } from 'reform-redux';
+ *
+ * store.dispatch(resetField(
+ *   formName: string,
+ *   fieldName: FieldName,
+ *   state?: ResetState
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName} fieldName
+ * @param {ResetState} [state]
+ * @returns {ResetField}
+ */
+export const resetField = (
   formName: string,
   fieldName: FieldName,
   state?: ResetState,
@@ -87,10 +255,30 @@ export const resetField: Function = (
   type: getReduxConst(RESET_FIELD),
   formName,
   fieldName,
+  // $FlowFixMe
   state,
 });
 
-export const resetFields: Function = (
+/**
+ * Reset fields
+ *
+ * @example
+ *
+ * import { resetFields } from 'reform-redux';
+ *
+ * store.dispatch(resetFields(
+ *   formName: string,
+ *   fieldNames: Array<FieldName>,
+ *   state?: ResetState
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName[]} fieldNames
+ * @param {ResetState} [state]
+ * @returns {ResetFields}
+ */
+export const resetFields = (
   formName: string,
   fieldsNames: Array<FieldName>,
   state?: ResetState,
@@ -98,10 +286,30 @@ export const resetFields: Function = (
   type: getReduxConst(RESET_FIELDS),
   formName,
   fieldsNames,
+  // $FlowFixMe
   state,
 });
 
-export const setFieldDisabled: Function = (
+/**
+ * Set field disabled
+ *
+ * @example
+ *
+ * import { setFieldDisabled } from 'reform-redux';
+ *
+ * store.dispatch(setFieldDisabled(
+ *   formName: string,
+ *   fieldName: FieldName,
+ *   disabled: boolean = true,
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName} fieldName
+ * @param {boolean} [disabled=true]
+ * @returns {SetFieldDisabled}
+ */
+export const setFieldDisabled = (
   formName: string,
   fieldName: FieldName,
   disabled: boolean = true,
@@ -112,7 +320,24 @@ export const setFieldDisabled: Function = (
   disabled,
 });
 
-export const setFieldsDisabled: Function = (
+/**
+ * Set fields disabled
+ *
+ * @example
+ *
+ * import { setFieldsDisabled } from 'reform-redux';
+ *
+ * store.dispatch(setFieldDisabled(
+ *   formName: string,
+ *   disabledFields: { [fieldName: FieldName]: boolean }
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {object.<FieldName, boolean>} disabledFields
+ * @returns {SetFieldsDisabled}
+ */
+export const setFieldsDisabled = (
   formName: string,
   disabledFields: { [fieldName: FieldName]: boolean },
 ): SetFieldsDisabled => ({
@@ -121,7 +346,26 @@ export const setFieldsDisabled: Function = (
   disabledFields,
 });
 
-export const changeFieldValue: Function = (
+/**
+ * Change field value
+ *
+ * @example
+ *
+ * import { changeFieldValue } from 'reform-redux';
+ *
+ * store.dispatch(changeFieldValue(
+ *   formName: string,
+ *   fieldName: FieldName,
+ *   fieldValue: FieldValue,
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName} fieldName
+ * @param {*} FieldValue
+ * @returns {ChangeFieldValue}
+ */
+export const changeFieldValue = (
   formName: string,
   fieldName: FieldName,
   fieldValue: FieldValue,
@@ -132,7 +376,24 @@ export const changeFieldValue: Function = (
   fieldValue,
 });
 
-export const changeFieldsValues: Function = (
+/**
+ * Change fields values
+ *
+ * @example
+ *
+ * import { changeFieldsValues } from 'reform-redux';
+ *
+ * store.dispatch(changeFieldsValues(
+ *   formName: string,
+ *   fieldsValues: { [fieldName: FieldName]: FieldValue },
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {object.<FieldName, *>} fieldsValues
+ * @returns {ChangeFieldsValues}
+ */
+export const changeFieldsValues = (
   formName: string,
   fieldsValues: { [fieldName: FieldName]: FieldValue },
 ): ChangeFieldsValues => ({
@@ -141,7 +402,26 @@ export const changeFieldsValues: Function = (
   fieldsValues,
 });
 
-export const setFieldErrors: Function = (
+/**
+ * Set field errors
+ *
+ * @example
+ *
+ * import { setFieldErrors } from 'reform-redux';
+ *
+ * store.dispatch(setFieldErrors(
+ *   formName: string,
+ *   fieldName: FieldName,
+ *   errors: Array<string>,
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {FieldName} fieldName
+ * @param {string[]} errors
+ * @returns {SetFieldErrors}
+ */
+export const setFieldErrors = (
   formName: string,
   fieldName: FieldName,
   errors: Array<string>,
@@ -152,7 +432,24 @@ export const setFieldErrors: Function = (
   errors,
 });
 
-export const setFieldsErrors: Function = (
+/**
+ * Set field errors
+ *
+ * @example
+ *
+ * import { setFieldsErrors } from 'reform-redux';
+ *
+ * store.dispatch(setFieldsErrors(
+ *   formName: string,
+ *   fieldsErrors: { [fieldName: FieldName]: Array<string> },
+ * ));
+ *
+ * @callback
+ * @param {string} formName
+ * @param {object.<FieldName, string[]>} fieldName
+ * @returns {SetFieldsErrors}
+ */
+export const setFieldsErrors = (
   formName: string,
   fieldsErrors: { [fieldName: FieldName]: Array<string> },
 ): SetFieldsErrors => ({

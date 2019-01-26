@@ -1,7 +1,7 @@
 import { Component, createElement } from 'react';
 import { Provider } from 'react-redux';
 import { shallow, mount } from 'enzyme';
-import { Field, changeFieldValue, Form } from '../../index';
+import { Field, changeFieldValue, Form, setFieldHidden } from '../../index';
 import { formInitialisation } from '../../actions/Form';
 
 describe('components / Field', () => {
@@ -145,6 +145,7 @@ describe('components / Field', () => {
         value: 'test',
         errors: [],
         changed: true,
+        hidden: false,
         touched: false,
         valid: true,
         disabled: false,
@@ -187,6 +188,7 @@ describe('components / Field', () => {
         errors: [],
         changed: false,
         touched: false,
+        hidden: false,
         valid: true,
         disabled: false,
       },
@@ -195,6 +197,7 @@ describe('components / Field', () => {
         errors: [],
         changed: false,
         touched: false,
+        hidden: false,
         valid: true,
         disabled: false,
       },
@@ -207,6 +210,7 @@ describe('components / Field', () => {
         value: '',
         errors: [],
         changed: false,
+        hidden: false,
         touched: false,
         valid: true,
         disabled: false,
@@ -279,7 +283,7 @@ describe('components / Field', () => {
   });
 
   it('if you pass disabled and value props then this props will in state.field.value and state.field.disabled.', () => {
-    expect.assertions(8);
+    expect.assertions(10);
 
     let component = mount(
       createElement(
@@ -295,6 +299,7 @@ describe('components / Field', () => {
             disabled: true,
             touched: true,
             changed: true,
+            hidden: true,
           }),
         ),
       ),
@@ -304,6 +309,7 @@ describe('components / Field', () => {
     expect(component.find('Field[name="test"]').state('field').disabled).toBeTruthy();
     expect(component.find('Field[name="test"]').state('field').touched).toBeTruthy();
     expect(component.find('Field[name="test"]').state('field').changed).toBeTruthy();
+    expect(component.find('Field[name="test"]').state('field').hidden).toBeTruthy();
 
     component = mount(
       createElement(
@@ -324,6 +330,7 @@ describe('components / Field', () => {
     expect(component.find('Field[name="test1"]').state('field').disabled).toBeFalsy();
     expect(component.find('Field[name="test1"]').state('field').touched).toBeFalsy();
     expect(component.find('Field[name="test1"]').state('field').changed).toBeFalsy();
+    expect(component.find('Field[name="test1"]').state('field').hidden).toBeFalsy();
   });
 
   it('if component type is checkbox or radio value must be an empty string.', () => {
@@ -457,6 +464,8 @@ describe('components / Field', () => {
   });
 
   it('component with custom onChange', () => {
+    expect.assertions(2);
+
     const onChange = jest.fn();
     const component = mount(
       createElement(
@@ -473,12 +482,15 @@ describe('components / Field', () => {
         ),
       ),
     );
-    const value = 'test';
-    const event = { nativeEvent: new Event('change'), target: { value } };
+    const newEvent = value => ({ nativeEvent: new Event('change'), target: { value } });
 
-    component.find('input').simulate('change', event);
+    component.find('input').simulate('change', newEvent('value'));
 
-    expect(onChange).toBeCalledWith(expect.anything(), value);
+    expect(onChange).toBeCalledWith(expect.anything(), 'value', '');
+
+    component.find('input').simulate('change', newEvent('value1'));
+
+    expect(onChange).toBeCalledWith(expect.anything(), 'value1', 'value');
   });
 
   it('validate on onChange after onBlur', done => {
@@ -590,6 +602,7 @@ describe('components / Field', () => {
           disabled: false,
           errors: [],
           touched: false,
+          hidden: false,
           valid: true,
           changed: false,
           value: 'TEST',
@@ -1043,6 +1056,7 @@ describe('components / Field', () => {
           errors: [],
           touched: false,
           valid: true,
+          hidden: false,
           changed: false,
           value: 'TEST',
         },
@@ -1077,6 +1091,7 @@ describe('components / Field', () => {
       errors: [],
       changed: false,
       touched: false,
+      hidden: false,
       valid: true,
       value: '',
     });
@@ -1107,6 +1122,7 @@ describe('components / Field', () => {
       disabled: false,
       errors: [],
       changed: false,
+      hidden: false,
       touched: false,
       valid: true,
       value: '',
@@ -1146,6 +1162,7 @@ describe('components / Field', () => {
           disabled: false,
           changed: false,
           touched: false,
+          hidden: false,
           errors: [],
           valid: true,
           value: 'TEST',
@@ -1181,6 +1198,7 @@ describe('components / Field', () => {
       'reactReduxContext',
       'reformReduxContext',
       'value',
+      'hidden',
       'onChange',
       'onBlur',
       'onFocus',
@@ -1216,6 +1234,7 @@ describe('components / Field', () => {
 
     expect(Object.keys(input.props())).toEqual([
       'value',
+      'hidden',
       'onChange',
       'onBlur',
       'onFocus',
@@ -1367,6 +1386,38 @@ describe('components / Field', () => {
     global.store.dispatch(changeFieldValue('form', 'field', ['field2']));
 
     expect(component.find('Field.field2').instance().state.field.value).toEqual(['field2']);
+  });
+
+  it('hidden state works correctly', done => {
+    expect.assertions(2);
+
+    const component = mount(
+      createElement(
+        Provider,
+        { store: global.store },
+        createElement(Form, { path: 'form' }, [
+          createElement(Field, {
+            name: 'field',
+            component: 'input',
+            type: 'checkbox',
+            checked: true,
+            value: 'field1',
+            key: 0,
+          }),
+        ]),
+      ),
+    );
+
+    expect(component.find('input').length).toBe(1);
+
+    global.store.dispatch(setFieldHidden('form', 'field', true));
+    component.update();
+
+    setImmediate(() => {
+      expect(component.find('input').length).toBe(0);
+
+      done();
+    });
   });
 
   it('value in few checkboxes with same name', () => {
@@ -1528,6 +1579,7 @@ describe('components / Field', () => {
       field: {
         changed: false,
         disabled: false,
+        hidden: false,
         errors: [],
         touched: false,
         valid: true,
@@ -1599,12 +1651,14 @@ describe('components / Field', () => {
         disabled: false,
         errors: [],
         touched: false,
+        hidden: false,
         valid: true,
         value: [2, 1],
       },
       field2: {
         changed: false,
         disabled: false,
+        hidden: false,
         errors: [],
         touched: false,
         valid: true,

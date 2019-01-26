@@ -36,6 +36,8 @@ export {
   setFieldsTouched,
   setFieldChanged,
   setFieldsChanged,
+  setFieldHidden,
+  setFieldsHidden,
 } from './actions/Field';
 export { resetForm, setFormSubmitted } from './actions/Form';
 

@@ -38,6 +38,7 @@ describe('components / Form', () => {
           changed: true,
           disabled: false,
           touched: true,
+          hidden: false,
           errors: [],
           valid: true,
           value: '',
@@ -79,6 +80,7 @@ describe('components / Form', () => {
           changed: true,
           disabled: false,
           touched: false,
+          hidden: false,
           errors: [],
           valid: true,
           value: 'test',
@@ -102,6 +104,7 @@ describe('components / Form', () => {
           changed: true,
           disabled: false,
           touched: false,
+          hidden: false,
           errors: [],
           valid: true,
           value: 'test',
@@ -138,12 +141,13 @@ describe('components / Form', () => {
       createElement(
         Provider,
         { store: global.store },
-        createElement(Form, { path: 'form', onSubmit }, [
+        createElement(Form, { path: 'form', onSubmit, submitHiddenFields: false }, [
           createElement(Field, {
             key: 0,
             name: 'test1',
             value: '12',
             component: 'input',
+            hidden: true,
             validate,
           }),
           createElement(Field, {
@@ -166,17 +170,10 @@ describe('components / Form', () => {
       expect(global.store.getState().form.submitting).toBeFalsy();
       expect(onSubmit).toBeCalledWith(
         {
-          test1: {
-            disabled: false,
-            errors: [],
-            valid: true,
-            touched: false,
-            changed: false,
-            value: '12',
-          },
           test2: {
             disabled: false,
             errors: [],
+            hidden: false,
             touched: false,
             valid: true,
             changed: false,
@@ -217,6 +214,7 @@ describe('components / Form', () => {
             disabled: false,
             errors: ['Value must be at least 2 characters'],
             valid: false,
+            hidden: false,
             changed: false,
             touched: false,
             value: '1',
@@ -225,6 +223,7 @@ describe('components / Form', () => {
             disabled: false,
             errors: ['Value must be at least 2 characters'],
             valid: false,
+            hidden: false,
             touched: false,
             changed: false,
             value: '1',
@@ -236,6 +235,7 @@ describe('components / Form', () => {
             errors: ['Value must be at least 2 characters'],
             valid: false,
             touched: false,
+            hidden: false,
             changed: false,
             value: '1',
           },
@@ -243,6 +243,7 @@ describe('components / Form', () => {
             disabled: false,
             errors: ['Value must be at least 2 characters'],
             valid: false,
+            hidden: false,
             touched: false,
             changed: false,
             value: '1',

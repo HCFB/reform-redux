@@ -11,6 +11,7 @@ export function debounce(func: Function, wait: number, immediate?: boolean) {
       if (!immediate) func.apply(this, args);
     };
     const callNow = immediate && !timeout;
+    // $FlowFixMe
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(this, args);

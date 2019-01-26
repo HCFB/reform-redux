@@ -22,6 +22,112 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
     toJS,
   }: DataFunctions = dataFunctions;
 
+  /**
+   * @typedef {string} FieldName
+   */
+
+  /**
+   * @typedef {object} FieldData
+   * @property {object} FieldData
+   * @property {*} FieldData.value
+   * @property {boolean} FieldData.changed
+   * @property {string[]} FieldData.errors
+   * @property {boolean} FieldData.valid
+   * @property {boolean} FieldData.touched
+   * @property {boolean} FieldData.disabled
+   */
+
+  /**
+   * @typedef {object.<FieldName, FieldData>} FieldsData
+   */
+
+  /**
+   * @callback Validate
+   * @param {*} value
+   * @returns {undefined|string} error or nothing
+   */
+
+  /**
+   * @typedef {(Validate|Validate[])} ValidateFunctions
+   * @param {FieldsData} fields
+   * @param {Event} event
+   */
+
+  /**
+   * onChange | onBlur | onFocus | onInit
+   * @typedef {string} NormalizeWhen
+   */
+
+  /**
+   * @callback Normalize
+   * @param {*} value
+   * @param {*} previousValue
+   * @param {FieldsData} allFields
+   * @param {NormalizeWhen} when
+   * @returns {*} normalized value
+   */
+
+  /**
+   * @callback OnEvent
+   * @param {event} event
+   * @param {FieldData} fieldData
+   */
+
+  /**
+   * @callback OnChange
+   * @param {*} data
+   * @param {*} value
+   */
+
+  /**
+   * @callback FieldOnChange
+   * @param {*} data
+   * @param {string} [normalizeWhen=onChange]
+   * @returns {*} new value
+   */
+
+  /**
+   * @class FieldComponent
+   * @param {FieldOnChange} onChange Execute this function when you need to change value in the store.
+   * @param {OnEvent} onBlur This function will trigger function or functions which validate your field.
+   * @param {OnEvent} onFocus This function will trigger normalize function.
+   * @param {*} value Field value.
+   * @param {boolean} disabled Field disabled or not.
+   * @param {boolean} changed Field changed or not.
+   * @param {string} formName Form name.
+   * @param {boolean} touched Field touched or not.
+   * @param {boolean} checked This prop will avaible in the component if your component is checkbox or radio button.
+   * @param {string[]} errors Array of errors.
+   */
+
+  /**
+   * The Field component creates new field in store and provide all data of this field to your component.
+   *
+   * @class Field
+   * @example
+   * import { Field, Form } from 'reform-redux';
+   *
+   * const FormWrapper = () => (
+   *  <Form path="path.to.form">
+   *    <Field name="test" component="input" />
+   *  </Form>
+   * );
+   *
+   * @param {string} name Name of your field. This name will appear in fields object in redux store.
+   * @param {FieldComponent} component Function or Class or String which be passed to React.createElement.
+   * @param {ValidateFunctions} [validate] Validate functions.
+   * @param {boolean} [disabled] Field disabled or not.
+   * @param {boolean} [hidden] Field hidden or not.
+   * @param {boolean} [changed] Field changed or not.
+   * @param {boolean} [touched] Field touched or not.
+   * @param {*} [value] Value of your field.
+   * @param {Normalize} [normalize] Normalize value function. If you normalize your data on onInit then allFields will empty object.
+   * @param {OnEvent} [onFocus] onFocus handler.
+   * @param {OnEvent} [onBlur] onBlur handler.
+   * @param {OnChange} [onChange] onChange handler.
+   * @param {boolean} [checked] Checked or not your radio button or checkbox.
+   * @param {boolean} [removeOnUnmount] Remove field data from store on unmount
+   */
   class Field extends Component<ComponentProps, ComponentState> {
     initialFieldData: FieldData;
     unsubscribeFromStore: Function = () => {};
@@ -30,15 +136,29 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       name: PropTypes.string.isRequired,
       component: PropTypes.oneOfType([PropTypes.node, PropTypes.element, PropTypes.func])
         .isRequired,
-      removeOnUnmount: PropTypes.bool,
       normalize: PropTypes.func,
+      type: PropTypes.string,
+      multiple: PropTypes.bool,
+      checked: PropTypes.bool,
+      value: PropTypes.string,
+      validate: PropTypes.func,
+      disabled: PropTypes.bool,
+      changed: PropTypes.bool,
+      touched: PropTypes.bool,
+      onChange: PropTypes.func,
+      onBlur: PropTypes.func,
+      onFocus: PropTypes.func,
+      removeOnUnmount: PropTypes.bool,
+      hidden: PropTypes.bool,
     };
 
     static defaultProps: {
       disabled: $PropertyType<ComponentProps, 'disabled'>,
       value: $PropertyType<ComponentProps, 'value'>,
+      hidden: $PropertyType<ComponentProps, 'hidden'>,
     } = {
       value: '',
+      hidden: false,
       disabled: false,
     };
 
@@ -71,6 +191,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       this.initialFieldData = map({
         value,
         errors: list([]),
+        hidden: props.hidden,
         valid: true,
         touched: props.touched || false,
         changed: props.changed || false,
@@ -288,7 +409,8 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       this.changeFieldValue(value);
 
       if (this.props.onChange) {
-        this.props.onChange(data, value);
+        const { onChange } = this.props;
+        onChange(data, value, getIn(this.state.field, ['value']));
       }
     };
 
@@ -346,12 +468,20 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
     };
 
     render() {
-      // eslint-disable-next-line no-unused-vars
-      const { normalize, component, name, validate, disabled, innerRef, ...restProps } = this.props;
+      const {
+        normalize, // eslint-disable-line no-unused-vars
+        component,
+        name, // eslint-disable-line no-unused-vars
+        validate, // eslint-disable-line no-unused-vars
+        disabled, // eslint-disable-line no-unused-vars
+        innerRef,
+        ...restProps
+      } = this.props;
       let fieldProps: {
         onChange: Function,
         onBlur: Function,
         onFocus: Function,
+        hidden: boolean,
         value: any,
         disabled: boolean,
       } = {
@@ -359,11 +489,13 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         onChange: this.changeFieldValueHandler,
         onBlur: this.onBlurFieldHandler,
         onFocus: this.onFocusFieldHandler,
+        hidden: getIn(this.state.field, ['hidden']),
         value: getIn(this.state.field, ['value']),
         disabled: getIn(this.state.field, ['disabled']),
       };
 
       const fieldValue: any = getIn(this.state.field, ['value']);
+      const fieldHidden: boolean = getIn(this.state.field, ['hidden']);
 
       if (this.isRadioOrCheckbox()) {
         fieldProps = {
@@ -404,7 +536,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         };
       }
 
-      return createElement(this.props.component, fieldProps);
+      return !fieldHidden && createElement(this.props.component, fieldProps);
     }
   }
 

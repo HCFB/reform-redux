@@ -19,6 +19,8 @@ import {
   SET_FIELDS_TOUCHED,
   SET_FIELD_CHANGED,
   SET_FIELDS_CHANGED,
+  SET_FIELDS_HIDDEN,
+  SET_FIELD_HIDDEN,
 } from '../constants/Field';
 import { getReduxConst } from '../utils/common';
 import type { State, Action } from '../types/formReducer';
@@ -28,6 +30,8 @@ import type {
   ChangeFieldValue,
   SetFieldsDisabled,
   SetFieldDisabled,
+  SetFieldHidden,
+  SetFieldsHidden,
   SetFieldErrors,
   SetFieldsErrors,
   ResetField,
@@ -43,6 +47,11 @@ import type {
 } from '../types/Field';
 import type { FormInitialisation, SetFormSubmitting, UpdateForm, ResetForm } from '../types/Form';
 import type { DataFunctions } from '../types/dataFunctions';
+
+/**
+ * initial | empty
+ * @typedef {string} ResetState
+ */
 
 export const createFormReducer: Function = ({
   fromJS,
@@ -171,6 +180,7 @@ export const createFormReducer: Function = ({
         );
       }, map({}));
 
+      // $FlowFixMe
       emptyFormState = merge(state, {
         fields: map(emptyFields),
         valid: true,
@@ -227,6 +237,13 @@ export const createFormReducer: Function = ({
 
       return state;
     },
+    [getReduxConst(SET_FIELD_HIDDEN)]: (state: State, action: SetFieldHidden): State => {
+      if (hasIn(state, ['fields', action.fieldName])) {
+        return setIn(state, ['fields', action.fieldName, 'hidden'], action.fieldHidden);
+      }
+
+      return state;
+    },
     [getReduxConst(SET_FIELD_TOUCHED)]: (state: State, action: SetFieldTouched): State => {
       let newState: State = map(state);
 
@@ -262,6 +279,19 @@ export const createFormReducer: Function = ({
         keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'touched'])),
       );
       newState = setIn(newState, ['touched'], touched);
+
+      return newState;
+    },
+    [getReduxConst(SET_FIELDS_HIDDEN)]: (state: State, action: SetFieldsHidden): State => {
+      let newState: State = map(state);
+
+      keys(action.hiddenFields).forEach((hiddenField: string) => {
+        newState = setIn(
+          newState,
+          ['fields', hiddenField, 'hidden'],
+          getIn(action.hiddenFields, [hiddenField]),
+        );
+      });
 
       return newState;
     },
@@ -363,7 +393,12 @@ export const createFormReducer: Function = ({
     },
   };
 
-  return (formName: string): Function => {
+  /**
+   * Create form reducer.
+   * @callback formReducerCreator
+   * @param {string} formName
+   */
+  return (formName: string) => {
     return (state: State = initialState, action: Action): State => {
       if (action.formName !== formName) return state;
 

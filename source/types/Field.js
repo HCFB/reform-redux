@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import type { ResetState } from './formReducer';
 
 // Additional Types
 
@@ -41,7 +42,10 @@ export type FieldValidateProp = Array<Function> | Function;
 
 export type ComponentProps = {
   name: string,
-  component: ComponentType<*>,
+  component: string | ComponentType<*>,
+  reformReduxContext: any, // fix me
+  reactReduxContext: any,
+  hidden: boolean,
   removeOnUnmount?: boolean,
   normalize?: (value: any, previousValue: any, allFields: FieldsData, when: string) => any,
   type?: string,
@@ -63,6 +67,19 @@ export type ComponentState = {
 };
 
 // Actions
+
+export type SetFieldHidden = {
+  type: string,
+  formName: string,
+  fieldName: FieldName,
+  fieldHidden: boolean,
+};
+
+export type SetFieldsHidden = {
+  type: string,
+  formName: string,
+  hiddenFields: { [fieldName: FieldName]: boolean },
+};
 
 export type SetFieldTouched = {
   type: string,
@@ -112,6 +129,7 @@ export type SetFieldsDisabled = {
 export type ResetField = {
   type: string,
   formName: string,
+  state: ResetState,
   fieldName: FieldName,
 };
 
@@ -124,6 +142,7 @@ export type RemoveField = {
 export type ResetFields = {
   type: string,
   formName: string,
+  state: ResetState,
   fieldsNames: Array<FieldName>,
 };
 

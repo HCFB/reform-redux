@@ -1,12 +1,16 @@
+[include]
+./source/.*
+
 [ignore]
-.*/node_modules/.*
+<PROJECT_ROOT>/node_modules/.*
 .*/__tests__/.*
-.*/coverage/.*
-.*/jest/.*
-.*/package*
-.*/rollup*
-.*/immutable*
-.*/reform-redux*
+<PROJECT_ROOT>/.vscode/.*
+<PROJECT_ROOT>/coverage/.*
+<PROJECT_ROOT>/jest/.*
+<PROJECT_ROOT>/package*
+<PROJECT_ROOT>/rollup*
+<PROJECT_ROOT>/immutable*
+<PROJECT_ROOT>/reform-redux*
 
 [libs]
 ./source/types/flow-typed

@@ -12,6 +12,34 @@ import type { ComponentCreator } from '../types/common';
 export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunctions) => {
   const { getIn }: DataFunctions = dataFunctions;
 
+  /**
+   * submit | reset
+   * @typedef {string} ButtonType
+   */
+
+  /**
+   * @class ButtonComponent
+   * @param {boolean} isLoading When form submitting
+   */
+
+  /**
+   * If you need to disable your submit button when form is submitting or reset form use this component.
+   *
+   * @class Button
+   * @example
+   * import { Field, Form, Button } from 'reform-redux';
+   *
+   * const FormWrapper = () => (
+   *  <Form path="path.to.form">
+   *    <Field name="test" component="input" />
+   *    <Button type="submit">submit</Button>
+   *  </Form>
+   * );
+   *
+   * @param {ButtonType} type Button type.
+   * @param {ButtonComponent} [component] Component.
+   * @param {Function} [onClick] onClick handler.
+   */
   class Button extends Component<ComponentProps, ComponentState> {
     unsubscribeFromStore: Function = () => {};
 
@@ -52,13 +80,26 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
       if (onClick) onClick(event);
     };
 
-    render(): Element<'button'> {
-      return createElement('button', {
-        ...filterReactDomProps(this.props),
+    render(): Element<*> {
+      const component = this.props.component || 'button';
+      const commonProps = {
         disabled: this.props.disabled || this.state.submitting,
         onClick: this.onClickHandler,
         children: this.props.children,
-      });
+      };
+      const componentProps =
+        typeof component === 'string'
+          ? {
+              ...filterReactDomProps(this.props),
+              ...commonProps,
+            }
+          : {
+              ...this.props,
+              ...commonProps,
+              isLoading: this.state.submitting,
+            };
+
+      return createElement(component, componentProps);
     }
   }
 

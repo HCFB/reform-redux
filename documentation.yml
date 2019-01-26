@@ -1,0 +1,29 @@
+toc:
+  - name: Components
+    description: Description of all components in the library.
+  - Form
+  - Field
+  - Button
+  - selectFormData
+
+  - name: Actions
+    description: Description of all actions in the library.
+  - setFieldTouched
+  - setFieldsTouched
+  - setFieldsHidden
+  - setFieldHidden
+  - setFieldErrors
+  - setFieldsErrors
+  - changeFieldsValues
+  - setFieldChanged
+  - setFieldsChanged
+  - removeField
+  - resetField
+  - resetFields
+  - setFieldDisabled
+  - setFieldsDisabled
+  - changeFieldValue
+  - setFormSubmitted
+  - resetForm
+
+  - name: Types

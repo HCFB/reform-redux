@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.4] - 2019-1-25
+
+- Documentation.js
+
+## [1.8.3] - 2019-1-21
+
+- Pass custom props to Button component
+
+## [1.8.2] - 2019-1-20
+
+- Form component submitHiddenFields property
+- Button component new component property
+
+## [1.8.0] - 2019-1-18
+
+- New actions setFieldsHidden, setFieldHidden & hidden param for components
+- Pass previous value to onChange callback
+
 ## [1.7.0] - 2018-12-28
 
 - Support of new react context api.

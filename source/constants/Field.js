@@ -1,3 +1,5 @@
+export const SET_FIELD_HIDDEN: string = 'SET_FIELD_HIDDEN';
+export const SET_FIELDS_HIDDEN: string = 'SET_FIELDS_HIDDEN';
 export const CHANGE_FIELD_VALUE: string = 'CHANGE_FIELD_VALUE';
 export const CHANGE_FIELDS_VALUES: string = 'CHANGE_FIELDS_VALUES';
 export const SET_FIELD_ERRORS: string = 'SET_FIELD_ERRORS';

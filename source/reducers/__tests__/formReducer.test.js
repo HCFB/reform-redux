@@ -10,6 +10,8 @@ import {
   RESET_FIELDS,
   RESET_FIELD,
   REMOVE_FIELD,
+  SET_FIELD_HIDDEN,
+  SET_FIELDS_HIDDEN,
 } from '../../constants/Field';
 import {
   UPDATE_FORM,
@@ -127,6 +129,31 @@ describe('reducers/formReducer', () => {
     });
 
     expect(newState.fields.field.disabled).toBeTruthy();
+  });
+
+  it('SET_FIELD_HIDDEN', () => {
+    const action = formReducerCreator('form');
+    const newState = action(state, {
+      type: getReduxConst(SET_FIELD_HIDDEN),
+      formName: 'form',
+      fieldName: 'field',
+      fieldHidden: true,
+    });
+
+    expect(newState.fields.field.hidden).toBeTruthy();
+  });
+
+  it('SET_FIELDS_HIDDEN', () => {
+    const action = formReducerCreator('form');
+    const newState = action(state, {
+      type: getReduxConst(SET_FIELDS_HIDDEN),
+      formName: 'form',
+      hiddenFields: {
+        field: true,
+      },
+    });
+
+    expect(newState.fields.field.hidden).toBeTruthy();
   });
 
   it('CHANGE_FIELD_VALUE', () => {

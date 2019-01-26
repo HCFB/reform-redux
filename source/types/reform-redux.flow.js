@@ -22,6 +22,8 @@ declare module 'reform-redux/immutable' {
   declare export var resetForm: Function;
   declare export var setFieldTouched: Function;
   declare export var setFieldsTouched: Function;
+  declare export var setFieldHidden: Function;
+  declare export var setFieldsHidden: Function;
 
   // Components
   declare export var Form: ComponentType<*>;
@@ -59,6 +61,24 @@ declare module 'reform-redux' {
   };
 
   // Actions
+  declare export var setFieldsHidden: (
+    formName: string,
+    hiddenFields: { [fieldName: string]: boolean },
+  ) => {
+    type: string,
+    formName: string,
+    hiddenFields: { [fieldName: string]: boolean },
+  };
+  declare export var setFieldHidden: (
+    formName: string,
+    fieldName: string,
+    fieldHidden: boolean,
+  ) => {
+    type: string,
+    formName: string,
+    fieldName: string,
+    fieldHidden: boolean,
+  };
   declare export var setFieldTouched: (
     formName: string,
     fieldName: string,
@@ -208,6 +228,7 @@ declare module 'reform-redux' {
     type?: string,
     multiple?: boolean,
     checked?: boolean,
+    hidden?: boolean,
     changed?: boolean,
     touched?: boolean,
     value?: string,
@@ -236,6 +257,7 @@ declare module 'reform-redux' {
   declare export var Button: ComponentType<{
     type: string,
     onClick?: Function,
+    component?: ComponentType<*>
   }>;
 
   // Containers

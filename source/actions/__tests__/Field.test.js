@@ -11,6 +11,8 @@ import {
   SET_FIELDS_TOUCHED,
   SET_FIELD_CHANGED,
   SET_FIELDS_CHANGED,
+  SET_FIELD_HIDDEN,
+  SET_FIELDS_HIDDEN,
 } from '../../constants/Field';
 import { getReduxConst } from '../../utils/common';
 import {
@@ -26,6 +28,8 @@ import {
   setFieldsTouched,
   setFieldChanged,
   setFieldsChanged,
+  setFieldHidden,
+  setFieldsHidden,
 } from '../Field';
 
 describe('actions / Field', () => {
@@ -52,6 +56,29 @@ describe('actions / Field', () => {
       type: getReduxConst(SET_FIELDS_TOUCHED),
       formName,
       touchedFields,
+    });
+  });
+
+  it('setFieldHidden', () => {
+    const fieldHidden = true;
+    const actionResult = setFieldHidden(formName, fieldName, fieldHidden);
+
+    expect(actionResult).toEqual({
+      type: getReduxConst(SET_FIELD_HIDDEN),
+      formName,
+      fieldName,
+      fieldHidden,
+    });
+  });
+
+  it('setFieldsHidden', () => {
+    const hiddenFields = { test: true };
+    const actionResult = setFieldsHidden(formName, hiddenFields);
+
+    expect(actionResult).toEqual({
+      type: getReduxConst(SET_FIELDS_HIDDEN),
+      formName,
+      hiddenFields,
     });
   });
 

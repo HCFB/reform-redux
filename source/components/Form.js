@@ -22,10 +22,11 @@ import {
   setFieldTouched,
   setFieldChanged,
   setFieldsChanged,
+  setFieldHidden,
+  setFieldsHidden,
 } from '../actions/Field';
 import { validateField, getValidateFunctionsArray } from '../utils/Field';
 import { debounce, asyncForEach, filterReactDomProps } from '../utils/common';
-import type { Element } from 'react';
 import type { ComponentProps, FieldsValidate } from '../types/Form';
 import type {
   FieldData,
@@ -39,6 +40,7 @@ import type { Store } from 'redux';
 import type { State, ResetState } from '../types/formReducer';
 import type { DataFunctions } from '../types/dataFunctions';
 
+// $FlowFixMe
 export const ReformReduxContext = createContext(null);
 
 export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctions) => {
@@ -48,21 +50,58 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
     listSize,
     list,
     setIn,
+    toJS,
     map,
     isList,
+    fromJS,
     is,
     deleteIn,
     listIncludes,
   }: DataFunctions = dataFunctions;
 
+  /**
+   * @callback onSubmitFailed
+   * @param {FieldsData} errorFields
+   * @param {FieldsData} fields
+   * @param {Event} event
+   */
+
+  /**
+   * @callback onSubmit
+   * @param {FieldsData} fields
+   * @param {Event} event
+   */
+
+  /**
+   * The Form component is a simple wrapper for the React `<form>`.
+   *
+   * @class Form
+   * @example
+   * import { Form } from 'reform-redux';
+   *
+   * const FormWrapper = () => (
+   *  <Form path="path.to.form" />
+   * );
+   *
+   * @param {string} path Path to reducer in the redux store. Example: 'some.reducers.myFormName'. (Required)
+   * @param {string} [name] Form name.
+   * @param {onSubmitFailed} [onSubmitFailed] Function which will trigger after unsuccessfull submit the form.
+   * @param {onSubmit} [onSubmit] Function which will trigger after successfull submit the form.
+   * @param {boolean} [submitHiddenFields] Submit hidden fields or not. False by default.
+   */
   class Form extends Component<ComponentProps> {
     formName: string;
     path: Array<string>;
     initialized: boolean = false;
+    _reformReduxContext: {} = {};
+    updateForm: Function;
 
     static propTypes = {
       path: PropTypes.string.isRequired,
       name: PropTypes.string,
+      submitHiddenFields: PropTypes.bool,
+      onSubmitFailed: PropTypes.func,
+      onSubmit: PropTypes.func,
     };
 
     static defaultProps: {
@@ -110,6 +149,12 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
         },
         field: {
           getFieldCount: (fieldName: string) => this.fieldsCount[this.formName][fieldName] || 0,
+          setFieldHidden: (fieldName: FieldName, fieldHidden: boolean): Function =>
+            props.reactReduxContext.store.dispatch(
+              setFieldHidden(this.formName, fieldName, fieldHidden),
+            ),
+          setFieldsHidden: (hiddenFields: { [fieldName: FieldName]: boolean }): Function =>
+            props.reactReduxContext.store.dispatch(setFieldsHidden(this.formName, hiddenFields)),
           setFieldTouched: (fieldName: FieldName, fieldTouched: boolean): Function =>
             props.reactReduxContext.store.dispatch(
               setFieldTouched(this.formName, fieldName, fieldTouched),
@@ -377,6 +422,17 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
         state = store.getState();
         fields = getIn(state, [...this.path, 'fields']);
 
+        if (!this.props.submitHiddenFields) {
+          const jsFields = toJS(fields);
+          const jsFilteredFields = {};
+          Object.keys(jsFields).forEach(jsFieldKey => {
+            if (!jsFields[jsFieldKey].hidden) {
+              jsFilteredFields[jsFieldKey] = jsFields[jsFieldKey];
+            }
+          });
+          fields = fromJS(jsFilteredFields);
+        }
+
         Promise.resolve(onSubmit(fields, event)).then(() => {
           store.dispatch(setFormSubmitting(this.formName, false));
           store.dispatch(setFormSubmitted(this.formName, true));
@@ -384,7 +440,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
       }
     };
 
-    render(): Element<'form'> {
+    render() {
       const { children, innerRef } = this.props;
 
       return createElement(

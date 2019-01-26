@@ -10,6 +10,21 @@ import type { DataFunctions } from '../types/dataFunctions';
 export const createSelectFormData: Function = (dataFunctions: DataFunctions) => {
   const { getIn }: DataFunctions = dataFunctions;
 
+  /**
+   * Component wrapper which pass fields data to wrapped component through props.
+   *
+   * @callback selectFormData
+   * @example
+   * import { selectFormData } from 'reform-redux';
+   *
+   * selectFormData(
+   *   fieldNames: Array<FieldName>,
+   *   formPath?: string
+   * )(ConnectedComponent: ComponentType<*>) => ComponentType<*>
+   *
+   * @param {FieldName[]} fieldNames Field names.
+   * @param {string} [formPath] Form path.
+   */
   const selectFormData = (fieldNames: Array<FieldName>, formPath?: string): Function => {
     return (ConnectedComponent: ComponentType<*>): ComponentType<*> => {
       class SelectFormData extends Component<*, FieldsData> {
