@@ -69,8 +69,26 @@ export const createSelectFormData: Function = (dataFunctions: DataFunctions) => 
           });
         }
 
-        shouldComponentUpdate() {
-          return Boolean(Object.keys(this.state).length);
+        shouldComponentUpdate(
+          {
+            reformReduxContext: nextReformReduxContext, // eslint-disable-line no-unused-vars
+            reactReduxContext: nextReactReduxContext, // eslint-disable-line no-unused-vars
+            children: nextChildren, // eslint-disable-line no-unused-vars
+            ...nextProps
+          },
+          nextState,
+        ) {
+          // eslint-disable-next-line no-unused-vars
+          const {
+            reformReduxContext: currentReformReduxContext, // eslint-disable-line no-unused-vars
+            reactReduxContext: currentReactReduxContext, // eslint-disable-line no-unused-vars
+            children: currentChildren, // eslint-disable-line no-unused-vars
+            ...currentProps
+          } = this.props;
+          return (
+            Boolean(Object.keys(this.state).length) &&
+            (!is(currentProps, nextProps) || !is(this.state, nextState))
+          );
         }
 
         componentWillUnmount() {

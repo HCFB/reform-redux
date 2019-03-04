@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { setImmediate } from 'timers';
 import { createElement } from 'react';
 import { Form, Field } from '../../index';
+import { setFieldsErrors } from '../../actions/Field';
 
 describe('components / Form', () => {
   it('snapshot', () => {
@@ -126,7 +127,7 @@ describe('components / Form', () => {
   });
 
   it('form component onSubmit behavior', done => {
-    expect.assertions(6);
+    expect.assertions(5);
 
     const validate = value => {
       expect(global.store.getState().form.submitting).toBeTruthy();
@@ -252,6 +253,285 @@ describe('components / Form', () => {
         expect.anything(),
       );
       done();
+    });
+  });
+
+  it('few forms with same name on page onSubmit', done => {
+    expect.assertions(3);
+
+    const onSubmit = jest.fn();
+
+    const component = mount(
+      createElement(Provider, { store: global.store }, [
+        createElement(Form, { path: 'form', name: 'form[first]', id: 'first', onSubmit, key: 1 }, [
+          createElement(Field, { key: 0, name: 'test1', value: '1', component: 'input' }),
+          createElement(Field, { key: 1, name: 'test2', value: '1', component: 'input' }),
+        ]),
+        createElement(
+          Form,
+          { path: 'form', name: 'form[second]', id: 'second', onSubmit, key: 2 },
+          [
+            createElement(Field, { key: 0, name: 'test1', value: '2', component: 'input' }),
+            createElement(Field, { key: 1, name: 'test2', value: '2', component: 'input' }),
+          ],
+        ),
+      ]),
+    );
+
+    expect(global.store.getState()).toEqual({
+      form: {
+        first: {
+          changed: false,
+          fields: {
+            test1: {
+              changed: false,
+              disabled: false,
+              errors: [],
+              hidden: false,
+              touched: false,
+              valid: true,
+              value: '1',
+            },
+            test2: {
+              changed: false,
+              disabled: false,
+              errors: [],
+              hidden: false,
+              touched: false,
+              valid: true,
+              value: '1',
+            },
+          },
+          submitted: false,
+          submitting: false,
+          touched: false,
+          valid: true,
+        },
+        second: {
+          changed: false,
+          fields: {
+            test1: {
+              changed: false,
+              disabled: false,
+              errors: [],
+              hidden: false,
+              touched: false,
+              valid: true,
+              value: '2',
+            },
+            test2: {
+              changed: false,
+              disabled: false,
+              errors: [],
+              hidden: false,
+              touched: false,
+              valid: true,
+              value: '2',
+            },
+          },
+          submitted: false,
+          submitting: false,
+          touched: false,
+          valid: true,
+        },
+      },
+    });
+
+    component.find('form#first').simulate('submit');
+
+    setImmediate(() => {
+      expect(onSubmit).lastCalledWith(
+        {
+          test1: {
+            changed: false,
+            disabled: false,
+            errors: [],
+            hidden: false,
+            touched: false,
+            valid: true,
+            value: '1',
+          },
+          test2: {
+            changed: false,
+            disabled: false,
+            errors: [],
+            hidden: false,
+            touched: false,
+            valid: true,
+            value: '1',
+          },
+        },
+        expect.anything(),
+      );
+
+      component.find('form#second').simulate('submit');
+
+      setImmediate(() => {
+        expect(onSubmit).lastCalledWith(
+          {
+            test1: {
+              changed: false,
+              disabled: false,
+              errors: [],
+              hidden: false,
+              touched: false,
+              valid: true,
+              value: '2',
+            },
+            test2: {
+              changed: false,
+              disabled: false,
+              errors: [],
+              hidden: false,
+              touched: false,
+              valid: true,
+              value: '2',
+            },
+          },
+          expect.anything(),
+        );
+
+        done();
+      });
+    });
+  });
+
+  it('few forms with same name on page onSubmitFailed', done => {
+    expect.assertions(2);
+
+    const onSubmitFailed = jest.fn();
+
+    const component = mount(
+      createElement(Provider, { store: global.store }, [
+        createElement(
+          Form,
+          { path: 'form', name: 'form[first]', id: 'first', onSubmitFailed, key: 1 },
+          [
+            createElement(Field, { key: 0, name: 'test1', value: '1', component: 'input' }),
+            createElement(Field, { key: 1, name: 'test2', value: '1', component: 'input' }),
+          ],
+        ),
+        createElement(
+          Form,
+          { path: 'form', name: 'form[second]', id: 'second', onSubmitFailed, key: 2 },
+          [
+            createElement(Field, { key: 0, name: 'test1', value: '2', component: 'input' }),
+            createElement(Field, { key: 1, name: 'test2', value: '2', component: 'input' }),
+          ],
+        ),
+      ]),
+    );
+
+    global.store.dispatch(
+      setFieldsErrors('form[first]', {
+        test1: ['error form1 test1'],
+        test2: ['error form1 test2'],
+      }),
+    );
+
+    global.store.dispatch(
+      setFieldsErrors('form[second]', {
+        test1: ['error form2 test1'],
+        test2: ['error form2 test2'],
+      }),
+    );
+
+    component.find('form#first').simulate('submit');
+
+    setImmediate(() => {
+      expect(onSubmitFailed).lastCalledWith(
+        {
+          test1: {
+            changed: false,
+            disabled: false,
+            errors: ['error form1 test1'],
+            hidden: false,
+            touched: false,
+            valid: false,
+            value: '1',
+          },
+          test2: {
+            changed: false,
+            disabled: false,
+            errors: ['error form1 test2'],
+            hidden: false,
+            touched: false,
+            valid: false,
+            value: '1',
+          },
+        },
+        {
+          test1: {
+            changed: false,
+            disabled: false,
+            errors: ['error form1 test1'],
+            hidden: false,
+            touched: false,
+            valid: false,
+            value: '1',
+          },
+          test2: {
+            changed: false,
+            disabled: false,
+            errors: ['error form1 test2'],
+            hidden: false,
+            touched: false,
+            valid: false,
+            value: '1',
+          },
+        },
+        expect.anything(),
+      );
+
+      component.find('form#second').simulate('submit');
+
+      setImmediate(() => {
+        expect(onSubmitFailed).lastCalledWith(
+          {
+            test1: {
+              changed: false,
+              disabled: false,
+              errors: ['error form2 test1'],
+              hidden: false,
+              touched: false,
+              valid: false,
+              value: '2',
+            },
+            test2: {
+              changed: false,
+              disabled: false,
+              errors: ['error form2 test2'],
+              hidden: false,
+              touched: false,
+              valid: false,
+              value: '2',
+            },
+          },
+          {
+            test1: {
+              changed: false,
+              disabled: false,
+              errors: ['error form2 test1'],
+              hidden: false,
+              touched: false,
+              valid: false,
+              value: '2',
+            },
+            test2: {
+              changed: false,
+              disabled: false,
+              errors: ['error form2 test2'],
+              hidden: false,
+              touched: false,
+              valid: false,
+              value: '2',
+            },
+          },
+          expect.anything(),
+        );
+
+        done();
+      });
     });
   });
 });

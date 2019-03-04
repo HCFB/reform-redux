@@ -10,7 +10,7 @@ import type { DataFunctions } from '../types/dataFunctions';
 import type { ComponentCreator } from '../types/common';
 
 export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunctions) => {
-  const { getIn }: DataFunctions = dataFunctions;
+  const { getIn, is }: DataFunctions = dataFunctions;
 
   /**
    * submit | reset
@@ -67,6 +67,25 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
       });
     }
 
+    shouldComponentUpdate(
+      {
+        reformReduxContext: nextReformReduxContext, // eslint-disable-line no-unused-vars
+        reactReduxContext: nextReactReduxContext, // eslint-disable-line no-unused-vars
+        children: nextChildren, // eslint-disable-line no-unused-vars
+        ...nextProps
+      },
+      nextState,
+    ) {
+      // eslint-disable-next-line no-unused-vars
+      const {
+        reformReduxContext: currentReformReduxContext, // eslint-disable-line no-unused-vars
+        reactReduxContext: currentReactReduxContext, // eslint-disable-line no-unused-vars
+        children: currentChildren, // eslint-disable-line no-unused-vars
+        ...currentProps
+      } = this.props;
+      return !is(currentProps, nextProps) || !is(this.state, nextState);
+    }
+
     componentWillUnmount() {
       this.unsubscribeFromStore();
     }
@@ -83,7 +102,7 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
     render(): Element<*> {
       const component = this.props.component || 'button';
       const commonProps = {
-        disabled: this.props.disabled || this.state.submitting,
+        disabled: this.props.disabled !== undefined ? this.props.disabled : this.state.submitting,
         onClick: this.onClickHandler,
         children: this.props.children,
       };

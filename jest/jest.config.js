@@ -4,6 +4,6 @@ module.exports = {
   },
   testPathIgnorePatterns: ['node_modules', '/source/types/', '/source/constants/'],
   coveragePathIgnorePatterns: ['node_modules', '/source/types/', '/source/constants/', '/jest/'],
-  setupTestFrameworkScriptFile: './jest/setup.js',
+  setupFilesAfterEnv: ['./jest/setup.js'],
   rootDir: '../',
 };

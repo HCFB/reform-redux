@@ -732,6 +732,7 @@ Type: [Function][107]
 -   `previousValue` **any** 
 -   `allFields` **[FieldsData][112]** 
 -   `when` **[NormalizeWhen][117]** 
+-   `name` **[FieldName][109]** 
 
 Returns **any** normalized value
 

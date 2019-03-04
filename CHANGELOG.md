@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.1] - 2019-3-4
+
+- If form key doesnt exists, dont concat him to form path
+
+## [1.9.0] - 2019-2-20
+
+- Remove support of immutable.js
+- Audit fixes
+- Simplify Field props
+- Support multiple forms with same name
+
+## [1.8.9] - 2019-2-6
+
+- Form update bugfixes
+
+## [1.8.8] - 2019-2-6
+
+- Call stack error bugfix
+
+## [1.8.7] - 2019-2-5
+
+- Code improvements
+- Send hidden fields bugfix
+
+## [1.8.5] - 2019-1-29
+
+- Pass name prop to normalize function
+
 ## [1.8.4] - 2019-1-25
 
 - Documentation.js

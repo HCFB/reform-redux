@@ -1,6 +1,6 @@
 {
   "name": "reform-redux",
-  "version": "1.8.4",
+  "version": "1.9.1",
   "license": "MIT",
   "description": "Simple realisation of react/redux form",
   "repository": {
@@ -18,22 +18,18 @@
     "form",
     "asynchronous",
     "validation",
-    "perfomance",
-    "immutable"
+    "perfomance"
   ],
   "main": "./reform-redux.js",
   "module": "./reform-redux.es.js",
   "files": [
     "reform-redux.flow.js",
     "reform-redux.js",
-    "reform-redux.es.js",
-    "immutable.es.js",
-    "immutable.js"
+    "reform-redux.es.js"
   ],
   "types": "./reform-redux.flow.js",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "immutable": "^4.0.0-rc.9",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-redux": "^6.0.0",
@@ -46,7 +42,7 @@
     "@babel/preset-flow": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
+    "babel-jest": "^24.1.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^7.0.0-beta.3",
     "documentation": "^9.1.1",
     "enzyme": "^3.8.0",
@@ -58,7 +54,7 @@
     "flow-bin": "^0.90.0",
     "flow-typed": "^2.5.1",
     "husky": "^0.14.3",
-    "jest": "^23.6.0",
+    "jest": "^24.1.0",
     "prettier": "^1.13.7",
     "react-dom": "^16.5.2",
     "rollup": "^0.66.2",
@@ -79,7 +75,7 @@
     "test": "jest --verbose --config ./jest/jest.config.js",
     "test:dev": "npm run test -- --watch",
     "test:dev:inspect": "node --inspect-brk node_modules/.bin/jest --runInBand --config ./jest/jest.config.js --watch",
-    "precommit": "npm run fix && git add .",
+    "precommit": "npm run fix && npm run documentation:build && git add .",
     "prepush": "npm run lint && npm run test && npm run flow && npm run documentation:build",
     "prepublish": "npm run lint && npm run flow && npm run test && npm run documentation:build && npm run build"
   }

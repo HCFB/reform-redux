@@ -8,7 +8,6 @@ const common = {
   external: [
     'react',
     'prop-types',
-    'immutable',
     'redux',
     'react-redux',
     // polyfills
@@ -48,15 +47,6 @@ export default [
       format: 'es',
     },
   },
-  {
-    ...common,
-    input: 'source/immutable.js',
-    output: {
-      name: 'reform-redux',
-      file: 'immutable.es.js',
-      format: 'es',
-    },
-  },
 
   // CommonJS
 
@@ -66,16 +56,6 @@ export default [
     output: {
       name: 'reform-redux',
       file: 'reform-redux.js',
-      format: 'cjs',
-    },
-    plugins: [...common.plugins, nodeResolve(), commonjs()],
-  },
-  {
-    ...common,
-    input: 'source/immutable.js',
-    output: {
-      name: 'reform-redux',
-      file: 'immutable.js',
       format: 'cjs',
     },
     plugins: [...common.plugins, nodeResolve(), commonjs()],

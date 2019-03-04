@@ -41,7 +41,8 @@ export type ReFormRedux = {
 export type ComponentProps = {
   children: Element<*>,
   path: string,
-  reactReduxContext: any,
+  reactReduxContextDispatch: any,
+  reactReduxContextGetState: any,
   innerRef: any,
   name?: string,
   submitHiddenFields?: boolean,

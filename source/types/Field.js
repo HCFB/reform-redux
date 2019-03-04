@@ -47,7 +47,14 @@ export type ComponentProps = {
   reactReduxContext: any,
   hidden: boolean,
   removeOnUnmount?: boolean,
-  normalize?: (value: any, previousValue: any, allFields: FieldsData, when: string) => any,
+  children?: any,
+  normalize?: (
+    value: any,
+    previousValue: any,
+    allFields: FieldsData,
+    when: string,
+    name: FieldName,
+  ) => any,
   type?: string,
   multiple?: boolean,
   checked?: boolean,
@@ -60,6 +67,22 @@ export type ComponentProps = {
   onBlur?: (event: Event, fieldData: FieldData) => any,
   onFocus?: (event: Event, fieldData: FieldData) => any,
   innerRef?: (element: any) => void,
+
+  reformReduxContextFieldGetFieldCount: Function,
+  reactReduxContextGetState: Function,
+  reactReduxContextSubscribe: Function,
+
+  reformReduxContextGetFieldCount: Function,
+  reformReduxContextSetFieldTouched: Function,
+  reformReduxContextSetFieldChanged: Function,
+  reformReduxContextChangeFieldValue: Function,
+  reformReduxContextSetFieldErrors: Function,
+
+  reformReduxContextFormUnregisterField: Function,
+  reformReduxContextFormName: string,
+  reformReduxContextFormPath: Array<string>,
+  reformReduxContextFormRegisterField: Function,
+  reformReduxContextCoreUpdateStackFieldValue: Function,
 };
 
 export type ComponentState = {

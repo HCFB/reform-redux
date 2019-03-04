@@ -27,7 +27,7 @@ export type Action =
   | SetFieldDisabled
   | SetFieldsDisabled;
 
-export type State = {
+export type StateObject = {
   valid: boolean,
   changed: boolean,
   touched: boolean,
@@ -35,3 +35,4 @@ export type State = {
   submitting: boolean,
   fields: FieldsData,
 };
+export type State = StateObject | { [string | number]: StateObject };

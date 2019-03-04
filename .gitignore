@@ -13,5 +13,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # build
-immutable*
 reform-redux*

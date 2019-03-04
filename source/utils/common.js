@@ -2,6 +2,20 @@ import { LIBRARY_NAME } from '../constants/common';
 import type { SearchKeyPath, Where } from '../types/common';
 import type { DataFunctions } from '../types/dataFunctions';
 
+export function getFormNameWihoutKey(formName: string): string {
+  const formNameData = /^([^[\]]+)(\[(.*)\])?$/.exec(formName);
+  const name = formNameData ? formNameData[1] : '';
+
+  return name;
+}
+
+export function getFormNameKey(formName: string): string {
+  const keyData = /.*\[(.*)\]/.exec(formName);
+  const key = keyData ? keyData[1] : '';
+
+  return key;
+}
+
 export function debounce(func: Function, wait: number, immediate?: boolean) {
   let timeout;
 
