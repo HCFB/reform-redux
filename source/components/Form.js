@@ -1,4 +1,4 @@
-import { Component, createElement, createContext, forwardRef } from 'react';
+import { PureComponent, createElement, createContext, forwardRef } from 'react';
 import { ReactReduxContext } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -88,7 +88,7 @@ export const createFormComponent: ComponentCreator = (dataFunctions: DataFunctio
    * @param {onSubmit} [onSubmit] Function which will trigger after successfull submit the form.
    * @param {boolean} [submitHiddenFields] Submit hidden fields or not. False by default.
    */
-  class Form extends Component<ComponentProps> {
+  class Form extends PureComponent<ComponentProps> {
     formName: string;
     path: Array<string>;
     initialized: boolean = false;

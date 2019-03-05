@@ -80,7 +80,7 @@ export type ComponentProps = {
 
   reformReduxContextFormUnregisterField: Function,
   reformReduxContextFormName: string,
-  reformReduxContextFormPath: Array<string>,
+  reformReduxContextFormPath: string,
   reformReduxContextFormRegisterField: Function,
   reformReduxContextCoreUpdateStackFieldValue: Function,
 };

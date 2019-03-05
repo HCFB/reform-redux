@@ -1,5 +1,5 @@
 import { ReactReduxContext } from 'react-redux';
-import { createElement, Component, forwardRef } from 'react';
+import { createElement, PureComponent, forwardRef } from 'react';
 import { is, cloneDeep } from '../utils/common';
 import { ReformReduxContext } from '../components/Form';
 import type { ComponentType, Element } from 'react';
@@ -27,7 +27,7 @@ export const createSelectFormData: Function = (dataFunctions: DataFunctions) => 
    */
   const selectFormData = (fieldNames: Array<FieldName>, formPath?: string): Function => {
     return (ConnectedComponent: ComponentType<*>): ComponentType<*> => {
-      class SelectFormData extends Component<*, FieldsData> {
+      class SelectFormData extends PureComponent<*, FieldsData> {
         unsubscribeFromStore: Function = () => {};
         state: FieldsData;
 

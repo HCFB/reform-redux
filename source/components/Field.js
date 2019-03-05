@@ -1,4 +1,4 @@
-import { Component, createElement, forwardRef } from 'react';
+import { PureComponent, createElement, forwardRef } from 'react';
 import { ReactReduxContext } from 'react-redux';
 import PropTypes from 'prop-types';
 import { ReformReduxContext } from './Form';
@@ -129,9 +129,10 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
    * @param {boolean} [checked] Checked or not your radio button or checkbox.
    * @param {boolean} [removeOnUnmount] Remove field data from store on unmount
    */
-  class Field extends Component<ComponentProps, ComponentState> {
+  class Field extends PureComponent<ComponentProps, ComponentState> {
     initialFieldData: FieldData;
     unsubscribeFromStore: Function = () => {};
+    formPath: Array<string>;
 
     static propTypes = {
       name: PropTypes.string.isRequired,
@@ -141,7 +142,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       type: PropTypes.string,
       multiple: PropTypes.bool,
       checked: PropTypes.bool,
-      value: PropTypes.string,
+      value: PropTypes.any,
       validate: PropTypes.func,
       disabled: PropTypes.bool,
       changed: PropTypes.bool,
@@ -165,6 +166,8 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
 
     constructor(props: ComponentProps) {
       super(props);
+
+      this.formPath = props.reformReduxContextFormPath.split('.');
 
       if (props.multiple && props.component === 'select' && props.value && !isList(props.value)) {
         throw new Error(
@@ -203,7 +206,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         // Get default value from store if it exists
 
         const state: State = props.reactReduxContextGetState();
-        const currentFormData: State = getIn(state, props.reformReduxContextFormPath);
+        const currentFormData: State = getIn(state, this.formPath);
         const initialFieldData: FieldData = getIn(currentFormData, ['fields', props.name]);
 
         if (initialFieldData) {
@@ -227,7 +230,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
         const currentFieldData: FieldData = this.state.field;
         const nextFieldData: FieldData = getIn(
           state,
-          [...this.props.reformReduxContextFormPath, 'fields', this.props.name],
+          [...this.formPath, 'fields', this.props.name],
           this.state.field,
         );
 
@@ -384,7 +387,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
 
       if (normalize) {
         const state: State = this.props.reactReduxContextGetState();
-        const currentFormData: State = getIn(state, this.props.reformReduxContextFormPath);
+        const currentFormData: State = getIn(state, this.formPath);
         const fields: FieldsData = getIn(currentFormData, ['fields']);
 
         value = normalize(
@@ -550,7 +553,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
           reformReduxContextSetFieldErrors: reformReduxContextValue.field.setFieldErrors,
 
           reformReduxContextFormName: reformReduxContextValue.form.name,
-          reformReduxContextFormPath: reformReduxContextValue.form.path,
+          reformReduxContextFormPath: reformReduxContextValue.form.path.join('.'),
           reformReduxContextFormUnregisterField: reformReduxContextValue.form.unregisterField,
           reformReduxContextFormRegisterField: reformReduxContextValue.form.registerField,
           reformReduxContextCoreUpdateStackFieldValue:
