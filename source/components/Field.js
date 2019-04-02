@@ -508,7 +508,7 @@ export const createFieldComponent: ComponentCreator = (dataFunctions: DataFuncti
       if (typeof component !== 'string') {
         fieldProps = {
           ...fieldProps,
-          innerRef,
+          ref: innerRef,
           formName: this.props.reformReduxContextFormName,
           errors: getIn(this.state.field, ['errors']),
           changed: getIn(this.state.field, ['changed']),

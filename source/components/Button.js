@@ -1,5 +1,5 @@
 import { ReactReduxContext } from 'react-redux';
-import { PureComponent, createElement, forwardRef } from 'react';
+import { Component, createElement, forwardRef } from 'react';
 import { resetForm } from '../actions/Form';
 import { filterReactDomProps } from '../utils/common';
 import { ReformReduxContext } from './Form';
@@ -40,7 +40,7 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
    * @param {ButtonComponent} [component] Component.
    * @param {Function} [onClick] onClick handler.
    */
-  class Button extends PureComponent<ComponentProps, ComponentState> {
+  class Button extends Component<ComponentProps, ComponentState> {
     unsubscribeFromStore: Function = () => {};
 
     state = {

@@ -1227,7 +1227,6 @@ describe('components / Field', () => {
       'onBlur',
       'onFocus',
       'disabled',
-      'innerRef',
       'formName',
       'errors',
       'changed',
@@ -1300,9 +1299,7 @@ describe('components / Field', () => {
             name: 'field',
             innerRef: () => {},
             component: props => {
-              expect(Object.keys(props)).toEqual(
-                expect.arrayContaining(['formName', 'innerRef', 'errors']),
-              );
+              expect(Object.keys(props)).toEqual(expect.arrayContaining(['formName', 'errors']));
               return 'test';
             },
           }),
