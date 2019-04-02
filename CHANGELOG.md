@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.4] - 2019-4-2
+
+- Use ref for the Button component
+
 ## [1.9.3] - 2019-4-2
 
 - Use ref when component isnt string

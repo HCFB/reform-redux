@@ -129,7 +129,7 @@ export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunct
           ...props,
           reactReduxContext: reactReduxContextValue,
           reformReduxContext: reformReduxContextValue,
-          innerRef: ref,
+          ref,
         }),
       ),
     ),
