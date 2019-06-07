@@ -4,6 +4,6 @@ module.exports = {
   },
   testPathIgnorePatterns: ['node_modules', '/source/types/', '/source/constants/'],
   coveragePathIgnorePatterns: ['node_modules', '/source/types/', '/source/constants/', '/jest/'],
-  setupFilesAfterEnv: ['./jest/setup.js'],
+  setupFilesAfterEnv: ['@testing-library/react/cleanup-after-each', './jest/setup.js'],
   rootDir: '../',
 };

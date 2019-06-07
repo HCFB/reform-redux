@@ -14,6 +14,7 @@ class Provider extends Component {
     return createElement(
       ReactReduxProvider,
       { store: global.store },
+      // eslint-disable-next-line react/prop-types
       createElement(Form, { path: 'form' }, this.props.children),
     );
   }
@@ -46,3 +47,5 @@ beforeEach(() => {
     },
   };
 });
+
+jest.mock('lodash/debounce', () => jest.fn(fn => fn));

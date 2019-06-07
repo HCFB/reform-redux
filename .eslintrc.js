@@ -1,8 +1,8 @@
 module.exports = {
   "parser": "babel-eslint",
   "plugins": [
-    "flowtype",
-    "prettier"
+    "prettier",
+    "react-hooks"
   ],
   "env": {
     "browser": true,
@@ -12,14 +12,16 @@ module.exports = {
   },
   "extends": [
     "eslint:recommended",
-    "plugin:flowtype/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:react/recommended"
   ],
   "parserOptions": {
     "sourceType": "module"
   },
   "rules": {
-    "flowtype/no-types-missing-file-annotation": 0,
+    "react-hooks/rules-of-hooks": "error",
+    "react/display-name": "off",
+    "react-hooks/exhaustive-deps": "warn",
     "prettier/prettier": ["error"],
     "strict": 0,
     "eol-last": [
@@ -36,5 +38,10 @@ module.exports = {
       "error",
       "always"
     ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 };

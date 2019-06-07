@@ -1,1 +1,1 @@
-export const LIBRARY_NAME: string = '@@reform-redux';
+export const LIBRARY_NAME = '@@reform-redux';

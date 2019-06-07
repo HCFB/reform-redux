@@ -1,137 +1,99 @@
 import { ReactReduxContext } from 'react-redux';
-import { Component, createElement, forwardRef } from 'react';
+import get from 'lodash/get';
+import {
+  createElement,
+  forwardRef,
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  memo,
+} from 'react';
 import { resetForm } from '../actions/Form';
 import { filterReactDomProps } from '../utils/common';
 import { ReformReduxContext } from './Form';
-import type { Element } from 'react';
-import type { State } from '../types/formReducer';
-import type { ComponentProps, ComponentState } from '../types/Button';
-import type { DataFunctions } from '../types/dataFunctions';
-import type { ComponentCreator } from '../types/common';
 
-export const createButtonComponent: ComponentCreator = (dataFunctions: DataFunctions) => {
-  const { getIn, is }: DataFunctions = dataFunctions;
+/**
+ * submit | reset
+ * @typedef {string} ButtonType
+ */
 
-  /**
-   * submit | reset
-   * @typedef {string} ButtonType
-   */
+/**
+ * @class ButtonComponent
+ * @param {boolean} isLoading When form submitting
+ */
 
-  /**
-   * @class ButtonComponent
-   * @param {boolean} isLoading When form submitting
-   */
+/**
+ * If you need to disable your submit button when form is submitting or reset form use this component.
+ *
+ * @class Button
+ * @example
+ * import { Field, Form, Button } from 'reform-redux';
+ *
+ * const FormWrapper = () => (
+ *  <Form path="path.to.form">
+ *    <Field name="test" component="input" />
+ *    <Button type="submit">submit</Button>
+ *  </Form>
+ * );
+ *
+ * @param {ButtonType} type Button type.
+ * @param {ButtonComponent} [component] Component.
+ * @param {Function} [onClick] onClick handler.
+ */
+const Button = props => {
+  const { type, onClick, component, disabled, children, innerRef } = props;
+  const reactReduxContext = useContext(ReactReduxContext);
+  const reformReduxContext = useContext(ReformReduxContext);
+  const [submitting, setSubmitting] = useState(false);
 
-  /**
-   * If you need to disable your submit button when form is submitting or reset form use this component.
-   *
-   * @class Button
-   * @example
-   * import { Field, Form, Button } from 'reform-redux';
-   *
-   * const FormWrapper = () => (
-   *  <Form path="path.to.form">
-   *    <Field name="test" component="input" />
-   *    <Button type="submit">submit</Button>
-   *  </Form>
-   * );
-   *
-   * @param {ButtonType} type Button type.
-   * @param {ButtonComponent} [component] Component.
-   * @param {Function} [onClick] onClick handler.
-   */
-  class Button extends Component<ComponentProps, ComponentState> {
-    unsubscribeFromStore: Function = () => {};
+  useEffect(() => {
+    if (!reformReduxContext) {
+      throw new Error('Component `Button` must be in `Form` component.');
+    }
 
-    state = {
-      submitting: false,
-    };
+    const unsubscribe = reactReduxContext.store.subscribe(() => {
+      const state = reactReduxContext.store.getState();
+      const currentFormData = get(state, reformReduxContext.form.path);
+      const formSubmitting = get(currentFormData, ['submitting']);
 
-    constructor(props: ComponentProps) {
-      super(props);
-
-      if (!props.reformReduxContext) {
-        throw new Error('Component `Button` must be in `Form` component.');
+      if (submitting !== formSubmitting) {
+        setSubmitting(formSubmitting);
       }
+    });
 
-      this.unsubscribeFromStore = props.reactReduxContext.store.subscribe(() => {
-        const state: State = props.reactReduxContext.store.getState();
-        const currentFormData: State = getIn(state, props.reformReduxContext.form.path);
-        const formSubmitting: boolean = getIn(currentFormData, ['submitting']);
+    return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-        if (this.state.submitting !== formSubmitting) {
-          this.setState({
-            submitting: formSubmitting,
-          });
+  const onClickHandler = useCallback(event => {
+    if (type === 'reset') reactReduxContext.store.dispatch(resetForm(reformReduxContext.form.name));
+
+    if (onClick) onClick(event);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const customComponent = component || 'button';
+  const commonProps = {
+    disabled: disabled !== undefined ? disabled : submitting,
+    onClick: onClickHandler,
+    children,
+    ref: innerRef,
+  };
+
+  const componentProps =
+    typeof component === 'string'
+      ? {
+          ...filterReactDomProps(props),
+          ...commonProps,
         }
-      });
-    }
-
-    shouldComponentUpdate(
-      {
-        reformReduxContext: nextReformReduxContext, // eslint-disable-line no-unused-vars
-        reactReduxContext: nextReactReduxContext, // eslint-disable-line no-unused-vars
-        children: nextChildren, // eslint-disable-line no-unused-vars
-        ...nextProps
-      },
-      nextState,
-    ) {
-      // eslint-disable-next-line no-unused-vars
-      const {
-        reformReduxContext: currentReformReduxContext, // eslint-disable-line no-unused-vars
-        reactReduxContext: currentReactReduxContext, // eslint-disable-line no-unused-vars
-        children: currentChildren, // eslint-disable-line no-unused-vars
-        ...currentProps
-      } = this.props;
-      return !is(currentProps, nextProps) || !is(this.state, nextState);
-    }
-
-    componentWillUnmount() {
-      this.unsubscribeFromStore();
-    }
-
-    onClickHandler = (event: Event) => {
-      const { type, onClick, reactReduxContext, reformReduxContext } = this.props;
-
-      if (type === 'reset')
-        reactReduxContext.store.dispatch(resetForm(reformReduxContext.form.name));
-
-      if (onClick) onClick(event);
-    };
-
-    render(): Element<*> {
-      const component = this.props.component || 'button';
-      const commonProps = {
-        disabled: this.props.disabled !== undefined ? this.props.disabled : this.state.submitting,
-        onClick: this.onClickHandler,
-        children: this.props.children,
-      };
-      const componentProps =
-        typeof component === 'string'
-          ? {
-              ...filterReactDomProps(this.props),
-              ...commonProps,
-            }
-          : {
-              ...this.props,
-              ...commonProps,
-              isLoading: this.state.submitting,
-            };
-
-      return createElement(component, componentProps);
-    }
-  }
-
-  return forwardRef((props, ref) =>
-    createElement(ReactReduxContext.Consumer, {}, reactReduxContextValue =>
-      createElement(ReformReduxContext.Consumer, {}, reformReduxContextValue =>
-        createElement(Button, {
+      : {
           ...props,
-          reactReduxContext: reactReduxContextValue,
-          reformReduxContext: reformReduxContextValue,
-          ref,
-        }),
-      ),
-    ),
-  );
+          ...commonProps,
+          isLoading: submitting,
+        };
+
+  return createElement(customComponent, componentProps);
 };
+
+export default memo(forwardRef((props, ref) => createElement(Button, { ...props, innerRef: ref })));

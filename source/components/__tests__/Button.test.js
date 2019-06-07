@@ -80,17 +80,13 @@ describe('components / Button', () => {
     expect.assertions(2);
 
     const component = mount(createElement(global.Provider, {}, createElement(Button)));
-    let buttonComponent = component.find('Button').instance();
     let button = component.find('button');
-
-    expect(button.prop('disabled') && buttonComponent.state.submitting).toBeFalsy();
+    expect(button.prop('disabled')).toBeFalsy();
 
     global.store.dispatch(setFormSubmitting('form', true));
     component.update();
-    buttonComponent = component.find('Button').instance();
     button = component.find('button');
-
-    expect(button.prop('disabled') && buttonComponent.state.submitting).toBeTruthy();
+    expect(button.prop('disabled')).toBeTruthy();
   });
 
   it('if component was unmounted then after change form property "submitting", component property "disabled" and state "submitting" will not the same', () => {

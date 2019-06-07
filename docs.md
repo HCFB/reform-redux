@@ -12,91 +12,88 @@
 -   [Button][8]
     -   [Parameters][9]
     -   [Examples][10]
--   [selectFormData][11]
-    -   [Parameters][12]
-    -   [Examples][13]
--   [Actions][14]
--   [setFieldTouched][15]
+-   [Actions][11]
+-   [setFieldTouched][12]
+    -   [Parameters][13]
+    -   [Examples][14]
+-   [setFieldsTouched][15]
     -   [Parameters][16]
     -   [Examples][17]
--   [setFieldsTouched][18]
+-   [setFieldsHidden][18]
     -   [Parameters][19]
     -   [Examples][20]
--   [setFieldsHidden][21]
+-   [setFieldHidden][21]
     -   [Parameters][22]
     -   [Examples][23]
--   [setFieldHidden][24]
+-   [setFieldErrors][24]
     -   [Parameters][25]
     -   [Examples][26]
--   [setFieldErrors][27]
+-   [setFieldsErrors][27]
     -   [Parameters][28]
     -   [Examples][29]
--   [setFieldsErrors][30]
+-   [changeFieldsValues][30]
     -   [Parameters][31]
     -   [Examples][32]
--   [changeFieldsValues][33]
+-   [setFieldChanged][33]
     -   [Parameters][34]
     -   [Examples][35]
--   [setFieldChanged][36]
+-   [setFieldsChanged][36]
     -   [Parameters][37]
     -   [Examples][38]
--   [setFieldsChanged][39]
+-   [removeField][39]
     -   [Parameters][40]
     -   [Examples][41]
--   [removeField][42]
+-   [resetField][42]
     -   [Parameters][43]
     -   [Examples][44]
--   [resetField][45]
+-   [resetFields][45]
     -   [Parameters][46]
     -   [Examples][47]
--   [resetFields][48]
+-   [setFieldDisabled][48]
     -   [Parameters][49]
     -   [Examples][50]
--   [setFieldDisabled][51]
+-   [setFieldsDisabled][51]
     -   [Parameters][52]
     -   [Examples][53]
--   [setFieldsDisabled][54]
+-   [changeFieldValue][54]
     -   [Parameters][55]
     -   [Examples][56]
--   [changeFieldValue][57]
+-   [setFormSubmitted][57]
     -   [Parameters][58]
     -   [Examples][59]
--   [setFormSubmitted][60]
+-   [resetForm][60]
     -   [Parameters][61]
     -   [Examples][62]
--   [resetForm][63]
-    -   [Parameters][64]
-    -   [Examples][65]
--   [Types][66]
--   [ResetState][67]
--   [formReducerCreator][68]
-    -   [Parameters][69]
--   [onSubmitFailed][70]
-    -   [Parameters][71]
--   [onSubmit][72]
-    -   [Parameters][73]
--   [FieldName][74]
--   [FieldData][75]
-    -   [Properties][76]
--   [FieldsData][77]
--   [Validate][78]
-    -   [Parameters][79]
--   [ValidateFunctions][80]
+-   [Types][63]
+-   [ResetState][64]
+-   [formReducerCreator][65]
+    -   [Parameters][66]
+-   [onSubmitFailed][67]
+    -   [Parameters][68]
+-   [onSubmit][69]
+    -   [Parameters][70]
+-   [FieldName][71]
+-   [FieldData][72]
+    -   [Properties][73]
+-   [FieldsData][74]
+-   [Validate][75]
+    -   [Parameters][76]
+-   [ValidateFunctions][77]
+    -   [Parameters][78]
+-   [NormalizeWhen][79]
+-   [Normalize][80]
     -   [Parameters][81]
--   [NormalizeWhen][82]
--   [Normalize][83]
-    -   [Parameters][84]
--   [OnEvent][85]
-    -   [Parameters][86]
--   [OnChange][87]
-    -   [Parameters][88]
--   [FieldOnChange][89]
-    -   [Parameters][90]
--   [FieldComponent][91]
+-   [OnEvent][82]
+    -   [Parameters][83]
+-   [OnChange][84]
+    -   [Parameters][85]
+-   [FieldOnChange][86]
+    -   [Parameters][87]
+-   [FieldComponent][88]
+    -   [Parameters][89]
+-   [ButtonType][90]
+-   [ButtonComponent][91]
     -   [Parameters][92]
--   [ButtonType][93]
--   [ButtonComponent][94]
-    -   [Parameters][95]
 
 ## Components
 
@@ -109,11 +106,11 @@ The Form component is a simple wrapper for the React `<form>`.
 
 ### Parameters
 
--   `path` **[string][96]** Path to reducer in the redux store. Example: 'some.reducers.myFormName'. (Required)
--   `name` **[string][96]?** Form name.
--   `onSubmitFailed` **[onSubmitFailed][97]?** Function which will trigger after unsuccessfull submit the form.
--   `onSubmit` **[onSubmit][98]?** Function which will trigger after successfull submit the form.
--   `submitHiddenFields` **[boolean][99]?** Submit hidden fields or not. False by default.
+-   `path` **[string][93]** Path to reducer in the redux store. Example: 'some.reducers.myFormName'. (Required)
+-   `name` **[string][93]?** Form name.
+-   `onSubmitFailed` **[onSubmitFailed][94]?** Function which will trigger after unsuccessfull submit the form.
+-   `onSubmit` **[onSubmit][95]?** Function which will trigger after successfull submit the form.
+-   `submitHiddenFields` **[boolean][96]?** Submit hidden fields or not. False by default.
 
 ### Examples
 
@@ -131,20 +128,20 @@ The Field component creates new field in store and provide all data of this fiel
 
 ### Parameters
 
--   `name` **[string][96]** Name of your field. This name will appear in fields object in redux store.
--   `component` **[FieldComponent][100]** Function or Class or String which be passed to React.createElement.
--   `validate` **[ValidateFunctions][101]?** Validate functions.
--   `disabled` **[boolean][99]?** Field disabled or not.
--   `hidden` **[boolean][99]?** Field hidden or not.
--   `changed` **[boolean][99]?** Field changed or not.
--   `touched` **[boolean][99]?** Field touched or not.
+-   `name` **[string][93]** Name of your field. This name will appear in fields object in redux store.
+-   `component` **[FieldComponent][97]** Function or Class or String which be passed to React.createElement.
+-   `validate` **[ValidateFunctions][98]?** Validate functions.
+-   `disabled` **[boolean][96]?** Field disabled or not.
+-   `hidden` **[boolean][96]?** Field hidden or not.
+-   `changed` **[boolean][96]?** Field changed or not.
+-   `touched` **[boolean][96]?** Field touched or not.
 -   `value` **any?** Value of your field.
--   `normalize` **[Normalize][102]?** Normalize value function. If you normalize your data on onInit then allFields will empty object.
--   `onFocus` **[OnEvent][103]?** onFocus handler.
--   `onBlur` **[OnEvent][103]?** onBlur handler.
--   `onChange` **[OnChange][104]?** onChange handler.
--   `checked` **[boolean][99]?** Checked or not your radio button or checkbox.
--   `removeOnUnmount` **[boolean][99]?** Remove field data from store on unmount
+-   `normalize` **[Normalize][99]?** Normalize value function. If you normalize your data on onInit then allFields will empty object.
+-   `onFocus` **[OnEvent][100]?** onFocus handler.
+-   `onBlur` **[OnEvent][100]?** onBlur handler.
+-   `onChange` **[OnChange][101]?** onChange handler.
+-   `checked` **[boolean][96]?** Checked or not your radio button or checkbox.
+-   `removeOnUnmount` **[boolean][96]?** Remove field data from store on unmount
 
 ### Examples
 
@@ -164,9 +161,9 @@ If you need to disable your submit button when form is submitting or reset form 
 
 ### Parameters
 
--   `type` **[ButtonType][105]** Button type.
--   `component` **[ButtonComponent][106]?** Component.
--   `onClick` **[Function][107]?** onClick handler.
+-   `type` **[ButtonType][102]** Button type.
+-   `component` **[ButtonComponent][103]?** Component.
+-   `onClick` **[Function][104]?** onClick handler.
 
 ### Examples
 
@@ -181,28 +178,6 @@ const FormWrapper = () => (
 );
 ```
 
-## selectFormData
-
-Component wrapper which pass fields data to wrapped component through props.
-
-Type: [Function][107]
-
-### Parameters
-
--   `fieldNames` **[Array][108]&lt;[FieldName][109]>** Field names.
--   `formPath` **[string][96]?** Form path.
-
-### Examples
-
-```javascript
-import { selectFormData } from 'reform-redux';
-
-selectFormData(
-  fieldNames: Array<FieldName>,
-  formPath?: string
-)(ConnectedComponent: ComponentType<*>) => ComponentType<*>
-```
-
 ## Actions
 
 Description of all actions in the library.
@@ -212,13 +187,13 @@ Description of all actions in the library.
 
 Set field touched.
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldName` **[FieldName][109]** 
--   `fieldTouched` **[boolean][99]** 
+-   `formName` **[string][93]** 
+-   `fieldName` **[FieldName][105]** 
+-   `fieldTouched` **[boolean][96]** 
 
 ### Examples
 
@@ -226,9 +201,9 @@ Type: [Function][107]
 import { setFieldTouched } from 'reform-redux';
 
 store.dispatch(setFieldTouched(
-  formName: string,
-  fieldName: FieldName,
-  fieldTouched: boolean,
+  formName,
+  fieldName,
+  fieldTouched,
 ));
 ```
 
@@ -238,12 +213,12 @@ Returns **SetFieldTouched**
 
 Set fields touched.
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `touchedFields` **[object][110]&lt;[FieldName][109], [boolean][99]>** 
+-   `formName` **[string][93]** 
+-   `touchedFields` **[object][106]&lt;[FieldName][105], [boolean][96]>** 
 
 ### Examples
 
@@ -251,8 +226,8 @@ Type: [Function][107]
 import { setFieldsTouched } from 'reform-redux';
 
 store.dispatch(setFieldsTouched(
-  formName: string,
-  touchedFields: { [fieldName: FieldName]: boolean },
+  formName,
+  touchedFields,
 ));
 ```
 
@@ -262,12 +237,12 @@ Returns **SetFieldsTouched**
 
 Set fields hidden.
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `hiddenFields` **[object][110]&lt;[FieldName][109], [boolean][99]>** 
+-   `formName` **[string][93]** 
+-   `hiddenFields` **[object][106]&lt;[FieldName][105], [boolean][96]>** 
 
 ### Examples
 
@@ -275,8 +250,8 @@ Type: [Function][107]
 import { setFieldsHidden } from 'reform-redux';
 
 store.dispatch(setFieldsHidden(
- formName: string,
- hiddenFields: { [fieldName: FieldName]: boolean },
+ formName,
+ hiddenFields,
 ));
 ```
 
@@ -286,13 +261,13 @@ Returns **SetFieldsHidden**
 
 Set field hidden.
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldName` **[FieldName][109]** 
--   `fieldHidden` **[boolean][99]** 
+-   `formName` **[string][93]** 
+-   `fieldName` **[FieldName][105]** 
+-   `fieldHidden` **[boolean][96]** 
 
 ### Examples
 
@@ -300,9 +275,9 @@ Type: [Function][107]
 import { setFieldHidden } from 'reform-redux';
 
 store.dispatch(setFieldHidden(
-  formName: string,
-  fieldName: FieldName,
-  fieldHidden: boolean,
+  formName,
+  fieldName,
+  fieldHidden,
 ));
 ```
 
@@ -312,13 +287,13 @@ Returns **SetFieldHidden**
 
 Set field errors
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldName` **[FieldName][109]** 
--   `errors` **[Array][108]&lt;[string][96]>** 
+-   `formName` **[string][93]** 
+-   `fieldName` **[FieldName][105]** 
+-   `errors` **[Array][107]&lt;[string][93]>** 
 
 ### Examples
 
@@ -326,9 +301,9 @@ Type: [Function][107]
 import { setFieldErrors } from 'reform-redux';
 
 store.dispatch(setFieldErrors(
-  formName: string,
-  fieldName: FieldName,
-  errors: Array<string>,
+  formName,
+  fieldName,
+  errors,
 ));
 ```
 
@@ -338,13 +313,13 @@ Returns **SetFieldErrors**
 
 Set field errors
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldsErrors` **{}** 
--   `fieldName` **[object][110]&lt;[FieldName][109], [Array][108]&lt;[string][96]>>** 
+-   `formName` **[string][93]** 
+-   `fieldsErrors`  
+-   `fieldName` **[object][106]&lt;[FieldName][105], [Array][107]&lt;[string][93]>>** 
 
 ### Examples
 
@@ -352,8 +327,8 @@ Type: [Function][107]
 import { setFieldsErrors } from 'reform-redux';
 
 store.dispatch(setFieldsErrors(
-  formName: string,
-  fieldsErrors: { [fieldName: FieldName]: Array<string> },
+  formName,
+  fieldsErrors,
 ));
 ```
 
@@ -363,12 +338,12 @@ Returns **SetFieldsErrors**
 
 Change fields values
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldsValues` **[object][110]&lt;[FieldName][109], any>** 
+-   `formName` **[string][93]** 
+-   `fieldsValues` **[object][106]&lt;[FieldName][105], any>** 
 
 ### Examples
 
@@ -376,8 +351,8 @@ Type: [Function][107]
 import { changeFieldsValues } from 'reform-redux';
 
 store.dispatch(changeFieldsValues(
-  formName: string,
-  fieldsValues: { [fieldName: FieldName]: FieldValue },
+  formName,
+  fieldsValues,
 ));
 ```
 
@@ -387,13 +362,13 @@ Returns **ChangeFieldsValues**
 
 Set field changed.
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldName` **[FieldName][109]** 
--   `fieldChanged` **[boolean][99]** 
+-   `formName` **[string][93]** 
+-   `fieldName` **[FieldName][105]** 
+-   `fieldChanged` **[boolean][96]** 
 
 ### Examples
 
@@ -401,9 +376,9 @@ Type: [Function][107]
 import { setFieldChanged } from 'reform-redux';
 
 store.dispatch(setFieldChanged(
-  formName: string,
-  fieldName: FieldName,
-  fieldChanged: boolean,
+  formName,
+  fieldName,
+  fieldChanged,
 ));
 ```
 
@@ -413,12 +388,12 @@ Returns **SetFieldChanged**
 
 Set fields changed.
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `changedFields` **[object][110]&lt;[FieldName][109], [boolean][99]>** 
+-   `formName` **[string][93]** 
+-   `changedFields` **[object][106]&lt;[FieldName][105], [boolean][96]>** 
 
 ### Examples
 
@@ -426,8 +401,8 @@ Type: [Function][107]
 import { setFieldsChanged } from 'reform-redux';
 
 store.dispatch(setFieldsChanged(
-  formName: string,
-  changedFields: { [fieldName: FieldName]: boolean },
+  formName,
+  changedFields,
 ));
 ```
 
@@ -437,12 +412,12 @@ Returns **SetFieldsChanged**
 
 Remove field
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldName` **[FieldName][109]** 
+-   `formName` **[string][93]** 
+-   `fieldName` **[FieldName][105]** 
 
 ### Examples
 
@@ -450,8 +425,8 @@ Type: [Function][107]
 import { removeField } from 'reform-redux';
 
 store.dispatch(removeField(
-  formName: string,
-  fieldName: FieldName,
+  formName,
+  fieldName,
 ));
 ```
 
@@ -461,13 +436,13 @@ Returns **RemoveField**
 
 Reset field
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldName` **[FieldName][109]** 
--   `state` **[ResetState][111]?** 
+-   `formName` **[string][93]** 
+-   `fieldName` **[FieldName][105]** 
+-   `state` **[ResetState][108]?** 
 
 ### Examples
 
@@ -475,8 +450,8 @@ Type: [Function][107]
 import { resetField } from 'reform-redux';
 
 store.dispatch(resetField(
-  formName: string,
-  fieldName: FieldName,
+  formName,
+  fieldName,
   state?: ResetState
 ));
 ```
@@ -487,14 +462,14 @@ Returns **ResetField**
 
 Reset fields
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldsNames` **[Array][108]&lt;[FieldName][109]>** 
--   `state` **[ResetState][111]?** 
--   `fieldNames` **[Array][108]&lt;[FieldName][109]>** 
+-   `formName` **[string][93]** 
+-   `fieldsNames`  
+-   `state` **[ResetState][108]?** 
+-   `fieldNames` **[Array][107]&lt;[FieldName][105]>** 
 
 ### Examples
 
@@ -502,8 +477,8 @@ Type: [Function][107]
 import { resetFields } from 'reform-redux';
 
 store.dispatch(resetFields(
-  formName: string,
-  fieldNames: Array<FieldName>,
+  formName,
+  fieldNames,
   state?: ResetState
 ));
 ```
@@ -514,13 +489,13 @@ Returns **ResetFields**
 
 Set field disabled
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldName` **[FieldName][109]** 
--   `disabled` **[boolean][99]**  (optional, default `true`)
+-   `formName` **[string][93]** 
+-   `fieldName` **[FieldName][105]** 
+-   `disabled` **[boolean][96]**  (optional, default `true`)
 
 ### Examples
 
@@ -528,9 +503,9 @@ Type: [Function][107]
 import { setFieldDisabled } from 'reform-redux';
 
 store.dispatch(setFieldDisabled(
-  formName: string,
-  fieldName: FieldName,
-  disabled: boolean = true,
+  formName,
+  fieldName,
+  disabled = true,
 ));
 ```
 
@@ -540,12 +515,12 @@ Returns **SetFieldDisabled**
 
 Set fields disabled
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `disabledFields` **[object][110]&lt;[FieldName][109], [boolean][99]>** 
+-   `formName` **[string][93]** 
+-   `disabledFields` **[object][106]&lt;[FieldName][105], [boolean][96]>** 
 
 ### Examples
 
@@ -553,8 +528,8 @@ Type: [Function][107]
 import { setFieldsDisabled } from 'reform-redux';
 
 store.dispatch(setFieldDisabled(
-  formName: string,
-  disabledFields: { [fieldName: FieldName]: boolean }
+  formName,
+  disabledFields
 ));
 ```
 
@@ -564,13 +539,13 @@ Returns **SetFieldsDisabled**
 
 Change field value
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `fieldName` **[FieldName][109]** 
--   `fieldValue` **FieldValue** 
+-   `formName` **[string][93]** 
+-   `fieldName` **[FieldName][105]** 
+-   `fieldValue`  
 -   `FieldValue` **any** 
 
 ### Examples
@@ -579,9 +554,9 @@ Type: [Function][107]
 import { changeFieldValue } from 'reform-redux';
 
 store.dispatch(changeFieldValue(
-  formName: string,
-  fieldName: FieldName,
-  fieldValue: FieldValue,
+  formName,
+  fieldName,
+  fieldValue,
 ));
 ```
 
@@ -591,12 +566,12 @@ Returns **ChangeFieldValue**
 
 Set form submitted
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `submitted` **[boolean][99]** 
+-   `formName` **[string][93]** 
+-   `submitted` **[boolean][96]** 
 
 ### Examples
 
@@ -604,8 +579,8 @@ Type: [Function][107]
 import { setFormSubmitted } from 'reform-redux';
 
 store.dispatch(setFormSubmitted(
-  formName: string,
-  submitted: boolean,
+  formName,
+  submitted,
 ));
 ```
 
@@ -615,12 +590,12 @@ Returns **SetFormSubmitted**
 
 Reset form
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
--   `state` **[ResetState][111]?** 
+-   `formName` **[string][93]** 
+-   `state` **[ResetState][108]?** 
 
 ### Examples
 
@@ -628,12 +603,10 @@ Type: [Function][107]
 import { resetForm } from 'reform-redux';
 
 store.dispatch(resetForm(
-  formName: string,
+  formName,
   state?: ResetState,
 ));
 ```
-
-Returns **ResetForm** 
 
 ## Types
 
@@ -644,110 +617,110 @@ Returns **ResetForm**
 
 initial | empty
 
-Type: [string][96]
+Type: [string][93]
 
 ## formReducerCreator
 
 Create form reducer.
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `formName` **[string][96]** 
+-   `formName` **[string][93]** 
 
 ## onSubmitFailed
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `errorFields` **[FieldsData][112]** 
--   `fields` **[FieldsData][112]** 
--   `event` **[Event][113]** 
+-   `errorFields` **[FieldsData][109]** 
+-   `fields` **[FieldsData][109]** 
+-   `event` **[Event][110]** 
 
 ## onSubmit
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `fields` **[FieldsData][112]** 
--   `event` **[Event][113]** 
+-   `fields` **[FieldsData][109]** 
+-   `event` **[Event][110]** 
 
 ## FieldName
 
-Type: [string][96]
+Type: [string][93]
 
 ## FieldData
 
-Type: [object][110]
+Type: [object][106]
 
 ### Properties
 
--   `FieldData` **[object][110]** 
+-   `FieldData` **[object][106]** 
     -   `FieldData.value` **any** 
-    -   `FieldData.changed` **[boolean][99]** 
-    -   `FieldData.errors` **[Array][108]&lt;[string][96]>** 
-    -   `FieldData.valid` **[boolean][99]** 
-    -   `FieldData.touched` **[boolean][99]** 
-    -   `FieldData.disabled` **[boolean][99]** 
+    -   `FieldData.changed` **[boolean][96]** 
+    -   `FieldData.errors` **[Array][107]&lt;[string][93]>** 
+    -   `FieldData.valid` **[boolean][96]** 
+    -   `FieldData.touched` **[boolean][96]** 
+    -   `FieldData.disabled` **[boolean][96]** 
 
 ## FieldsData
 
-Type: [object][110]&lt;[FieldName][109], [FieldData][114]>
+Type: [object][106]&lt;[FieldName][105], [FieldData][111]>
 
 ## Validate
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
 -   `value` **any** 
 
-Returns **([undefined][115] \| [string][96])** error or nothing
+Returns **([undefined][112] \| [string][93])** error or nothing
 
 ## ValidateFunctions
 
-Type: ([Validate][116] \| [Array][108]&lt;[Validate][116]>)
+Type: ([Validate][113] \| [Array][107]&lt;[Validate][113]>)
 
 ### Parameters
 
--   `fields` **[FieldsData][112]** 
--   `event` **[Event][113]** 
+-   `fields` **[FieldsData][109]** 
+-   `event` **[Event][110]** 
 
 ## NormalizeWhen
 
 onChange | onBlur | onFocus | onInit
 
-Type: [string][96]
+Type: [string][93]
 
 ## Normalize
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
 -   `value` **any** 
 -   `previousValue` **any** 
--   `allFields` **[FieldsData][112]** 
--   `when` **[NormalizeWhen][117]** 
--   `name` **[FieldName][109]** 
+-   `allFields` **[FieldsData][109]** 
+-   `when` **[NormalizeWhen][114]** 
+-   `name` **[FieldName][105]** 
 
 Returns **any** normalized value
 
 ## OnEvent
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
--   `event` **[event][113]** 
--   `fieldData` **[FieldData][114]** 
+-   `event` **[event][110]** 
+-   `fieldData` **[FieldData][111]** 
 
 ## OnChange
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
@@ -756,12 +729,12 @@ Type: [Function][107]
 
 ## FieldOnChange
 
-Type: [Function][107]
+Type: [Function][104]
 
 ### Parameters
 
 -   `data` **any** 
--   `normalizeWhen` **[string][96]**  (optional, default `onChange`)
+-   `normalizeWhen` **[string][93]**  (optional, default `onChange`)
 
 Returns **any** new value
 
@@ -769,28 +742,28 @@ Returns **any** new value
 
 ### Parameters
 
--   `onChange` **[FieldOnChange][118]** Execute this function when you need to change value in the store.
--   `onBlur` **[OnEvent][103]** This function will trigger function or functions which validate your field.
--   `onFocus` **[OnEvent][103]** This function will trigger normalize function.
+-   `onChange` **[FieldOnChange][115]** Execute this function when you need to change value in the store.
+-   `onBlur` **[OnEvent][100]** This function will trigger function or functions which validate your field.
+-   `onFocus` **[OnEvent][100]** This function will trigger normalize function.
 -   `value` **any** Field value.
--   `disabled` **[boolean][99]** Field disabled or not.
--   `changed` **[boolean][99]** Field changed or not.
--   `formName` **[string][96]** Form name.
--   `touched` **[boolean][99]** Field touched or not.
--   `checked` **[boolean][99]** This prop will avaible in the component if your component is checkbox or radio button.
--   `errors` **[Array][108]&lt;[string][96]>** Array of errors.
+-   `disabled` **[boolean][96]** Field disabled or not.
+-   `changed` **[boolean][96]** Field changed or not.
+-   `formName` **[string][93]** Form name.
+-   `touched` **[boolean][96]** Field touched or not.
+-   `checked` **[boolean][96]** This prop will avaible in the component if your component is checkbox or radio button.
+-   `errors` **[Array][107]&lt;[string][93]>** Array of errors.
 
 ## ButtonType
 
 submit | reset
 
-Type: [string][96]
+Type: [string][93]
 
 ## ButtonComponent
 
 ### Parameters
 
--   `isLoading` **[boolean][99]** When form submitting
+-   `isLoading` **[boolean][96]** When form submitting
 
 [1]: #components
 
@@ -812,218 +785,212 @@ Type: [string][96]
 
 [10]: #examples-2
 
-[11]: #selectformdata
+[11]: #actions
 
-[12]: #parameters-3
+[12]: #setfieldtouched
 
-[13]: #examples-3
+[13]: #parameters-3
 
-[14]: #actions
+[14]: #examples-3
 
-[15]: #setfieldtouched
+[15]: #setfieldstouched
 
 [16]: #parameters-4
 
 [17]: #examples-4
 
-[18]: #setfieldstouched
+[18]: #setfieldshidden
 
 [19]: #parameters-5
 
 [20]: #examples-5
 
-[21]: #setfieldshidden
+[21]: #setfieldhidden
 
 [22]: #parameters-6
 
 [23]: #examples-6
 
-[24]: #setfieldhidden
+[24]: #setfielderrors
 
 [25]: #parameters-7
 
 [26]: #examples-7
 
-[27]: #setfielderrors
+[27]: #setfieldserrors
 
 [28]: #parameters-8
 
 [29]: #examples-8
 
-[30]: #setfieldserrors
+[30]: #changefieldsvalues
 
 [31]: #parameters-9
 
 [32]: #examples-9
 
-[33]: #changefieldsvalues
+[33]: #setfieldchanged
 
 [34]: #parameters-10
 
 [35]: #examples-10
 
-[36]: #setfieldchanged
+[36]: #setfieldschanged
 
 [37]: #parameters-11
 
 [38]: #examples-11
 
-[39]: #setfieldschanged
+[39]: #removefield
 
 [40]: #parameters-12
 
 [41]: #examples-12
 
-[42]: #removefield
+[42]: #resetfield
 
 [43]: #parameters-13
 
 [44]: #examples-13
 
-[45]: #resetfield
+[45]: #resetfields
 
 [46]: #parameters-14
 
 [47]: #examples-14
 
-[48]: #resetfields
+[48]: #setfielddisabled
 
 [49]: #parameters-15
 
 [50]: #examples-15
 
-[51]: #setfielddisabled
+[51]: #setfieldsdisabled
 
 [52]: #parameters-16
 
 [53]: #examples-16
 
-[54]: #setfieldsdisabled
+[54]: #changefieldvalue
 
 [55]: #parameters-17
 
 [56]: #examples-17
 
-[57]: #changefieldvalue
+[57]: #setformsubmitted
 
 [58]: #parameters-18
 
 [59]: #examples-18
 
-[60]: #setformsubmitted
+[60]: #resetform
 
 [61]: #parameters-19
 
 [62]: #examples-19
 
-[63]: #resetform
+[63]: #types
 
-[64]: #parameters-20
+[64]: #resetstate
 
-[65]: #examples-20
+[65]: #formreducercreator
 
-[66]: #types
+[66]: #parameters-20
 
-[67]: #resetstate
+[67]: #onsubmitfailed
 
-[68]: #formreducercreator
+[68]: #parameters-21
 
-[69]: #parameters-21
+[69]: #onsubmit
 
-[70]: #onsubmitfailed
+[70]: #parameters-22
 
-[71]: #parameters-22
+[71]: #fieldname
 
-[72]: #onsubmit
+[72]: #fielddata
 
-[73]: #parameters-23
+[73]: #properties
 
-[74]: #fieldname
+[74]: #fieldsdata
 
-[75]: #fielddata
+[75]: #validate
 
-[76]: #properties
+[76]: #parameters-23
 
-[77]: #fieldsdata
+[77]: #validatefunctions
 
-[78]: #validate
+[78]: #parameters-24
 
-[79]: #parameters-24
+[79]: #normalizewhen
 
-[80]: #validatefunctions
+[80]: #normalize
 
 [81]: #parameters-25
 
-[82]: #normalizewhen
+[82]: #onevent
 
-[83]: #normalize
+[83]: #parameters-26
 
-[84]: #parameters-26
+[84]: #onchange
 
-[85]: #onevent
+[85]: #parameters-27
 
-[86]: #parameters-27
+[86]: #fieldonchange
 
-[87]: #onchange
+[87]: #parameters-28
 
-[88]: #parameters-28
+[88]: #fieldcomponent
 
-[89]: #fieldonchange
+[89]: #parameters-29
 
-[90]: #parameters-29
+[90]: #buttontype
 
-[91]: #fieldcomponent
+[91]: #buttoncomponent
 
 [92]: #parameters-30
 
-[93]: #buttontype
+[93]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[94]: #buttoncomponent
+[94]: #onsubmitfailed
 
-[95]: #parameters-31
+[95]: #onsubmit
 
-[96]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[96]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[97]: #onsubmitfailed
+[97]: #fieldcomponent
 
-[98]: #onsubmit
+[98]: #validatefunctions
 
-[99]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[99]: #normalize
 
-[100]: #fieldcomponent
+[100]: #onevent
 
-[101]: #validatefunctions
+[101]: #onchange
 
-[102]: #normalize
+[102]: #buttontype
 
-[103]: #onevent
+[103]: #buttoncomponent
 
-[104]: #onchange
+[104]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[105]: #buttontype
+[105]: #fieldname
 
-[106]: #buttoncomponent
+[106]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[107]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[107]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[108]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[108]: #resetstate
 
-[109]: #fieldname
+[109]: #fieldsdata
 
-[110]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[110]: https://developer.mozilla.org/docs/Web/API/Event
 
-[111]: #resetstate
+[111]: #fielddata
 
-[112]: #fieldsdata
+[112]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
 
-[113]: https://developer.mozilla.org/docs/Web/API/Event
+[113]: #validate
 
-[114]: #fielddata
+[114]: #normalizewhen
 
-[115]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
-
-[116]: #validate
-
-[117]: #normalizewhen
-
-[118]: #fieldonchange
+[115]: #fieldonchange

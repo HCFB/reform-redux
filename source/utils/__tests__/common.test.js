@@ -1,30 +1,8 @@
 import { LIBRARY_NAME } from '../../constants/common';
-import {
-  debounce,
-  asyncForEach,
-  getReduxConst,
-  cloneDeep,
-  is,
-  filterReactDomProps,
-} from '../common';
+import { asyncForEach, getReduxConst, cloneDeep, is, filterReactDomProps } from '../common';
 import plain from '../plainFunctions';
 
 describe('utils/common', () => {
-  it('debounce', () => {
-    jest.useFakeTimers();
-
-    const mockFunction = jest.fn();
-    const debounced = debounce(mockFunction, 100);
-
-    debounced();
-    debounced();
-    debounced();
-
-    jest.runAllTimers();
-
-    expect(mockFunction).toHaveBeenCalledTimes(1);
-  });
-
   it('asyncForEach', async () => {
     jest.useFakeTimers();
 

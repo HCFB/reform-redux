@@ -1,55 +1,31 @@
 import { LIBRARY_NAME } from '../constants/common';
-import type { SearchKeyPath, Where } from '../types/common';
-import type { DataFunctions } from '../types/dataFunctions';
 
-export function getFormNameWihoutKey(formName: string): string {
+export function getFormNameWihoutKey(formName) {
   const formNameData = /^([^[\]]+)(\[(.*)\])?$/.exec(formName);
   const name = formNameData ? formNameData[1] : '';
 
   return name;
 }
 
-export function getFormNameKey(formName: string): string {
+export function getFormNameKey(formName) {
   const keyData = /.*\[(.*)\]/.exec(formName);
   const key = keyData ? keyData[1] : '';
 
   return key;
 }
 
-export function debounce(func: Function, wait: number, immediate?: boolean) {
-  let timeout;
-
-  return (...args: Array<any>) => {
-    const later = function() {
-      timeout = null;
-      if (!immediate) func.apply(this, args);
-    };
-    const callNow = immediate && !timeout;
-    // $FlowFixMe
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(this, args);
-  };
-}
-
-export const asyncForEach: Function = async (
-  array: Array<any>,
-  callback: Function,
-  dataFunctions: DataFunctions,
-) => {
-  const { listSize, getIn }: DataFunctions = dataFunctions;
-
-  for (let index: number = 0; index < listSize(array); index++) {
+export const asyncForEach = async (array, callback) => {
+  for (let index = 0; index < listSize(array); index++) {
     await callback(getIn(array, [index]), index, array);
   }
 };
 
-export function getReduxConst(constName: string): string {
+export function getReduxConst(constName) {
   return `${LIBRARY_NAME}/${constName}`;
 }
 
-export function cloneDeep<Input: any>(o: Input): Input {
-  let copy: any = o;
+export function cloneDeep(o) {
+  let copy = o;
 
   if (o && typeof o === 'object') {
     copy = Object.prototype.toString.call(o) === '[object Array]' ? [] : {};
@@ -63,7 +39,7 @@ export function cloneDeep<Input: any>(o: Input): Input {
   return copy;
 }
 
-export function is(x: any, y: any): boolean {
+export function is(x, y) {
   if (x === null || x === undefined || y === null || y === undefined) {
     return x === y;
   }
@@ -96,10 +72,10 @@ export function is(x: any, y: any): boolean {
   return Object.keys(y).every(i => p.indexOf(i) !== -1) && p.every(i => is(x[i], y[i]));
 }
 
-export function hasIn(where: any, searchKeyPath: SearchKeyPath): boolean {
-  let current: any = where;
+export function hasIn(where, searchKeyPath) {
+  let current = where;
 
-  for (let i: number = 0; i < searchKeyPath.length; i++) {
+  for (let i = 0; i < searchKeyPath.length; i++) {
     if (current[searchKeyPath[i]] === undefined) return false;
     current = current[searchKeyPath[i]];
   }
@@ -107,9 +83,9 @@ export function hasIn(where: any, searchKeyPath: SearchKeyPath): boolean {
   return true;
 }
 
-export function setIn<Input: any>(where: Input, searchKeyPath: SearchKeyPath, value: any): Input {
-  let current: Input = where;
-  let i: number;
+export function setIn(where, searchKeyPath, value) {
+  let current = where;
+  let i;
 
   for (i = 0; i < searchKeyPath.length - 1; i++) {
     current = current[searchKeyPath[i]];
@@ -120,9 +96,9 @@ export function setIn<Input: any>(where: Input, searchKeyPath: SearchKeyPath, va
   return cloneDeep(where);
 }
 
-export function deleteIn<Input: any>(where: Input, searchKeyPath: SearchKeyPath): Input {
-  let current: Input = where;
-  let i: number;
+export function deleteIn(where, searchKeyPath) {
+  let current = where;
+  let i;
 
   for (i = 0; i < searchKeyPath.length - 1; i++) {
     current = current[searchKeyPath[i]];
@@ -133,10 +109,10 @@ export function deleteIn<Input: any>(where: Input, searchKeyPath: SearchKeyPath)
   return where;
 }
 
-export function getIn(where: Where, searchKeyPath: SearchKeyPath, defaultValue: any): any {
-  let current: any = where;
+export function getIn(where, searchKeyPath, defaultValue) {
+  let current = where;
 
-  for (let i: number = 0; i < searchKeyPath.length; i++) {
+  for (let i = 0; i < searchKeyPath.length; i++) {
     if (current[searchKeyPath[i]] === undefined) return defaultValue || false;
     current = current[searchKeyPath[i]];
   }
@@ -144,35 +120,35 @@ export function getIn(where: Where, searchKeyPath: SearchKeyPath, defaultValue: 
   return cloneDeep(current);
 }
 
-export function merge<Input: any>(target: Input, source: Input): Input {
+export function merge(target, source) {
   return { ...target, ...source };
 }
 
-export function keys(input: Object): Array<string> {
+export function keys(input) {
   return Object.keys(input);
 }
 
-export function isList(input: Where): boolean {
+export function isList(input) {
   return Array.isArray(input);
 }
 
-export function listIncludes(list: Array<any>, item: any): boolean {
+export function listIncludes(list, item) {
   return list.indexOf(item) > -1;
 }
 
-export function listSize(list: Array<any>): number {
+export function listSize(list) {
   return list.length;
 }
 
-export function isImmutable(): boolean {
+export function isImmutable() {
   return false;
 }
 
-export function toJS<Input: any>(input: Input): Input {
+export function toJS(input) {
   return input;
 }
 
-const DOMProps: Array<string> = [
+const DOMProps = [
   'abbr',
   'accept',
   'acceptCharset',
@@ -190,6 +166,7 @@ const DOMProps: Array<string> = [
   'challenge',
   'charset',
   'checked',
+  'children',
   'cite',
   'class',
   'className',
@@ -343,10 +320,10 @@ const DOMProps: Array<string> = [
   'onAnimationIteration',
   'onTransitionEnd',
 ];
-const DOMDataAttributes: RegExp = /data-.{1,}/;
+const DOMDataAttributes = /data-.{1,}/;
 
-export function filterReactDomProps(props: Object): Object {
-  const filterProps: Object = {};
+export function filterReactDomProps(props) {
+  const filterProps = {};
 
   for (const prop in props) {
     if (

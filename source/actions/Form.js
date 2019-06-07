@@ -5,30 +5,21 @@ import {
   UPDATE_FORM,
   SET_FORM_SUBMITTED,
 } from '../constants/Form';
-import type { ResetState } from '../types/formReducer';
 import { getReduxConst } from '../utils/common';
-import type { FieldsData } from '../types/Field';
-import type {
-  FormInitialisation,
-  SetFormSubmitting,
-  ResetForm,
-  UpdateForm,
-  SetFormSubmitted,
-} from '../types/Form';
 
-export const formInitialisation = (formName: string, fields: FieldsData): FormInitialisation => ({
+export const formInitialisation = (formName, fields) => ({
   type: getReduxConst(FORM_INITIALISATION),
   formName,
   fields,
 });
 
-export const updateForm = (formName: string, fields: FieldsData): UpdateForm => ({
+export const updateForm = (formName, fields) => ({
   type: getReduxConst(UPDATE_FORM),
   formName,
   fields,
 });
 
-export const setFormSubmitting = (formName: string, submitting: boolean): SetFormSubmitting => ({
+export const setFormSubmitting = (formName, submitting) => ({
   type: getReduxConst(SET_FORM_SUBMITTING),
   formName,
   submitting,
@@ -42,8 +33,8 @@ export const setFormSubmitting = (formName: string, submitting: boolean): SetFor
  * import { setFormSubmitted } from 'reform-redux';
  *
  * store.dispatch(setFormSubmitted(
- *   formName: string,
- *   submitted: boolean,
+ *   formName,
+ *   submitted,
  * ));
  *
  * @callback
@@ -51,7 +42,7 @@ export const setFormSubmitting = (formName: string, submitting: boolean): SetFor
  * @param {boolean} submitted
  * @returns {SetFormSubmitted}
  */
-export const setFormSubmitted = (formName: string, submitted: boolean): SetFormSubmitted => ({
+export const setFormSubmitted = (formName, submitted) => ({
   type: getReduxConst(SET_FORM_SUBMITTED),
   formName,
   submitted,
@@ -65,7 +56,7 @@ export const setFormSubmitted = (formName: string, submitted: boolean): SetFormS
  * import { resetForm } from 'reform-redux';
  *
  * store.dispatch(resetForm(
- *   formName: string,
+ *   formName,
  *   state?: ResetState,
  * ));
  *
@@ -73,7 +64,7 @@ export const setFormSubmitted = (formName: string, submitted: boolean): SetFormS
  * @param {string} formName
  * @param {ResetState} [state]
  */
-export const resetForm = (formName: string, state?: ResetState): ResetForm => ({
+export const resetForm = (formName, state) => ({
   type: getReduxConst(RESET_FORM),
   formName,
   state,

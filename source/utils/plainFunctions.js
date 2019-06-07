@@ -13,9 +13,8 @@ import {
   isImmutable,
   toJS,
 } from './common';
-import type { DataFunctions } from '../types/dataFunctions';
 
-export default function plain(): DataFunctions {
+export default function plain() {
   return {
     fromJS: cloneDeep,
     map: cloneDeep,

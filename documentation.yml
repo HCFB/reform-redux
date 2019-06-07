@@ -4,7 +4,6 @@ toc:
   - Form
   - Field
   - Button
-  - selectFormData
 
   - name: Actions
     description: Description of all actions in the library.

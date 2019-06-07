@@ -2,8 +2,9 @@ import { Component, createElement } from 'react';
 import { Provider } from 'react-redux';
 import { Provider as ReactReduxProvider } from 'react-redux';
 import { shallow, mount } from 'enzyme';
-import { Field, changeFieldValue, Form, setFieldHidden } from '../../index';
-import { formInitialisation } from '../../actions/Form';
+import { act } from 'react-dom/test-utils';
+import { render, fireEvent } from '@testing-library/react';
+import { Field, Form, setFieldHidden } from '../../index';
 
 describe('components / Field', () => {
   it('snapshot', () => {
@@ -21,7 +22,9 @@ describe('components / Field', () => {
     expect(snapshot).toMatchSnapshot();
   });
 
-  it('receive new prop checked for radio and checkbox types', done => {
+  it('receive new prop checked for radio and checkbox types', () => {
+    jest.useFakeTimers();
+
     const wrapper = ({ checked = false }) =>
       createElement(
         Provider,
@@ -38,17 +41,20 @@ describe('components / Field', () => {
           }),
         ),
       );
-    const component = mount(createElement(wrapper));
 
-    component.setProps({
-      checked: true,
+    act(() => {
+      const { rerender } = render(createElement(wrapper));
+
+      rerender(
+        createElement(wrapper, {
+          checked: true,
+        }),
+      );
+
+      jest.runAllTimers();
     });
 
-    setImmediate(() => {
-      expect(global.store.getState().form.fields.field.value).toBe('test');
-
-      done();
-    });
+    expect(global.store.getState().form.fields.field.value).toBe('test');
   });
 
   it('receive new prop changed and touched', () => {
@@ -94,9 +100,10 @@ describe('components / Field', () => {
     expect(global.store.getState().form.changed).toBeFalsy();
   });
 
-  it('dynamically create new fields in form', () => {
+  it('dynamically create new fields in form', done => {
     expect.assertions(2);
     jest.useFakeTimers();
+
     class Test extends Component {
       state = {
         showFields: false,
@@ -108,49 +115,58 @@ describe('components / Field', () => {
 
       render() {
         return createElement(
-          Provider,
-          { store: global.store },
-          createElement(
-            Form,
-            { path: 'form' },
-            this.state.showFields
-              ? [
-                  createElement(Field, {
-                    name: 'field',
-                    component: 'input',
-                    key: 0,
-                  }),
-                ]
-              : null,
-          ),
+          global.Provider,
+          {},
+          this.state.showFields
+            ? [
+                createElement(Field, {
+                  name: 'field',
+                  component: 'input',
+                  'data-testid': 'input',
+                  key: 0,
+                }),
+              ]
+            : null,
         );
       }
     }
 
-    const component = mount(createElement(Test));
+    let rerender;
+    let getByTestId;
+    act(() => {
+      const component = render(createElement(Test));
+      rerender = component.rerender;
+      getByTestId = component.getByTestId;
+    });
 
     expect(global.store.getState().form.fields).toEqual({});
 
-    component.setProps({
-      showFields: true,
+    act(() => {
+      rerender(createElement(Test, { showFields: true }));
     });
 
-    jest.runAllTimers();
+    act(() => {
+      fireEvent.change(getByTestId('input'), {
+        nativeEvent: new Event('change'),
+        target: { value: 'test' },
+      });
+      jest.runOnlyPendingTimers();
+    });
 
-    component
-      .find('input')
-      .simulate('change', { nativeEvent: new Event('change'), target: { value: 'test' } });
+    setImmediate(() => {
+      expect(global.store.getState().form.fields).toEqual({
+        field: {
+          value: 'test',
+          errors: [],
+          changed: true,
+          hidden: false,
+          touched: false,
+          valid: true,
+          disabled: false,
+        },
+      });
 
-    expect(global.store.getState().form.fields).toEqual({
-      field: {
-        value: 'test',
-        errors: [],
-        changed: true,
-        hidden: false,
-        touched: false,
-        valid: true,
-        disabled: false,
-      },
+      done();
     });
   });
 
@@ -293,107 +309,13 @@ describe('components / Field', () => {
     );
   });
 
-  it('if you pass disabled and value props then this props will in state.field.value and state.field.disabled.', () => {
-    expect.assertions(10);
-
-    let component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
-        createElement(
-          Form,
-          { path: 'form' },
-          createElement(Field, {
-            name: 'test',
-            component: 'input',
-            value: 'test',
-            disabled: true,
-            touched: true,
-            changed: true,
-            hidden: true,
-          }),
-        ),
-      ),
-    );
-
-    expect(component.find('Field[name="test"]').state('field').value).toBe('test');
-    expect(component.find('Field[name="test"]').state('field').disabled).toBeTruthy();
-    expect(component.find('Field[name="test"]').state('field').touched).toBeTruthy();
-    expect(component.find('Field[name="test"]').state('field').changed).toBeTruthy();
-    expect(component.find('Field[name="test"]').state('field').hidden).toBeTruthy();
-
-    component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
-        createElement(
-          Form,
-          { path: 'form' },
-          createElement(Field, {
-            name: 'test1',
-            component: 'input',
-          }),
-        ),
-      ),
-    );
-
-    expect(component.find('Field[name="test1"]').state('field').value).toBe('');
-    expect(component.find('Field[name="test1"]').state('field').disabled).toBeFalsy();
-    expect(component.find('Field[name="test1"]').state('field').touched).toBeFalsy();
-    expect(component.find('Field[name="test1"]').state('field').changed).toBeFalsy();
-    expect(component.find('Field[name="test1"]').state('field').hidden).toBeFalsy();
-  });
-
-  it('if component type is checkbox or radio value must be an empty string.', () => {
-    expect.assertions(2);
-
-    let component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
-        createElement(
-          Form,
-          { path: 'form' },
-          createElement(Field, {
-            name: 'test',
-            component: 'input',
-            value: 'test',
-            type: 'checkbox',
-          }),
-        ),
-      ),
-    );
-
-    expect(component.find('Field[name="test"]').state('field').value).toBe('');
-
-    component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
-        createElement(
-          Form,
-          { path: 'form' },
-          createElement(Field, {
-            name: 'test',
-            component: 'input',
-            value: 'test',
-            type: 'radio',
-          }),
-        ),
-      ),
-    );
-
-    expect(component.find('Field[name="test"]').state('field').value).toBe('');
-  });
-
   it('check value of checkbox without value props in validate function.', done => {
-    let component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
+    let component;
+    act(() => {
+      component = mount(
         createElement(
-          Form,
-          { path: 'form' },
+          global.Provider,
+          {},
           createElement(Field, {
             name: 'test',
             component: 'input',
@@ -407,43 +329,11 @@ describe('components / Field', () => {
             },
           }),
         ),
-      ),
-    );
+      );
+    });
 
     const event = { nativeEvent: new Event('change'), target: { checked: true } };
-    component.find(Field).simulate('change', event);
-  });
-
-  it('if in redux store exists field data then take it from redux store and write to field state.', () => {
-    global.store.dispatch(
-      formInitialisation('form', {
-        field: {
-          value: '',
-          errors: [],
-          valid: true,
-          disabled: false,
-        },
-      }),
-    );
-
-    const component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
-        createElement(
-          Form,
-          { path: 'form' },
-          createElement(Field, {
-            name: 'field',
-            component: 'input',
-            value: 'test',
-            type: 'checkbox',
-          }),
-        ),
-      ),
-    );
-
-    expect(component.find('Field[name="field"]').state('field').value).toBe('');
+    component.find('input').simulate('change', event);
   });
 
   it('component onChange', () => {
@@ -969,34 +859,40 @@ describe('components / Field', () => {
   });
 
   it('validate on onBlur if field was not touched', done => {
-    const validate = value => {
-      if (!value.length) return 'Required!';
-    };
-    const component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
+    jest.useFakeTimers();
+
+    let component;
+    let input;
+    let event;
+    act(() => {
+      const validate = value => {
+        if (!value.length) return 'Required!';
+      };
+      component = mount(
         createElement(
-          Form,
-          { path: 'form' },
+          global.Provider,
+          {},
           createElement(Field, {
             name: 'field',
             component: 'input',
             validate,
           }),
         ),
-      ),
-    );
+      );
+      input = component.find('input');
+      event = { nativeEvent: new Event('blur') };
+    });
 
-    const input = component.find('input');
-    const event = { nativeEvent: new Event('blur') };
-    input.simulate('blur', event);
+    act(() => {
+      input.simulate('blur', event);
+      jest.runAllTimers();
+    });
 
     setImmediate(() => {
-      expect(global.store.getState().form.fields.field.errors).toEqual(['Required!']);
-
-      setImmediate(() => {
+      act(() => {
+        expect(global.store.getState().form.fields.field.errors).toEqual(['Required!']);
         input.simulate('change', { nativeEvent: new Event('change'), target: { value: 'test' } });
+        jest.runAllTimers();
 
         setImmediate(() => {
           expect(global.store.getState().form.fields.field.errors).toEqual([]);
@@ -1143,29 +1039,32 @@ describe('components / Field', () => {
   });
 
   it('normalize value on onFocus', () => {
+    jest.useFakeTimers();
     const normalize = jest.fn();
     normalize.mockReturnValue('TEST');
 
-    const component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
+    let component;
+
+    act(() => {
+      component = mount(
         createElement(
-          Form,
-          { path: 'form' },
+          global.Provider,
+          {},
           createElement(Field, {
             name: 'field',
             component: 'input',
             normalize,
           }),
         ),
-      ),
-    );
+      );
+    });
 
     const event = { nativeEvent: new Event('focus') };
     const input = component.find('input');
 
-    input.simulate('focus', event);
+    act(() => {
+      input.simulate('focus', event);
+    });
 
     expect(normalize).lastCalledWith(
       'TEST',
@@ -1209,18 +1108,6 @@ describe('components / Field', () => {
     const input = component.find(customComponent);
 
     expect(Object.keys(input.props())).toEqual([
-      'reactReduxContextGetState',
-      'reactReduxContextSubscribe',
-      'reformReduxContextGetFieldCount',
-      'reformReduxContextSetFieldTouched',
-      'reformReduxContextSetFieldChanged',
-      'reformReduxContextChangeFieldValue',
-      'reformReduxContextSetFieldErrors',
-      'reformReduxContextFormName',
-      'reformReduxContextFormPath',
-      'reformReduxContextFormUnregisterField',
-      'reformReduxContextFormRegisterField',
-      'reformReduxContextCoreUpdateStackFieldValue',
       'value',
       'hidden',
       'onChange',
@@ -1374,49 +1261,14 @@ describe('components / Field', () => {
     expect(global.store.getState().form.fields.field.value).toBeTruthy();
   });
 
-  it('checked prop in two checkboxes with same name', () => {
+  it('hidden state works correctly', () => {
     expect.assertions(2);
+    jest.useFakeTimers();
 
-    const component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
-        createElement(Form, { path: 'form' }, [
-          createElement(Field, {
-            name: 'field',
-            component: 'input',
-            type: 'checkbox',
-            checked: true,
-            value: 'field1',
-            key: 0,
-          }),
-          createElement(Field, {
-            name: 'field',
-            component: 'input',
-            type: 'checkbox',
-            className: 'field2',
-            value: 'field2',
-            key: 1,
-          }),
-        ]),
-      ),
-    );
-
-    expect(component.find('Field.field2').instance().state.field.value).toEqual(['field1']);
-
-    global.store.dispatch(changeFieldValue('form', 'field', ['field2']));
-
-    expect(component.find('Field.field2').instance().state.field.value).toEqual(['field2']);
-  });
-
-  it('hidden state works correctly', done => {
-    expect.assertions(2);
-
-    const component = mount(
-      createElement(
-        Provider,
-        { store: global.store },
-        createElement(Form, { path: 'form' }, [
+    let component;
+    act(() => {
+      component = mount(
+        createElement(global.Provider, {}, [
           createElement(Field, {
             name: 'field',
             component: 'input',
@@ -1426,52 +1278,18 @@ describe('components / Field', () => {
             key: 0,
           }),
         ]),
-      ),
-    );
-
-    expect(component.find('input').length).toBe(1);
-
-    global.store.dispatch(setFieldHidden('form', 'field', true));
-    component.update();
-
-    setImmediate(() => {
-      expect(component.find('input').length).toBe(0);
-
-      done();
+      );
     });
-  });
 
-  it('value in few checkboxes with same name', () => {
-    const component1 = mount(
-      createElement(
-        Provider,
-        { store: global.store },
-        createElement(Form, { path: 'form' }, [
-          createElement(Field, {
-            name: 'field1',
-            component: 'input',
-            type: 'checkbox',
-            checked: true,
-            value: 'field1',
-            key: 0,
-          }),
-          createElement(Field, {
-            name: 'field1',
-            component: 'input',
-            checked: true,
-            type: 'checkbox',
-            className: 'field3',
-            value: 'field2',
-            key: 1,
-          }),
-        ]),
-      ),
-    );
+    expect(component.html()).toBe('<form><input type="checkbox" value="field1" checked=""></form>');
 
-    expect(component1.find('Field.field3').instance().state.field.value).toEqual([
-      'field1',
-      'field2',
-    ]);
+    act(() => {
+      global.store.dispatch(setFieldHidden('form', 'field', true));
+      jest.runAllTimers();
+      component.update();
+    });
+
+    expect(component.html()).toBe('<form></form>');
   });
 
   it('in radio or checkbox components exists checked and value props', () => {
@@ -1615,76 +1433,81 @@ describe('components / Field', () => {
     expect(global.store.getState().form.fields.field.value).toEqual([1, 2]);
   });
 
-  it('dont reset values on form update', () => {
+  it('dont reset values on form update', done => {
     expect.assertions(4);
     jest.useFakeTimers();
 
+    // eslint-disable-next-line react/prop-types
     const wrapper = ({ visible = false, change = false }) => {
-      return createElement(
-        Provider,
-        { store: global.store },
-        createElement(Form, { path: 'form' }, [
-          visible
-            ? createElement(Field, {
-                key: 0,
-                name: 'field',
-                component: 'input',
-                value: 1,
-                checked: true,
-                type: 'checkbox',
-              })
-            : null,
-          createElement(Field, {
-            key: 1,
-            name: 'field',
-            value: 2,
-            checked: true,
-            component: 'input',
-            type: 'checkbox',
-          }),
-          createElement(Field, {
-            key: 3,
-            name: 'field2',
-            value: change ? 'field2 value' : '',
-            component: 'input',
-            type: 'text',
-          }),
-        ]),
-      );
+      return createElement(global.Provider, {}, [
+        visible
+          ? createElement(Field, {
+              key: 0,
+              name: 'field',
+              component: 'input',
+              value: 1,
+              checked: true,
+              type: 'checkbox',
+            })
+          : null,
+        createElement(Field, {
+          key: 1,
+          name: 'field',
+          value: 2,
+          checked: true,
+          component: 'input',
+          type: 'checkbox',
+        }),
+        createElement(Field, {
+          key: 3,
+          name: 'field2',
+          value: change ? 'field2 value' : '',
+          component: 'input',
+          type: 'text',
+        }),
+      ]);
     };
 
-    const component = mount(createElement(wrapper));
+    let component;
+    act(() => {
+      component = mount(createElement(wrapper));
+    });
 
     expect(global.store.getState().form.fields.field.value).toBe(2);
     expect(global.store.getState().form.fields.field2.value).toBe('');
 
-    component.setProps({ change: true });
+    act(() => {
+      component.setProps({ change: true });
+    });
 
     expect(global.store.getState().form.fields.field2.value).toBe('field2 value');
 
-    component.setProps({ visible: true });
+    act(() => {
+      component.setProps({ visible: true });
 
-    jest.runAllTimers();
-
-    expect(global.store.getState().form.fields).toEqual({
-      field: {
-        changed: false,
-        disabled: false,
-        errors: [],
-        touched: false,
-        hidden: false,
-        valid: true,
-        value: [2, 1],
-      },
-      field2: {
-        changed: false,
-        disabled: false,
-        hidden: false,
-        errors: [],
-        touched: false,
-        valid: true,
-        value: 'field2 value',
-      },
+      setImmediate(() => {
+        expect(global.store.getState().form.fields).toEqual({
+          field: {
+            changed: false,
+            disabled: false,
+            errors: [],
+            touched: false,
+            hidden: false,
+            valid: true,
+            value: [2, 1],
+          },
+          field2: {
+            changed: false,
+            disabled: false,
+            hidden: false,
+            errors: [],
+            touched: false,
+            valid: true,
+            value: 'field2 value',
+          },
+        });
+        done();
+      });
     });
   });
 });

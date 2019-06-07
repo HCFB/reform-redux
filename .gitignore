@@ -13,4 +13,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # build
-reform-redux*
+reform-redux.es.js
+reform-redux.js

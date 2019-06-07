@@ -2,14 +2,12 @@ import '@babel/polyfill';
 
 import plain from './utils/plainFunctions';
 import { createFormReducer } from './reducers/formReducer';
-import { createFormComponent } from './components/Form';
-import { createFieldComponent } from './components/Field';
-import { createButtonComponent } from './components/Button';
-import { createSelectFormData } from './containers/selectFormData';
+import Form from './components/Form';
+import Field from './components/Field';
+import Button from './components/Button';
 import { filterReactDomProps } from './utils/common';
-import type { DataFunctions } from './types/dataFunctions';
 
-const dataFunctions: DataFunctions = plain();
+const dataFunctions = plain();
 
 // Utils
 
@@ -17,7 +15,7 @@ export { filterReactDomProps };
 
 // Reducer
 
-const formReducerCreator: Function = createFormReducer(dataFunctions);
+const formReducerCreator = createFormReducer(dataFunctions);
 export { formReducerCreator };
 
 // Actions
@@ -43,9 +41,4 @@ export { resetForm, setFormSubmitted } from './actions/Form';
 
 // Components
 
-const Form = createFormComponent(dataFunctions);
-const Field = createFieldComponent(dataFunctions);
-const Button = createButtonComponent(dataFunctions);
-const selectFormData = createSelectFormData(dataFunctions);
-
-export { Form, Field, Button, selectFormData };
+export { Form, Field, Button };

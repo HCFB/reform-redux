@@ -2,6 +2,7 @@ import { shallow, mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { setImmediate } from 'timers';
 import { createElement } from 'react';
+import { act } from 'react-test-renderer';
 import { Form, Field } from '../../index';
 import { setFieldsErrors } from '../../actions/Field';
 
@@ -21,17 +22,28 @@ describe('components / Form', () => {
   });
 
   it('form initialisation in the store after component mount', () => {
-    mount(
-      createElement(
-        Provider,
-        { store: global.store },
+    jest.useFakeTimers();
+
+    act(() => {
+      mount(
         createElement(
-          Form,
-          { path: 'form' },
-          createElement(Field, { name: 'test', component: 'input', changed: true, touched: true }),
+          Provider,
+          { store: global.store },
+          createElement(
+            Form,
+            { path: 'form' },
+            createElement(Field, {
+              name: 'test',
+              component: 'input',
+              changed: true,
+              touched: true,
+            }),
+          ),
         ),
-      ),
-    );
+      );
+
+      jest.runAllTimers();
+    });
 
     expect(global.store.getState().form).toEqual({
       fields: {
@@ -398,45 +410,50 @@ describe('components / Form', () => {
 
   it('few forms with same name on page onSubmitFailed', done => {
     expect.assertions(2);
+    jest.useFakeTimers();
 
     const onSubmitFailed = jest.fn();
 
-    const component = mount(
-      createElement(Provider, { store: global.store }, [
-        createElement(
-          Form,
-          { path: 'form', name: 'form[first]', id: 'first', onSubmitFailed, key: 1 },
-          [
-            createElement(Field, { key: 0, name: 'test1', value: '1', component: 'input' }),
-            createElement(Field, { key: 1, name: 'test2', value: '1', component: 'input' }),
-          ],
-        ),
-        createElement(
-          Form,
-          { path: 'form', name: 'form[second]', id: 'second', onSubmitFailed, key: 2 },
-          [
-            createElement(Field, { key: 0, name: 'test1', value: '2', component: 'input' }),
-            createElement(Field, { key: 1, name: 'test2', value: '2', component: 'input' }),
-          ],
-        ),
-      ]),
-    );
+    let component;
+    act(() => {
+      component = mount(
+        createElement(Provider, { store: global.store }, [
+          createElement(
+            Form,
+            { path: 'form', name: 'form[first]', id: 'first', onSubmitFailed, key: 1 },
+            [
+              createElement(Field, { key: 0, name: 'test1', value: '1', component: 'input' }),
+              createElement(Field, { key: 1, name: 'test2', value: '1', component: 'input' }),
+            ],
+          ),
+          createElement(
+            Form,
+            { path: 'form', name: 'form[second]', id: 'second', onSubmitFailed, key: 2 },
+            [
+              createElement(Field, { key: 0, name: 'test1', value: '2', component: 'input' }),
+              createElement(Field, { key: 1, name: 'test2', value: '2', component: 'input' }),
+            ],
+          ),
+        ]),
+      );
 
-    global.store.dispatch(
-      setFieldsErrors('form[first]', {
-        test1: ['error form1 test1'],
-        test2: ['error form1 test2'],
-      }),
-    );
+      global.store.dispatch(
+        setFieldsErrors('form[first]', {
+          test1: ['error form1 test1'],
+          test2: ['error form1 test2'],
+        }),
+      );
 
-    global.store.dispatch(
-      setFieldsErrors('form[second]', {
-        test1: ['error form2 test1'],
-        test2: ['error form2 test2'],
-      }),
-    );
+      global.store.dispatch(
+        setFieldsErrors('form[second]', {
+          test1: ['error form2 test1'],
+          test2: ['error form2 test2'],
+        }),
+      );
 
-    component.find('form#first').simulate('submit');
+      component.find('form#first').simulate('submit');
+      jest.runAllTimers();
+    });
 
     setImmediate(() => {
       expect(onSubmitFailed).lastCalledWith(
@@ -483,7 +500,10 @@ describe('components / Form', () => {
         expect.anything(),
       );
 
-      component.find('form#second').simulate('submit');
+      act(() => {
+        component.find('form#second').simulate('submit');
+        jest.runAllTimers();
+      });
 
       setImmediate(() => {
         expect(onSubmitFailed).lastCalledWith(

@@ -23,37 +23,13 @@ import {
   SET_FIELD_HIDDEN,
 } from '../constants/Field';
 import { getReduxConst, getFormNameKey, getFormNameWihoutKey } from '../utils/common';
-import type { State, Action } from '../types/formReducer';
-import type {
-  FieldsData,
-  ChangeFieldsValues,
-  ChangeFieldValue,
-  SetFieldsDisabled,
-  SetFieldDisabled,
-  SetFieldHidden,
-  SetFieldsHidden,
-  SetFieldErrors,
-  SetFieldsErrors,
-  ResetField,
-  FieldsValues,
-  ResetFields,
-  FieldName,
-  SetFieldTouched,
-  SetFieldsTouched,
-  RemoveField,
-  SetFieldsChanged,
-  SetFieldChanged,
-  SetFormSubmitted,
-} from '../types/Field';
-import type { FormInitialisation, SetFormSubmitting, UpdateForm, ResetForm } from '../types/Form';
-import type { DataFunctions } from '../types/dataFunctions';
 
 /**
  * initial | empty
  * @typedef {string} ResetState
  */
 
-export const createFormReducer: Function = ({
+export const createFormReducer = ({
   map,
   hasIn,
   setIn,
@@ -64,8 +40,8 @@ export const createFormReducer: Function = ({
   keys,
   list,
   isList,
-}: DataFunctions) => {
-  const initialState: State = {
+}) => {
+  const initialState = {
     valid: true,
     submitted: false,
     submitting: false,
@@ -73,24 +49,18 @@ export const createFormReducer: Function = ({
     touched: false,
     fields: {},
   };
-  let initialFormState: State = initialState;
-  let emptyFormState: State = initialState;
-  let multipleFormsWasInitialized: boolean = false;
+  let initialFormState = initialState;
+  let emptyFormState = initialState;
+  let multipleFormsWasInitialized = false;
 
-  const reducers: {
-    [reducerName: string]: (state: State, action: Action, statePrefix: Array<string>) => State,
-  } = {
-    [getReduxConst(RESET_FORM)]: (state: State, action: ResetForm): State => {
+  const reducers = {
+    [getReduxConst(RESET_FORM)]: (state, action) => {
       return action.state === 'initial' ? map(initialFormState) : map(emptyFormState);
     },
-    [getReduxConst(RESET_FIELD)]: (
-      state: State,
-      action: ResetField,
-      statePrefix: Array<string>,
-    ): State => {
-      const newState: State = map(state);
-      const resetToState: State = action.state === 'initial' ? initialFormState : emptyFormState;
-      const fieldPath: Array<string> = [...statePrefix, 'fields', action.fieldName];
+    [getReduxConst(RESET_FIELD)]: (state, action, statePrefix) => {
+      const newState = map(state);
+      const resetToState = action.state === 'initial' ? initialFormState : emptyFormState;
+      const fieldPath = [...statePrefix, 'fields', action.fieldName];
 
       if (hasIn(newState, fieldPath)) {
         return setIn(newState, fieldPath, getIn(resetToState, fieldPath));
@@ -98,16 +68,12 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(RESET_FIELDS)]: (
-      state: State,
-      action: ResetFields,
-      statePrefix: Array<string>,
-    ): State => {
+    [getReduxConst(RESET_FIELDS)]: (state, action, statePrefix) => {
       let newState = map(state);
-      const resetToState: State = action.state === 'initial' ? initialFormState : emptyFormState;
+      const resetToState = action.state === 'initial' ? initialFormState : emptyFormState;
 
-      action.fieldsNames.forEach((fieldName: FieldName) => {
-        const fieldPath: Array<string> = [...statePrefix, 'fields', fieldName];
+      action.fieldsNames.forEach(fieldName => {
+        const fieldPath = [...statePrefix, 'fields', fieldName];
 
         if (hasIn(newState, fieldPath)) {
           newState = setIn(newState, fieldPath, getIn(resetToState, fieldPath));
@@ -116,13 +82,9 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(REMOVE_FIELD)]: (
-      state: State,
-      action: RemoveField,
-      statePrefix: Array<string>,
-    ): State => {
-      const newState: State = map(state);
-      const fieldPath: Array<string> = [...statePrefix, 'fields', action.fieldName];
+    [getReduxConst(REMOVE_FIELD)]: (state, action, statePrefix) => {
+      const newState = map(state);
+      const fieldPath = [...statePrefix, 'fields', action.fieldName];
 
       if (hasIn(newState, fieldPath)) {
         return deleteIn(newState, fieldPath);
@@ -130,15 +92,11 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(CHANGE_FIELDS_VALUES)]: (
-      state: State,
-      action: ChangeFieldsValues,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
-      const fieldsValues: FieldsValues = action.fieldsValues;
+    [getReduxConst(CHANGE_FIELDS_VALUES)]: (state, action, statePrefix) => {
+      let newState = map(state);
+      const fieldsValues = action.fieldsValues;
 
-      keys(fieldsValues).forEach((fieldKey: string) => {
+      keys(fieldsValues).forEach(fieldKey => {
         if (hasIn(state, [...statePrefix, 'fields', fieldKey])) {
           // Change form
           newState = setIn(newState, [...statePrefix, 'changed'], true);
@@ -155,34 +113,22 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(SET_FORM_SUBMITTING)]: (
-      state: State,
-      action: SetFormSubmitting,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(SET_FORM_SUBMITTING)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
       return setIn(newState, [...statePrefix, 'submitting'], action.submitting);
     },
-    [getReduxConst(FORM_INITIALISATION)]: (
-      state: State,
-      action: FormInitialisation,
-      statePrefix: Array<string>,
-    ): State => {
+    [getReduxConst(FORM_INITIALISATION)]: (state, action, statePrefix) => {
       const fields = map(action.fields);
-      const touched: boolean = keys(fields).some((fieldKey: string) =>
-        getIn(fields, [fieldKey, 'touched']),
-      );
-      const changed: boolean = keys(fields).some((fieldKey: string) =>
-        getIn(fields, [fieldKey, 'changed']),
-      );
-      const formState = (merge(initialState, {
+      const touched = keys(fields).some(fieldKey => getIn(fields, [fieldKey, 'touched']));
+      const changed = keys(fields).some(fieldKey => getIn(fields, [fieldKey, 'changed']));
+      const formState = merge(initialState, {
         fields: map(fields),
         valid: true,
         touched,
         changed,
-      }): any);
-      const emptyFields: FieldsData = keys(fields).reduce((accumulator, emptyFieldKey: string) => {
+      });
+      const emptyFields = keys(fields).reduce((accumulator, emptyFieldKey) => {
         return merge(
           accumulator,
           map({
@@ -197,7 +143,7 @@ export const createFormReducer: Function = ({
           }),
         );
       }, map({}));
-      const initialEmptyFormState: any = merge(initialState, {
+      const initialEmptyFormState = merge(initialState, {
         fields: map(emptyFields),
         valid: true,
       });
@@ -224,18 +170,14 @@ export const createFormReducer: Function = ({
 
       return map(initialFormState);
     },
-    [getReduxConst(UPDATE_FORM)]: (
-      state: State,
-      action: UpdateForm,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(UPDATE_FORM)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
-      keys(action.fields).forEach((fieldKey: string) => {
+      keys(action.fields).forEach(fieldKey => {
         newState = setIn(newState, [...statePrefix, 'fields', fieldKey], action.fields[fieldKey]);
       });
 
-      keys(getIn(newState, [...statePrefix, 'fields'])).forEach((fieldKey: string) => {
+      keys(getIn(newState, [...statePrefix, 'fields'])).forEach(fieldKey => {
         if (!getIn(action.fields, [fieldKey])) {
           newState = deleteIn(newState, [...statePrefix, 'fields', fieldKey]);
         }
@@ -243,12 +185,8 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(CHANGE_FIELD_VALUE)]: (
-      state: State,
-      action: ChangeFieldValue,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(CHANGE_FIELD_VALUE)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
       if (hasIn(state, [...statePrefix, 'fields', action.fieldName])) {
         // Change form
@@ -265,14 +203,10 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(SET_FIELDS_DISABLED)]: (
-      state: State,
-      action: SetFieldsDisabled,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(SET_FIELDS_DISABLED)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
-      keys(action.disabledFields).forEach((disabledField: string) => {
+      keys(action.disabledFields).forEach(disabledField => {
         newState = setIn(
           newState,
           [...statePrefix, 'fields', disabledField, 'disabled'],
@@ -282,11 +216,7 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(SET_FIELD_DISABLED)]: (
-      state: State,
-      action: SetFieldDisabled,
-      statePrefix: Array<string>,
-    ): State => {
+    [getReduxConst(SET_FIELD_DISABLED)]: (state, action, statePrefix) => {
       if (hasIn(state, [...statePrefix, 'fields', action.fieldName])) {
         return setIn(
           state,
@@ -297,11 +227,7 @@ export const createFormReducer: Function = ({
 
       return state;
     },
-    [getReduxConst(SET_FIELD_HIDDEN)]: (
-      state: State,
-      action: SetFieldHidden,
-      statePrefix: Array<string>,
-    ): State => {
+    [getReduxConst(SET_FIELD_HIDDEN)]: (state, action, statePrefix) => {
       if (hasIn(state, [...statePrefix, 'fields', action.fieldName])) {
         return setIn(
           state,
@@ -312,12 +238,8 @@ export const createFormReducer: Function = ({
 
       return state;
     },
-    [getReduxConst(SET_FIELD_TOUCHED)]: (
-      state: State,
-      action: SetFieldTouched,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(SET_FIELD_TOUCHED)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
       if (hasIn(state, [...statePrefix, 'fields', action.fieldName])) {
         // Change field
@@ -330,21 +252,15 @@ export const createFormReducer: Function = ({
 
       // Change form
       const fields = getIn(newState, [...statePrefix, 'fields']);
-      const touched = Boolean(
-        keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'touched'])),
-      );
+      const touched = Boolean(keys(fields).find(fieldKey => getIn(fields, [fieldKey, 'touched'])));
       newState = setIn(newState, [...statePrefix, 'touched'], touched);
 
       return newState;
     },
-    [getReduxConst(SET_FIELDS_TOUCHED)]: (
-      state: State,
-      action: SetFieldsTouched,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(SET_FIELDS_TOUCHED)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
-      keys(action.touchedFields).forEach((touchedField: string) => {
+      keys(action.touchedFields).forEach(touchedField => {
         // Change field
         newState = setIn(
           newState,
@@ -355,21 +271,15 @@ export const createFormReducer: Function = ({
 
       // Change form
       const fields = getIn(newState, [...statePrefix, 'fields']);
-      const touched = Boolean(
-        keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'touched'])),
-      );
+      const touched = Boolean(keys(fields).find(fieldKey => getIn(fields, [fieldKey, 'touched'])));
       newState = setIn(newState, [...statePrefix, 'touched'], touched);
 
       return newState;
     },
-    [getReduxConst(SET_FIELDS_HIDDEN)]: (
-      state: State,
-      action: SetFieldsHidden,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(SET_FIELDS_HIDDEN)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
-      keys(action.hiddenFields).forEach((hiddenField: string) => {
+      keys(action.hiddenFields).forEach(hiddenField => {
         newState = setIn(
           newState,
           [...statePrefix, 'fields', hiddenField, 'hidden'],
@@ -379,12 +289,8 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(SET_FIELD_CHANGED)]: (
-      state: State,
-      action: SetFieldChanged,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(SET_FIELD_CHANGED)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
       if (hasIn(state, [...statePrefix, 'fields', action.fieldName])) {
         // Change field
@@ -397,21 +303,15 @@ export const createFormReducer: Function = ({
 
       // Change form
       const fields = getIn(newState, [...statePrefix, 'fields']);
-      const changed = Boolean(
-        keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'changed'])),
-      );
+      const changed = Boolean(keys(fields).find(fieldKey => getIn(fields, [fieldKey, 'changed'])));
       newState = setIn(newState, [...statePrefix, 'changed'], changed);
 
       return newState;
     },
-    [getReduxConst(SET_FIELDS_CHANGED)]: (
-      state: State,
-      action: SetFieldsChanged,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(SET_FIELDS_CHANGED)]: (state, action, statePrefix) => {
+      let newState = map(state);
 
-      keys(action.changedFields).forEach((changedField: string) => {
+      keys(action.changedFields).forEach(changedField => {
         // Change field
         newState = setIn(
           newState,
@@ -422,20 +322,14 @@ export const createFormReducer: Function = ({
 
       // Change form
       const fields = getIn(newState, [...statePrefix, 'fields']);
-      const changed = Boolean(
-        keys(fields).find((fieldKey: string) => getIn(fields, [fieldKey, 'changed'])),
-      );
+      const changed = Boolean(keys(fields).find(fieldKey => getIn(fields, [fieldKey, 'changed'])));
       newState = setIn(newState, [...statePrefix, 'changed'], changed);
 
       return newState;
     },
-    [getReduxConst(SET_FIELD_ERRORS)]: (
-      state: State,
-      action: SetFieldErrors,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
-      const fieldPath: Array<string> = [...statePrefix, 'fields', action.fieldName];
+    [getReduxConst(SET_FIELD_ERRORS)]: (state, action, statePrefix) => {
+      let newState = map(state);
+      const fieldPath = [...statePrefix, 'fields', action.fieldName];
       newState = setIn(newState, [...fieldPath, 'errors'], list(action.errors));
 
       if (listSize(action.errors)) {
@@ -444,8 +338,8 @@ export const createFormReducer: Function = ({
       } else {
         newState = setIn(newState, [...fieldPath, 'valid'], true);
 
-        let formValid: boolean = true;
-        keys(getIn(newState, [...statePrefix, 'fields'])).forEach((fieldKey: string) => {
+        let formValid = true;
+        keys(getIn(newState, [...statePrefix, 'fields'])).forEach(fieldKey => {
           if (!getIn(newState, [...statePrefix, 'fields', fieldKey, 'valid'])) {
             formValid = false;
           }
@@ -456,17 +350,13 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(SET_FIELDS_ERRORS)]: (
-      state: State,
-      action: SetFieldsErrors,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
-      const fieldsErrors: { [fieldName: FieldName]: Array<string> } = action.fieldsErrors;
+    [getReduxConst(SET_FIELDS_ERRORS)]: (state, action, statePrefix) => {
+      let newState = map(state);
+      const fieldsErrors = action.fieldsErrors;
 
-      keys(fieldsErrors).forEach((fieldKey: string) => {
-        const fieldErrors: Array<string> = getIn(fieldsErrors, [fieldKey]);
-        const fieldPath: Array<string> = [...statePrefix, 'fields', fieldKey];
+      keys(fieldsErrors).forEach(fieldKey => {
+        const fieldErrors = getIn(fieldsErrors, [fieldKey]);
+        const fieldPath = [...statePrefix, 'fields', fieldKey];
         newState = setIn(newState, [...fieldPath, 'errors'], fieldErrors);
 
         if (listSize(fieldErrors)) {
@@ -478,9 +368,9 @@ export const createFormReducer: Function = ({
 
       // Check that form is valid or not
 
-      const stateFields: FieldsData = getIn(newState, [...statePrefix, 'fields']);
-      let formValid: boolean = true;
-      keys(stateFields).forEach((fieldKey: string) => {
+      const stateFields = getIn(newState, [...statePrefix, 'fields']);
+      let formValid = true;
+      keys(stateFields).forEach(fieldKey => {
         if (!getIn(stateFields, [fieldKey, 'valid'])) {
           formValid = false;
         }
@@ -490,12 +380,8 @@ export const createFormReducer: Function = ({
 
       return newState;
     },
-    [getReduxConst(SET_FORM_SUBMITTED)]: (
-      state: State,
-      action: SetFormSubmitted,
-      statePrefix: Array<string>,
-    ): State => {
-      let newState: State = map(state);
+    [getReduxConst(SET_FORM_SUBMITTED)]: (state, action, statePrefix) => {
+      let newState = map(state);
       newState = setIn(newState, [...statePrefix, 'submitted'], action.submitted);
       return newState;
     },
@@ -506,12 +392,12 @@ export const createFormReducer: Function = ({
    * @callback formReducerCreator
    * @param {string} formName
    */
-  return (formName: string) => {
-    return (state: State = initialState, action: Action): State => {
+  return formName => {
+    return (state = initialState, action) => {
       if (getFormNameWihoutKey(action.formName) !== formName) return state;
 
-      const formNameKey: string = getFormNameKey(action.formName);
-      const statePrefix: Array<string> = formNameKey ? [formNameKey] : [];
+      const formNameKey = getFormNameKey(action.formName);
+      const statePrefix = formNameKey ? [formNameKey] : [];
       const reducer = reducers[action.type];
       return reducer ? reducer(state, action, statePrefix) : state;
     };

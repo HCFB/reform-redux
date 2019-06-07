@@ -31,10 +31,6 @@ How to run asynchronous server-side validation on your form.
 
 How to initialize your form data from any slice of the Redux state.
 
-### [Selecting form values](https://codesandbox.io/s/04ow975qyv)
-
-How to bind certain form values as props to your custom component.
-
 ### [Two forms on same page](https://codesandbox.io/s/7zx59o8316)
 
 How to create two forms on same page.
@@ -42,7 +38,3 @@ How to create two forms on same page.
 ### [Normalizing or masking](https://codesandbox.io/s/1qz08x6x9q)
 
 How to use normalize or masking your form values.
-
-### [ImmutableJS support](https://codesandbox.io/s/pkvo883w47)
-
-How to use the library with ImmutableJS.
