@@ -8,6 +8,7 @@ import {
   useContext,
   useCallback,
   memo,
+  useRef,
 } from 'react';
 import { resetForm } from '../actions/Form';
 import { filterReactDomProps } from '../utils/common';
@@ -47,6 +48,16 @@ const Button = props => {
   const reformReduxContext = useContext(ReformReduxContext);
   const [submitting, setSubmitting] = useState(false);
 
+  const submittingStateRef = useRef(submitting);
+
+  // magic for react state https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+  useEffect(
+    () => {
+      submittingStateRef.current = submitting;
+    },
+    [submitting],
+  );
+
   useEffect(() => {
     if (!reformReduxContext) {
       throw new Error('Component `Button` must be in `Form` component.');
@@ -57,7 +68,7 @@ const Button = props => {
       const currentFormData = get(state, reformReduxContext.form.path);
       const formSubmitting = get(currentFormData, ['submitting']);
 
-      if (submitting !== formSubmitting) {
+      if (submittingStateRef.current !== formSubmitting) {
         setSubmitting(formSubmitting);
       }
     });
@@ -82,7 +93,7 @@ const Button = props => {
   };
 
   const componentProps =
-    typeof component === 'string'
+    typeof customComponent === 'string'
       ? {
           ...filterReactDomProps(props),
           ...commonProps,
