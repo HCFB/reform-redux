@@ -248,6 +248,126 @@ describe('components / Field', () => {
     ).toThrow('Component `Field` must be in `Form` component.');
   });
 
+  it('2 lists of checkboxes', () => {
+    expect.assertions(8);
+
+    const wrapper = ({ moreCheckboxes }) => {
+      return createElement(global.Provider, {}, [
+        createElement(Field, {
+          key: 1,
+          value: 1,
+          name: 'test',
+          component: 'input',
+          type: 'checkbox',
+        }),
+        createElement(Field, {
+          key: 2,
+          value: 2,
+          name: 'test',
+          component: 'input',
+          type: 'checkbox',
+        }),
+        createElement(Field, {
+          key: 3,
+          value: 3,
+          name: 'test',
+          component: 'input',
+          type: 'checkbox',
+        }),
+
+        createElement(Field, {
+          key: 4,
+          value: 4,
+          name: 'test2',
+          component: 'input',
+          type: 'checkbox',
+        }),
+        createElement(Field, {
+          key: 5,
+          value: 5,
+          name: 'test2',
+          component: 'input',
+          type: 'checkbox',
+        }),
+        createElement(Field, {
+          key: 6,
+          value: 6,
+          name: 'test2',
+          component: 'input',
+          type: 'checkbox',
+        }),
+
+        ...(moreCheckboxes
+          ? [
+              createElement(Field, {
+                key: 7,
+                value: 7,
+                name: 'test2',
+                component: 'input',
+                type: 'checkbox',
+              }),
+              createElement(Field, {
+                key: 8,
+                value: 8,
+                name: 'test2',
+                component: 'input',
+                type: 'checkbox',
+              }),
+              createElement(Field, {
+                key: 9,
+                value: 9,
+                name: 'test2',
+                component: 'input',
+                type: 'checkbox',
+              }),
+            ]
+          : []),
+      ]);
+    };
+
+    let component;
+    act(() => {
+      component = mount(createElement(wrapper));
+    });
+
+    expect(component.find('input').length).toBe(6);
+
+    act(() => {
+      const event = { nativeEvent: new Event('change'), target: { checked: true } };
+      const blurEvent = { nativeEvent: new Event('blur') };
+
+      component
+        .find('input')
+        .at(0)
+        .simulate('change', event)
+        .simulate('blur', blurEvent);
+    });
+
+    expect(global.store.getState().form.fields.test.value).toEqual([1]);
+    expect(global.store.getState().form.fields.test.touched).toBeTruthy();
+    expect(global.store.getState().form.fields.test.changed).toBeTruthy();
+
+    act(() => {
+      component.setProps({
+        moreCheckboxes: true,
+      });
+    });
+
+    expect(component.find('input').length).toBe(9);
+    expect(global.store.getState().form.fields.test.touched).toBeTruthy();
+    expect(global.store.getState().form.fields.test.changed).toBeTruthy();
+
+    act(() => {
+      const event = { nativeEvent: new Event('change'), target: { checked: true } };
+      component
+        .find('input')
+        .at(8)
+        .simulate('change', event);
+    });
+
+    expect(global.store.getState().form.fields.test2.value).toEqual([9]);
+  });
+
   it('check component prop types', () => {
     expect.assertions(3);
 
@@ -1497,7 +1617,7 @@ describe('components / Field', () => {
             value: [2, 1],
           },
           field2: {
-            changed: false,
+            changed: true,
             disabled: false,
             hidden: false,
             errors: [],
